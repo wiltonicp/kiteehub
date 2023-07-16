@@ -120,7 +120,7 @@ public class AuthServiceImpl implements AuthService {
 
         // TODO 使用腾讯云执行发送验证码，将验证码作为短信内容的参数变量放入，
         // TODO sdkAppId和签名不传则使用系统默认配置的sdkAppId和签名，支持传入多个参数，逗号拼接，示例："张三,15038****76,进行中"
-        devSmsApi.sendSmsTencent("sdkAppId", phone, "签名", "模板编码", phoneValidCode);
+        devSmsApi.sendSmsTencent("1400825573", phone, "风筝科技", "1814888", phoneValidCode);
 
         // 将请求号作为key，验证码的值作为value放到redis，用于校验，5分钟有效
         commonCacheOperator.put(AUTH_VALID_CODE_CACHE_KEY + phone + StrUtil.UNDERLINE + phoneValidCodeReqNo, phoneValidCode, 5 * 60);
