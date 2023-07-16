@@ -52,7 +52,7 @@ public class BizConfigure {
                         .title("业务功能BIZ")
                         .description("业务功能BIZ")
                         .termsOfServiceUrl("https://www.kiteehub.com")
-                        .contact(new Contact("SNOWY_TEAM","https://www.xiaonuo.vip", "xuyuxiang29@foxmail.com"))
+                        .contact(new Contact("SNOWY_TEAM","https://www.kiteehub.com", "wilton.icp@gmail.com"))
                         .version("2.0.0")
                         .build())
                 .globalResponseMessage(RequestMethod.GET, CommonResult.responseList())

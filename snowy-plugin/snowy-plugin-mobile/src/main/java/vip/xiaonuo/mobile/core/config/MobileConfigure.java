@@ -52,7 +52,7 @@ public class MobileConfigure {
                         .title("移动端功能MOBILE")
                         .description("移动端功能MOBILE")
                         .termsOfServiceUrl("https://www.kiteehub.com")
-                        .contact(new Contact("SNOWY_TEAM","https://www.xiaonuo.vip", "xiaonuobase@qq.com"))
+                        .contact(new Contact("SNOWY_TEAM","https://www.kiteehub.com", "wilton.icp@gmail.com"))
                         .version("2.0.0")
                         .build())
                 .globalResponseMessage(RequestMethod.GET, CommonResult.responseList())
