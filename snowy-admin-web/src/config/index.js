@@ -82,13 +82,13 @@ const DEFAULT_CONFIG = {
 		// 背景图
 		SNOWY_SYS_BACK_IMAGE: '',
 		// 系统名称
-		SNOWY_SYS_NAME: 'Snowy',
+		SNOWY_SYS_NAME: 'KiteeHub',
 		// 版本
 		SNOWY_SYS_VERSION: '2.0',
 		// 版权
-		SNOWY_SYS_COPYRIGHT: 'Snowy ©2022 Created by xiaonuo.vip',
+		SNOWY_SYS_COPYRIGHT: 'KiteeHub ©2022 Created by kiteehub.com',
 		// 版权跳转URL
-		SNOWY_SYS_COPYRIGHT_URL: 'https://www.xiaonuo.vip',
+		SNOWY_SYS_COPYRIGHT_URL: 'https://www.kiteehub.com',
 		// 默认文件存储
 		SNOWY_SYS_DEFAULT_FILE_ENGINE: 'LOCAL',
 		// 是否开启验证码

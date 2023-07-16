@@ -10,16 +10,16 @@
 				<right-circle-outlined />
 			</div>
 		</template>
-		<img
-			src="/src/assets/images/index_001.png"
-			class="carousel-images"
-			@click="leaveForOpen('https://www.xiaonuo.vip')"
-		/>
-		<img
-			src="/src/assets/images/index_002.png"
-			class="carousel-images"
-			@click="leaveForOpen('https://www.xiaonuo.vip')"
-		/>
+<!--		<img-->
+<!--			src="/src/assets/images/index_001.png"-->
+<!--			class="carousel-images"-->
+<!--			@click="leaveForOpen('https://www.kiteehub.com')"-->
+<!--		/>-->
+<!--		<img-->
+<!--			src="/src/assets/images/index_002.png"-->
+<!--			class="carousel-images"-->
+<!--			@click="leaveForOpen('https://www.kiteehub.com')"-->
+<!--		/>-->
 		<!--
 			<img v-for="(item, index) in carouselList"
 				:src="item.images"
@@ -35,11 +35,11 @@
 	const carouselList = ref([
 		{
 			images: '/src/assets/images/index_001.png',
-			url: 'https://www.xiaonuo.vip'
+			url: 'https://www.kiteehub.com'
 		},
 		{
 			images: '/src/assets/images/index_002.png',
-			url: 'https://www.xiaonuo.vip'
+			url: 'https://www.kiteehub.com'
 		}
 	])
 	// 打开一个新窗口

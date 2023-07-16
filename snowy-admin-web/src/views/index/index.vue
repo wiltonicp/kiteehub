@@ -13,7 +13,7 @@
 			</a-row>
 		</a-col>
 		<a-col :span="8">
-			<carousel class="mb-2" />
+<!--			<carousel class="mb-2" />-->
 			<schedule class="mb-2" />
 			<miniMessage class="mb-2" />
 		</a-col>
