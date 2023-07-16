@@ -43,7 +43,7 @@ import javax.validation.constraints.NotEmpty;
  * @date 2022/6/27 14:14
  **/
 @Api(tags = "单页面控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 7)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 7)
 @RestController
 @Validated
 public class SysSpaController {

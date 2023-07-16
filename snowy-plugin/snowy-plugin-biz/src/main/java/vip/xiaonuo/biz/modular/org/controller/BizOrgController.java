@@ -44,7 +44,7 @@ import java.util.List;
  * @date 2022/4/24 19:55
  */
 @Api(tags = "机构控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 1)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 1)
 @RestController
 @Validated
 public class BizOrgController {

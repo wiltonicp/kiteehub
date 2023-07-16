@@ -40,7 +40,7 @@ import javax.validation.constraints.NotEmpty;
  * @date 2022/2/23 18:26
  **/
 @Api(tags = "邮件控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 3)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 3)
 @RestController
 @Validated
 public class DevEmailController {

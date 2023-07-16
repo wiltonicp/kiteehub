@@ -40,7 +40,7 @@ import java.util.List;
  * @date 2022/9/2 10:44
  */
 @Api(tags = "系统首页控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 0)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 0)
 @RestController
 @Validated
 public class SysIndexController {

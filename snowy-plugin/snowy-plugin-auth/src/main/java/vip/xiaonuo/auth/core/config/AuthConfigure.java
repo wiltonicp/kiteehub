@@ -134,7 +134,7 @@ public class AuthConfigure implements WebMvcConfigurer {
                         .title("登录鉴权AUTH")
                         .description("登录鉴权AUTH")
                         .termsOfServiceUrl("https://www.kiteehub.com")
-                        .contact(new Contact("SNOWY_TEAM","https://www.kiteehub.com", "wilton.icp@gmail.com"))
+                        .contact(new Contact("KITEE_HUB_TEAM","https://www.kiteehub.com", "wilton.icp@gmail.com"))
                         .version("2.0.0")
                         .build())
                 .globalResponseMessage(RequestMethod.GET, CommonResult.responseList())

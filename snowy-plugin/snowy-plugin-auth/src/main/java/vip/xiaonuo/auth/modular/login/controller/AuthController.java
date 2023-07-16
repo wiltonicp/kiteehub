@@ -42,7 +42,7 @@ import javax.validation.Valid;
  * @date 2021/12/23 21:50
  */
 @Api(tags = "B端登录控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 2)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 2)
 @RestController
 @Validated
 public class AuthController {

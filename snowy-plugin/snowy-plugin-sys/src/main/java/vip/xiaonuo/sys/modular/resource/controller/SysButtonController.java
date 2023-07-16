@@ -42,7 +42,7 @@ import java.util.List;
  * @date 2022/6/27 13:56
  **/
 @Api(tags = "按钮控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 3)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 3)
 @RestController
 @Validated
 public class SysButtonController {

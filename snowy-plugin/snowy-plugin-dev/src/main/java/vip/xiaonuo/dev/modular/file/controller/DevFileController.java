@@ -46,7 +46,7 @@ import java.util.List;
  * @date 2022/2/23 18:26
  **/
 @Api(tags = "文件控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 4)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 4)
 @RestController
 @Validated
 public class DevFileController {

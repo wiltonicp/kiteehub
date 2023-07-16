@@ -47,7 +47,7 @@ import java.util.List;
  * @date 2022/4/22 9:34
  **/
 @Api(tags = "用户个人控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 10)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 10)
 @RestController
 @Validated
 public class SysUserCenterController {

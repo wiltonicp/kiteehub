@@ -41,7 +41,7 @@ import java.util.List;
  * @date 2022/8/5 10:48
  **/
 @Api(tags = "定时任务控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 7)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 7)
 @RestController
 @Validated
 public class DevJobController {

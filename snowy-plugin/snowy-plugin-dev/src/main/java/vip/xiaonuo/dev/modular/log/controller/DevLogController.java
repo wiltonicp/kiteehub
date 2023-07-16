@@ -43,7 +43,7 @@ import java.util.List;
  * @date 2022/9/2 15:15
  */
 @Api(tags = "日志控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 8)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 8)
 @RestController
 @Validated
 public class DevLogController {

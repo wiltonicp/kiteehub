@@ -42,7 +42,7 @@ import java.util.List;
  * @date  2023/01/28 22:42
  */
 @Api(tags = "移动端菜单控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 1)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 1)
 @RestController
 @Validated
 public class MobileMenuController {

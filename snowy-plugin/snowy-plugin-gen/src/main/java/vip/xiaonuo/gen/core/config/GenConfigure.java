@@ -53,7 +53,7 @@ public class GenConfigure {
                         .title("代码生成GEN")
                         .description("代码生成GEN")
                         .termsOfServiceUrl("https://www.kiteehub.com")
-                        .contact(new Contact("SNOWY_TEAM","https://www.kiteehub.com", "wilton.icp@gmail.com"))
+                        .contact(new Contact("KITEE_HUB_TEAM","https://www.kiteehub.com", "wilton.icp@gmail.com"))
                         .version("2.0.0")
                         .build())
                 .globalResponseMessage(RequestMethod.GET, CommonResult.responseList())

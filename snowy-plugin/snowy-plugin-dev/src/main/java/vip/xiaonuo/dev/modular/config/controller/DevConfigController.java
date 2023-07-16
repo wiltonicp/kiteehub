@@ -42,7 +42,7 @@ import java.util.List;
  * @date 2022/4/22 10:56
  **/
 @Api(tags = "配置控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 1)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 1)
 @RestController
 @Validated
 public class DevConfigController {

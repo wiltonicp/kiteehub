@@ -42,7 +42,7 @@ import java.util.List;
  * @date 2022/4/25 20:40
  */
 @Api(tags = "职位控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 2)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 2)
 @RestController
 @Validated
 public class SysPositionController {

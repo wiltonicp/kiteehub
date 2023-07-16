@@ -43,7 +43,7 @@ import java.util.List;
  * @date 2022/6/27 14:09
  **/
 @Api(tags = "菜单控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 5)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 5)
 @RestController
 @Validated
 public class SysMenuController {

@@ -42,7 +42,7 @@ import java.util.List;
  * @date 2022/10/25 22:33
  **/
 @Api(tags = "代码生成详细配置控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 2)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 2)
 @RestController
 @Validated
 public class GenConfigController {

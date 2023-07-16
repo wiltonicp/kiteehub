@@ -42,7 +42,7 @@ import java.util.List;
  * @date 2022/6/21 14:58
  **/
 @Api(tags = "字典控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 2)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 2)
 @RestController
 @Validated
 public class DevDictController {

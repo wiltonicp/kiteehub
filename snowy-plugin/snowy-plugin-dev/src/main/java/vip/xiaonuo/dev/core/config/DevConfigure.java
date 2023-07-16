@@ -52,7 +52,7 @@ public class DevConfigure {
                         .title("开发工具DEV")
                         .description("开发工具DEV")
                         .termsOfServiceUrl("https://www.kiteehub.com")
-                        .contact(new Contact("SNOWY_TEAM","https://www.kiteehub.com", "wilton.icp@gmail.com"))
+                        .contact(new Contact("KITEE_HUB_TEAM","https://www.kiteehub.com", "wilton.icp@gmail.com"))
                         .version("2.0.0")
                         .build())
                 .globalResponseMessage(RequestMethod.GET, CommonResult.responseList())

@@ -44,7 +44,7 @@ import java.util.List;
  * @date 2022/4/25 20:19
  */
 @Api(tags = "角色控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 8)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 8)
 @RestController
 @Validated
 public class SysRoleController {

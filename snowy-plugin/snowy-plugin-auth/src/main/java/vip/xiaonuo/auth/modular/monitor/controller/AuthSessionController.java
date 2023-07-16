@@ -43,7 +43,7 @@ import javax.validation.constraints.NotEmpty;
  * @date 2022/6/24 15:20
  **/
 @Api(tags = "会话治理控制器")
-@ApiSupport(author = "SNOWY_TEAM", order = 3)
+@ApiSupport(author = "KITEE_HUB_TEAM", order = 3)
 @RestController
 @Validated
 public class AuthSessionController {
