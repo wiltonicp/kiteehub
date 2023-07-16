@@ -52,7 +52,7 @@ public class GenConfigure {
                 .apiInfo(new ApiInfoBuilder()
                         .title("代码生成GEN")
                         .description("代码生成GEN")
-                        .termsOfServiceUrl("https://www.xiaonuo.vip")
+                        .termsOfServiceUrl("https://www.kiteehub.com")
                         .contact(new Contact("SNOWY_TEAM","https://www.xiaonuo.vip", "xiaonuobase@qq.com"))
                         .version("2.0.0")
                         .build())

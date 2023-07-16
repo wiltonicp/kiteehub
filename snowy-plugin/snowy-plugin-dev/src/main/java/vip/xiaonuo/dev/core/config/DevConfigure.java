@@ -51,7 +51,7 @@ public class DevConfigure {
                 .apiInfo(new ApiInfoBuilder()
                         .title("开发工具DEV")
                         .description("开发工具DEV")
-                        .termsOfServiceUrl("https://www.xiaonuo.vip")
+                        .termsOfServiceUrl("https://www.kiteehub.com")
                         .contact(new Contact("SNOWY_TEAM","https://www.xiaonuo.vip", "xuyuxiang29@foxmail.com"))
                         .version("2.0.0")
                         .build())

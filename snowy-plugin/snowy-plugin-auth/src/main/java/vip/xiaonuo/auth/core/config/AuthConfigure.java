@@ -133,7 +133,7 @@ public class AuthConfigure implements WebMvcConfigurer {
                 .apiInfo(new ApiInfoBuilder()
                         .title("登录鉴权AUTH")
                         .description("登录鉴权AUTH")
-                        .termsOfServiceUrl("https://www.xiaonuo.vip")
+                        .termsOfServiceUrl("https://www.kiteehub.com")
                         .contact(new Contact("SNOWY_TEAM","https://www.xiaonuo.vip", "xuyuxiang29@foxmail.com"))
                         .version("2.0.0")
                         .build())

@@ -51,7 +51,7 @@ public class MobileConfigure {
                 .apiInfo(new ApiInfoBuilder()
                         .title("移动端功能MOBILE")
                         .description("移动端功能MOBILE")
-                        .termsOfServiceUrl("https://www.xiaonuo.vip")
+                        .termsOfServiceUrl("https://www.kiteehub.com")
                         .contact(new Contact("SNOWY_TEAM","https://www.xiaonuo.vip", "xiaonuobase@qq.com"))
                         .version("2.0.0")
                         .build())
