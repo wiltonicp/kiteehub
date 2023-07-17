@@ -207,7 +207,7 @@ public class DevFileServiceImpl extends ServiceImpl<DevFileMapper, DevFile> impl
         if(engine.equals(DevFileEngineTypeEnum.LOCAL.getValue())) {
             String apiUrl = commonProperties.getBackendUrl();
             if(ObjectUtil.isEmpty(apiUrl)) {
-                throw new CommonException("后端域名地址未正确配置：snowy.config.common.backend-url为空");
+                throw new CommonException("后端域名地址未正确配置：kiteehub.config.common.backend-url为空");
             }
             downloadUrl= apiUrl + "/dev/file/download?id=" + fileId;
             devFile.setDownloadPath(downloadUrl);

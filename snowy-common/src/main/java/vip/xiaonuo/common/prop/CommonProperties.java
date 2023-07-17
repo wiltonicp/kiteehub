@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties(prefix = "snowy.config.common")
+@ConfigurationProperties(prefix = "kiteehub.config.common")
 public class CommonProperties {
 
     /** 前端地址 */
