@@ -3,11 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>vip.xiaonuo</groupId>
-    <artifactId>snowy</artifactId>
-    <name>snowy</name>
+    <groupId>com.kiteehub</groupId>
+    <artifactId>kiteehub</artifactId>
+    <name>kiteehub</name>
     <version>2.0.0</version>
-    <description>snowy快速开发平台</description>
+    <description>kiteehub快速开发平台</description>
     <packaging>pom</packaging>
 
     <parent>
@@ -18,7 +18,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <snowy.version>2.0.0</snowy.version>
+        <kiteehub.version>2.0.0</kiteehub.version>
         <spring-framework.version>5.3.26</spring-framework.version>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -87,124 +87,124 @@
 
      <modules>
         <!-- 基础通用规则模块 -->
-        <module>snowy-common</module>
+        <module>kiteehub-common</module>
 
         <!-- 插件模块 -->
-        <module>snowy-plugin</module>
+        <module>kiteehub-plugin</module>
 
         <!-- 插件API接口模块 -->
-        <module>snowy-plugin-api</module>
+        <module>kiteehub-plugin-api</module>
 
         <!-- 主启动模块 -->
-        <module>snowy-web-app</module>
+        <module>kiteehub-web-app</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
 
-            <!-- snowy-common -->
+            <!-- kiteehub-common -->
             <dependency>
-                <groupId>vip.xiaonuo</groupId>
-                <artifactId>snowy-common</artifactId>
-                <version>${snowy.version}</version>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-common</artifactId>
+                <version>${kiteehub.version}</version>
             </dependency>
 
-            <!-- snowy-plugin-auth-api -->
+            <!-- kiteehub-plugin-auth-api -->
             <dependency>
-                <groupId>vip.xiaonuo</groupId>
-                <artifactId>snowy-plugin-auth-api</artifactId>
-                <version>${snowy.version}</version>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-plugin-auth-api</artifactId>
+                <version>${kiteehub.version}</version>
             </dependency>
 
-            <!-- snowy-plugin-biz-api -->
+            <!-- kiteehub-plugin-biz-api -->
             <dependency>
-                <groupId>vip.xiaonuo</groupId>
-                <artifactId>snowy-plugin-biz-api</artifactId>
-                <version>${snowy.version}</version>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-plugin-biz-api</artifactId>
+                <version>${kiteehub.version}</version>
             </dependency>
 
-            <!-- snowy-plugin-client-api -->
+            <!-- kiteehub-plugin-client-api -->
             <dependency>
-                <groupId>vip.xiaonuo</groupId>
-                <artifactId>snowy-plugin-client-api</artifactId>
-                <version>${snowy.version}</version>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-plugin-client-api</artifactId>
+                <version>${kiteehub.version}</version>
             </dependency>
 
-            <!-- snowy-plugin-dev-api -->
+            <!-- kiteehub-plugin-dev-api -->
             <dependency>
-                <groupId>vip.xiaonuo</groupId>
-                <artifactId>snowy-plugin-dev-api</artifactId>
-                <version>${snowy.version}</version>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-plugin-dev-api</artifactId>
+                <version>${kiteehub.version}</version>
             </dependency>
 
-            <!-- snowy-plugin-gen-api -->
+            <!-- kiteehub-plugin-gen-api -->
             <dependency>
-                <groupId>vip.xiaonuo</groupId>
-                <artifactId>snowy-plugin-gen-api</artifactId>
-                <version>${snowy.version}</version>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-plugin-gen-api</artifactId>
+                <version>${kiteehub.version}</version>
             </dependency>
 
-            <!-- snowy-plugin-mobile-api -->
+            <!-- kiteehub-plugin-mobile-api -->
             <dependency>
-                <groupId>vip.xiaonuo</groupId>
-                <artifactId>snowy-plugin-mobile-api</artifactId>
-                <version>${snowy.version}</version>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-plugin-mobile-api</artifactId>
+                <version>${kiteehub.version}</version>
             </dependency>
 
-            <!-- snowy-plugin-sys-api -->
+            <!-- kiteehub-plugin-sys-api -->
             <dependency>
-                <groupId>vip.xiaonuo</groupId>
-                <artifactId>snowy-plugin-sys-api</artifactId>
-                <version>${snowy.version}</version>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-plugin-sys-api</artifactId>
+                <version>${kiteehub.version}</version>
             </dependency>
 
-            <!-- snowy-plugin-auth -->
+            <!-- kiteehub-plugin-auth -->
             <dependency>
-                <groupId>vip.xiaonuo</groupId>
-                <artifactId>snowy-plugin-auth</artifactId>
-                <version>${snowy.version}</version>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-plugin-auth</artifactId>
+                <version>${kiteehub.version}</version>
             </dependency>
 
-            <!-- snowy-plugin-biz -->
+            <!-- kiteehub-plugin-biz -->
             <dependency>
-                <groupId>vip.xiaonuo</groupId>
-                <artifactId>snowy-plugin-biz</artifactId>
-                <version>${snowy.version}</version>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-plugin-biz</artifactId>
+                <version>${kiteehub.version}</version>
             </dependency>
 
-            <!-- snowy-plugin-client -->
+            <!-- kiteehub-plugin-client -->
             <dependency>
-                <groupId>vip.xiaonuo</groupId>
-                <artifactId>snowy-plugin-client</artifactId>
-                <version>${snowy.version}</version>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-plugin-client</artifactId>
+                <version>${kiteehub.version}</version>
             </dependency>
 
-            <!-- snowy-plugin-dev -->
+            <!-- kiteehub-plugin-dev -->
             <dependency>
-                <groupId>vip.xiaonuo</groupId>
-                <artifactId>snowy-plugin-dev</artifactId>
-                <version>${snowy.version}</version>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-plugin-dev</artifactId>
+                <version>${kiteehub.version}</version>
             </dependency>
 
-            <!-- snowy-plugin-gen -->
+            <!-- kiteehub-plugin-gen -->
             <dependency>
-                <groupId>vip.xiaonuo</groupId>
-                <artifactId>snowy-plugin-gen</artifactId>
-                <version>${snowy.version}</version>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-plugin-gen</artifactId>
+                <version>${kiteehub.version}</version>
             </dependency>
 
-            <!-- snowy-plugin-mobile -->
+            <!-- kiteehub-plugin-mobile -->
             <dependency>
-                <groupId>vip.xiaonuo</groupId>
-                <artifactId>snowy-plugin-mobile</artifactId>
-                <version>${snowy.version}</version>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-plugin-mobile</artifactId>
+                <version>${kiteehub.version}</version>
             </dependency>
 
-            <!-- snowy-plugin-sys -->
+            <!-- kiteehub-plugin-sys -->
             <dependency>
-                <groupId>vip.xiaonuo</groupId>
-                <artifactId>snowy-plugin-sys</artifactId>
-                <version>${snowy.version}</version>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-plugin-sys</artifactId>
+                <version>${kiteehub.version}</version>
             </dependency>
 
             <!-- lombok -->

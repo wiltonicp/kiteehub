@@ -1,6 +1,6 @@
 <div align="center">
     <p align="center">
-        <img src="./snowy-admin-web/public/img/logo.png" height="150" alt="logo"/>
+        <img src="kiteehub-admin-web/public/img/logo.png" height="150" alt="logo"/>
     </p>
 </div>
 
@@ -88,11 +88,11 @@ npm run dev
 
 ## 代码结构
 
-Snowy2.0框架对代码以插件化的模式进行分包，使得包层级结构更加清晰合理，同时降低了耦合度，关于插件模块化开发的规范请查阅文档【SNOWY开源文档——前端手册or后端手册——开发规范】板块。
+KiteeHub2.0框架对代码以插件化的模式进行分包，使得包层级结构更加清晰合理，同时降低了耦合度，关于插件模块化开发的规范请查阅文档【SNOWY开源文档——前端手册or后端手册——开发规范】板块。
 
 ```
 snowy
-  |-snowy-admin-web == 前端
+  |-kiteehub-admin-web == 前端
     |-public == 基础静态文件
     |-src == 前端源代码
       |-api == API接口转发
@@ -106,24 +106,24 @@ snowy
       |-style == 样式风格配置
       |-utils == 工具类
       |-views == 所有视图界面
-  |-snowy-common == 基础通用模块
-  |-snowy-plugin == 插件包
-    |-snowy-plugin-auth == 登录鉴权插件
-    |-snowy-plugin-biz == 业务功能插件
-    |-snowy-plugin-client == C端功能插件
-    |-snowy-plugin-dev == 开发工具插件
-    |-snowy-plugin-gen == 代码生成插件
-    |-snowy-plugin-mobile == 移动端管理插件
-    |-snowy-plugin-sys == 系统功能插件
-  |-snowy-plugin-api == 插件api包
-    |-snowy-plugin-auth-api == 登录鉴权插件api接口
-    |-snowy-plugin-biz-api == 业务功能插件api接口
-    |-snowy-plugin-client-api == C端功能插件api接口
-    |-snowy-plugin-dev-api == 开发工具插件api接口
-    |-snowy-plugin-gen == 代码生成插件api接口
-    |-snowy-plugin-mobile == 移动端管理插件api接口
-    |-snowy-plugin-sys-api == 系统功能插件api接口
-  |-snowy-web-app == 主启动模块
+  |-kiteehub-common == 基础通用模块
+  |-kiteehub-plugin == 插件包
+    |-kiteehub-plugin-auth == 登录鉴权插件
+    |-kiteehub-plugin-biz == 业务功能插件
+    |-kiteehub-plugin-client == C端功能插件
+    |-kiteehub-plugin-dev == 开发工具插件
+    |-kiteehub-plugin-gen == 代码生成插件
+    |-kiteehub-plugin-mobile == 移动端管理插件
+    |-kiteehub-plugin-sys == 系统功能插件
+  |-kiteehub-plugin-api == 插件api包
+    |-kiteehub-plugin-auth-api == 登录鉴权插件api接口
+    |-kiteehub-plugin-biz-api == 业务功能插件api接口
+    |-kiteehub-plugin-client-api == C端功能插件api接口
+    |-kiteehub-plugin-dev-api == 开发工具插件api接口
+    |-kiteehub-plugin-gen == 代码生成插件api接口
+    |-kiteehub-plugin-mobile == 移动端管理插件api接口
+    |-kiteehub-plugin-sys-api == 系统功能插件api接口
+  |-kiteehub-web-app == 主启动模块
 ```
 
 
