@@ -83,13 +83,13 @@ const DEFAULT_CONFIG = {
 		// 背景图
 		KITEE_SYS_BACK_IMAGE: '',
 		// 系统名称
-		KITEE_SYS_NAME: 'KiteeHub',
+		KITEE_SYS_NAME: '社保咨询一体化智能服务平台',
 		// 版本
 		KITEE_SYS_VERSION: '2.0',
 		// 版权
-		KITEE_SYS_COPYRIGHT: 'KiteeHub ©2022 Created by kiteehub.com',
+		KITEE_SYS_COPYRIGHT: 'Kitee ©2022 Created by 智能服务平台',
 		// 版权跳转URL
-		KITEE_SYS_COPYRIGHT_URL: 'https://www.kiteehub.com',
+		KITEE_SYS_COPYRIGHT_URL: 'https://www.kitee.com',
 		// 默认文件存储
 		KITEE_SYS_DEFAULT_FILE_ENGINE: 'LOCAL',
 		// 是否开启验证码
