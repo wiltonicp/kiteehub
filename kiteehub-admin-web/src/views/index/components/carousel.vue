@@ -35,11 +35,11 @@
 	const carouselList = ref([
 		{
 			images: '/src/assets/images/index_001.png',
-			url: 'https://www.kiteehub.com'
+			url: 'https://www.kitee.com'
 		},
 		{
 			images: '/src/assets/images/index_002.png',
-			url: 'https://www.kiteehub.com'
+			url: 'https://www.kitee.com'
 		}
 	])
 	// 打开一个新窗口

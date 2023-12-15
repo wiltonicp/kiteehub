@@ -24,7 +24,7 @@
 				<a-card>
 					<div class="login-header">
 						<div class="logo">
-							<img :alt="sysBaseConfig.KITEE_SYS_NAME" :src="sysBaseConfig.KITEE_SYS_LOGO" />
+<!--							<img :alt="sysBaseConfig.KITEE_SYS_NAME" :src="sysBaseConfig.KITEE_SYS_LOGO" />-->
 							<label>{{ sysBaseConfig.KITEE_SYS_NAME }}</label>
 						</div>
 						<!--<h2>{{ $t('login.signInTitle') }}</h2>-->
@@ -91,7 +91,7 @@
 							<phone-login-form />
 						</a-tab-pane>
 					</a-tabs>
-					<three-login />
+<!--					<three-login />-->
 				</a-card>
 			</div>
 		</div>
