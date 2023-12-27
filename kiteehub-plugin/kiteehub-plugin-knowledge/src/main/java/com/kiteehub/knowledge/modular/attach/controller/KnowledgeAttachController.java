@@ -15,6 +15,8 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
+import com.kiteehub.knowledge.modular.knowledge.param.KnowledgeUploadParam;
+import com.kiteehub.knowledge.modular.knowledge.service.KnowledgeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
@@ -50,6 +52,8 @@ public class KnowledgeAttachController {
 
     @Resource
     private KnowledgeAttachService knowledgeAttachService;
+    @Resource
+    private KnowledgeService knowledgeService;
 
     /**
      * 获取知识库附件分页
@@ -65,20 +69,33 @@ public class KnowledgeAttachController {
         return CommonResult.data(knowledgeAttachService.page(knowledgeAttachPageParam));
     }
 
+//    /**
+//     * 添加知识库附件
+//     *
+//     * @author Ranger
+//     * @date  2023/12/27 14:00
+//     */
+//    @ApiOperationSupport(order = 2)
+//    @ApiOperation("添加知识库附件")
+//    @CommonLog("添加知识库附件")
+//    @SaCheckPermission("/knowledge/attach/add")
+//    @PostMapping("/knowledge/attach/add")
+//    public CommonResult<String> add(@RequestBody @Valid KnowledgeAttachAddParam knowledgeAttachAddParam) {
+//        knowledgeAttachService.add(knowledgeAttachAddParam);
+//        return CommonResult.ok();
+//    }
+
     /**
-     * 添加知识库附件
-     *
-     * @author Ranger
-     * @date  2023/12/27 14:00
+     * 上传知识库附件
+     * @param request
+     * @return
      */
     @ApiOperationSupport(order = 2)
-    @ApiOperation("添加知识库附件")
-    @CommonLog("添加知识库附件")
-    @SaCheckPermission("/knowledge/attach/add")
-    @PostMapping("/knowledge/attach/add")
-    public CommonResult<String> add(@RequestBody @Valid KnowledgeAttachAddParam knowledgeAttachAddParam) {
-        knowledgeAttachService.add(knowledgeAttachAddParam);
-        return CommonResult.ok();
+    @ApiOperation("上传知识库附件")
+    @PostMapping(value = "/knowledge/attach/upload")
+    public CommonResult<String> upload(KnowledgeUploadParam request){
+        knowledgeService.upload(request);
+        return CommonResult.ok("上传知识库文件成功");
     }
 
     /**

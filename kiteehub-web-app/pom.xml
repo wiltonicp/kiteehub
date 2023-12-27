@@ -127,6 +127,7 @@
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -142,6 +143,30 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>${docker.maven.plugin.version}</version>
+                <configuration>
+                    <!-- 覆盖相同标签镜像 -->
+                    <forceTags>true</forceTags>
+                    <!-- install阶段上传镜像 -->
+                    <pushImage>true</pushImage>
+                    <!-- 远程仓库地址 -->
+                    <!--                        <registryUrl>${docker.registry}</registryUrl>-->
+                    <dockerDirectory>src/main/docker</dockerDirectory>
+                    <!--                    <dockerHost>http://192.168.1.169:2375</dockerHost>-->
+                    <imageName>kitee-knowledge</imageName>
+                    <!--                    <imageName>${docker.registry}/${project.artifactId}:${project.version}</imageName>-->
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
             </plugin>
         </plugins>
     </build>
