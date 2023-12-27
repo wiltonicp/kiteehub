@@ -33,5 +33,24 @@
             <groupId>com.kiteehub</groupId>
             <artifactId>kiteehub-plugin-dev-api</artifactId>
         </dependency>
+
+        <!--  PDF解析   -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+        </dependency>
+
+        <!--  chatgpt   -->
+        <dependency>
+            <groupId>com.unfbx</groupId>
+            <artifactId>chatgpt-java</artifactId>
+        </dependency>
+
+        <!--  向量数据库   -->
+        <dependency>
+            <groupId>io.milvus</groupId>
+            <artifactId>milvus-sdk-java</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

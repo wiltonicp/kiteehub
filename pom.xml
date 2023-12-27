@@ -83,6 +83,9 @@
         <ten.sdk.ses.version>3.1.455</ten.sdk.ses.version>
         <ten.sdk.sms.version>3.1.455</ten.sdk.sms.version>
         <tomcat.embed.core.version>9.0.72</tomcat.embed.core.version>
+        <pdfbox.version>2.0.27</pdfbox.version>
+        <chatgpt.java.version>1.1.5</chatgpt.java.version>
+        <milvus.sdk.version>2.3.2</milvus.sdk.version>
     </properties>
 
      <modules>
@@ -633,6 +636,27 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.connector.java.version}</version>
+            </dependency>
+
+            <!--  PDF解析   -->
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>${pdfbox.version}</version>
+            </dependency>
+
+            <!--  chatgpt   -->
+            <dependency>
+                <groupId>com.unfbx</groupId>
+                <artifactId>chatgpt-java</artifactId>
+                <version>${chatgpt.java.version}</version>
+            </dependency>
+
+            <!--  向量数据库   -->
+            <dependency>
+                <groupId>io.milvus</groupId>
+                <artifactId>milvus-sdk-java</artifactId>
+                <version>${milvus.sdk.version}</version>
             </dependency>
 
             <!-- postgresql -->

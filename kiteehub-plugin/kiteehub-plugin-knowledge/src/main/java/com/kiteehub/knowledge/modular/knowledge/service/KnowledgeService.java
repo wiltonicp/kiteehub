@@ -14,11 +14,12 @@ package com.kiteehub.knowledge.modular.knowledge.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kiteehub.knowledge.modular.knowledge.entity.Knowledge;
-import com.kiteehub.knowledge.modular.knowledge.param.KnowledgeAddParam;
-import com.kiteehub.knowledge.modular.knowledge.param.KnowledgeEditParam;
-import com.kiteehub.knowledge.modular.knowledge.param.KnowledgeIdParam;
-import com.kiteehub.knowledge.modular.knowledge.param.KnowledgePageParam;
+import com.kiteehub.knowledge.modular.knowledge.param.*;
+import com.kiteehub.knowledge.modular.knowledge.result.KnowledgeDetailResult;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -76,4 +77,17 @@ public interface KnowledgeService extends IService<Knowledge> {
      * @date  2023/12/27 10:20
      **/
     Knowledge queryEntity(Long id);
+
+
+    void saveOne(KnowledgeSaveParam request, Long userId);
+
+    void upload(KnowledgeUploadParam request);
+
+    void storeContent(MultipartFile file, String kid, Boolean firstTime) throws IOException;
+
+    KnowledgeDetailResult detail(String kid);
+
+    void removeAttach(KnowledgeAttachRemoveParam request);
+
+    void removeKnowledge(KnowledgeRemoveParam request);
 }
