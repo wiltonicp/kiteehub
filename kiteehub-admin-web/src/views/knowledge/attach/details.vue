@@ -22,7 +22,7 @@
 
 	// 打开抽屉
 	const onOpen = (record) => {
-        console.log('打开抽屉')
+        console.log('打开抽屉123')
 		visible.value = true
 	}
 	// 关闭抽屉
