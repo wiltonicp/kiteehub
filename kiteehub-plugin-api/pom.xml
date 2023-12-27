@@ -35,5 +35,8 @@
 
         <!-- 系统功能插件api接口 -->
         <module>kiteehub-plugin-sys-api</module>
+
+        <!-- 知识库插件api接口 -->
+        <module>kiteehub-plugin-knowledge-api</module>
     </modules>
 </project>

@@ -35,5 +35,8 @@
 
         <!-- 系统功能插件 -->
         <module>kiteehub-plugin-sys</module>
+
+        <!-- 知识库插件 -->
+        <module>kiteehub-plugin-knowledge</module>
     </modules>
 </project>

@@ -158,6 +158,13 @@
                 <version>${kiteehub.version}</version>
             </dependency>
 
+            <!-- kiteehub-plugin-knowledge-api -->
+            <dependency>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-plugin-knowledge-api</artifactId>
+                <version>${kiteehub.version}</version>
+            </dependency>
+
             <!-- kiteehub-plugin-auth -->
             <dependency>
                 <groupId>com.kiteehub</groupId>
@@ -204,6 +211,13 @@
             <dependency>
                 <groupId>com.kiteehub</groupId>
                 <artifactId>kiteehub-plugin-sys</artifactId>
+                <version>${kiteehub.version}</version>
+            </dependency>
+
+            <!-- kiteehub-plugin-knowledge -->
+            <dependency>
+                <groupId>com.kiteehub</groupId>
+                <artifactId>kiteehub-plugin-knowledge</artifactId>
                 <version>${kiteehub.version}</version>
             </dependency>
 

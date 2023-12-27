@@ -118,6 +118,12 @@
             <groupId>com.kiteehub</groupId>
             <artifactId>kiteehub-plugin-sys</artifactId>
         </dependency>
+
+        <!-- 知识库插件 -->
+        <dependency>
+            <groupId>com.kiteehub</groupId>
+            <artifactId>kiteehub-plugin-knowledge</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
