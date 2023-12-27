@@ -35,32 +35,8 @@ public class KnowledgeAttachEditParam {
     @NotNull(message = "id不能为空")
     private Long id;
 
-    /** 知识库ID */
-    @ApiModelProperty(value = "知识库ID", position = 2)
-    private String kid;
-
-    /** 文档ID */
-    @ApiModelProperty(value = "文档ID", position = 3)
-    private String docId;
-
     /** 文档名称 */
     @ApiModelProperty(value = "文档名称", position = 4)
     private String docName;
-
-    /** 文档类型 */
-    @ApiModelProperty(value = "文档类型", position = 5)
-    private String docType;
-
-    /** 文档内容 */
-    @ApiModelProperty(value = "文档内容", position = 6)
-    private String content;
-
-    /** 数据总量 */
-    @ApiModelProperty(value = "数据总量", position = 7)
-    private Integer totalData;
-
-    /** 状态 */
-    @ApiModelProperty(value = "状态", position = 8)
-    private String gatherState;
 
 }
