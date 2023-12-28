@@ -20,6 +20,7 @@ import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachIdParam;
 import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachPageParam;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 知识库附件Service接口
@@ -67,7 +68,7 @@ public interface KnowledgeAttachService extends IService<KnowledgeAttach> {
      * @author Ranger
      * @date  2023/12/27 14:00
      */
-    KnowledgeAttach detail(KnowledgeAttachIdParam knowledgeAttachIdParam);
+    List<Map<String, Object>> detail(KnowledgeAttachIdParam knowledgeAttachIdParam);
 
     /**
      * 获取知识库附件详情

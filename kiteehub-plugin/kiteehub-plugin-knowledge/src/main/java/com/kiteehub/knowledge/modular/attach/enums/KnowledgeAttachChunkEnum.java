@@ -9,26 +9,25 @@
  * 4.分发源码时候，请注明软件出处 https://www.kiteehub.com
  * 5.本项目只可用于内部开发，如有问题可联系团队wilton.icp@gmail.com商议合作。
  */
-package com.kiteehub.knowledge.modular.attach.param;
+package com.kiteehub.knowledge.modular.attach.enums;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
-import lombok.Setter;
-
-import javax.validation.constraints.NotNull;
 
 /**
- * 知识库附件Id参数
+ * 知识附件分片表枚举
  *
  * @author Ranger
- * @date  2023/12/27 14:00
+ * @date  2023/12/28 14:52
  **/
 @Getter
-@Setter
-public class KnowledgeAttachIdParam {
+public enum KnowledgeAttachChunkEnum {
 
-    /** ID */
-    @ApiModelProperty(value = "ID", required = true)
-    @NotNull(message = "id不能为空")
-    private Long id;
+    /** 测试 */
+    TEST("TEST");
+
+    private final String value;
+
+    KnowledgeAttachChunkEnum(String value) {
+        this.value = value;
+    }
 }

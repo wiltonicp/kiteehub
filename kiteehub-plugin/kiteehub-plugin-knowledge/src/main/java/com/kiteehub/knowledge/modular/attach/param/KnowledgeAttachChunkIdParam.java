@@ -16,28 +16,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
-import java.util.Date;
 
 /**
- * 知识库附件编辑参数
+ * 知识附件分片表Id参数
  *
  * @author Ranger
- * @date  2023/12/27 14:00
+ * @date  2023/12/28 14:52
  **/
 @Getter
 @Setter
-public class KnowledgeAttachEditParam {
+public class KnowledgeAttachChunkIdParam {
 
-    /** ID */
-    @ApiModelProperty(value = "ID", required = true, position = 1)
-    @NotNull(message = "id不能为空")
+    /** 主键 */
+    @ApiModelProperty(value = "主键", required = true)
+    @NotBlank(message = "id不能为空")
     private Long id;
-
-    /** 文档名称 */
-    @ApiModelProperty(value = "文档名称", position = 2)
-    @NotNull(message = "docName不能为空")
-    private String docName;
-
 }

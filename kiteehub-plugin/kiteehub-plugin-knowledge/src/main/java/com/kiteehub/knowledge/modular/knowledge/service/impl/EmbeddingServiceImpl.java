@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 向量数据库库接口
@@ -50,5 +51,10 @@ public class EmbeddingServiceImpl implements EmbeddingService {
         Vectorization vectorization = vectorizationFactory.getEmbedding();
         List<Double> queryVector = vectorization.singleVectorization(query);
         return queryVector;
+    }
+
+    @Override
+    public List<Map<String, Object>> getListByKId(String kid, String docId) {
+        return vectorStore.listByKId(kid, docId);
     }
 }

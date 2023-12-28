@@ -1,6 +1,7 @@
 package com.kiteehub.knowledge.modular.knowledge.service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 向量数据库库接口
@@ -17,4 +18,6 @@ public interface EmbeddingService {
     void removeByKid(String kid);
 
     List<Double> getQueryVector(String query);
+
+    List<Map<String,Object>> getListByKId(String kid, String docId);
 }

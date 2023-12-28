@@ -9,26 +9,16 @@
  * 4.分发源码时候，请注明软件出处 https://www.kiteehub.com
  * 5.本项目只可用于内部开发，如有问题可联系团队wilton.icp@gmail.com商议合作。
  */
-package com.kiteehub.knowledge.modular.attach.param;
+package com.kiteehub.knowledge.modular.attach.mapper;
 
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
-
-import javax.validation.constraints.NotNull;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachChunk;
 
 /**
- * 知识库附件Id参数
+ * 知识附件分片表Mapper接口
  *
  * @author Ranger
- * @date  2023/12/27 14:00
+ * @date  2023/12/28 14:52
  **/
-@Getter
-@Setter
-public class KnowledgeAttachIdParam {
-
-    /** ID */
-    @ApiModelProperty(value = "ID", required = true)
-    @NotNull(message = "id不能为空")
-    private Long id;
+public interface KnowledgeAttachChunkMapper extends BaseMapper<KnowledgeAttachChunk> {
 }
