@@ -170,7 +170,7 @@ const deleteKnowledgeAttach = (record) => {
 // 查看
 const examine = (record) => {
 	console.log(record, 'examine(record)')
-	detailsRef.value.onOpen()
+	detailsRef.value.onOpen(record)
 }
 // 批量删除
 const deleteBatchKnowledgeAttach = (params) => {
