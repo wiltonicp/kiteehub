@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * 知识库Id参数
@@ -30,5 +31,5 @@ public class KnowledgeIdParam {
     /** ID */
     @ApiModelProperty(value = "ID", required = true)
     @NotBlank(message = "id不能为空")
-    private Long id;
+    private String id;
 }

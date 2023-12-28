@@ -76,10 +76,10 @@ public interface KnowledgeService extends IService<Knowledge> {
      * @author Ranger
      * @date  2023/12/27 10:20
      **/
-    Knowledge queryEntity(Long id);
+    Knowledge queryEntity(String id);
 
 
-    void saveOne(KnowledgeSaveParam request, Long userId);
+    void saveOne(KnowledgeSaveParam request, String userId);
 
     void upload(KnowledgeUploadParam request);
 

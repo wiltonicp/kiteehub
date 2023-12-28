@@ -14,6 +14,8 @@ package com.kiteehub.knowledge.modular.attach.param;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -26,6 +28,11 @@ import java.util.Date;
 @Getter
 @Setter
 public class KnowledgeAttachChunkPageParam {
+
+    /** ID */
+    @ApiModelProperty(value = "ID", required = true)
+    @NotNull(message = "附件id不能为空")
+    private String id;
 
     /** 当前页 */
     @ApiModelProperty(value = "当前页码")

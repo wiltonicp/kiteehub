@@ -1,5 +1,7 @@
 package com.kiteehub.knowledge.chain.vectorstore;
 
+import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachChunk;
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +11,7 @@ import java.util.Map;
  */
 public interface VectorStore {
 
-    void storeEmbeddings(List<String> chunkList, List<List<Double>> vectorList, String kid, String docId, Boolean firstTime);
+    void storeEmbeddings(List<KnowledgeAttachChunk> attachChunkList, List<List<Double>> vectorList, String kid, String docId, Boolean firstTime);
     List<Map<String,Object>> listByKId(String kid, String docId);
     void removeByRowId(String kid,String docId,Long rowId);
     void removeByDocId(String kid,String docId);

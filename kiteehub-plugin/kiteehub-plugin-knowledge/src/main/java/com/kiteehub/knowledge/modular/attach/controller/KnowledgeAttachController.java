@@ -15,6 +15,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
+import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachChunk;
 import com.kiteehub.knowledge.modular.knowledge.param.KnowledgeUploadParam;
 import com.kiteehub.knowledge.modular.knowledge.service.KnowledgeService;
 import io.swagger.annotations.Api;
@@ -44,7 +45,7 @@ import java.util.Map;
  * 知识库附件控制器
  *
  * @author Ranger
- * @date  2023/12/27 14:00
+ * @date 2023/12/27 14:00
  */
 @Api(tags = "知识库附件控制器")
 @ApiSupport(author = "KITEEHUB_TEAM", order = 1)
@@ -61,7 +62,7 @@ public class KnowledgeAttachController {
      * 获取知识库附件分页
      *
      * @author Ranger
-     * @date  2023/12/27 14:00
+     * @date 2023/12/27 14:00
      */
     @ApiOperationSupport(order = 1)
     @ApiOperation("获取知识库附件分页")
@@ -73,6 +74,7 @@ public class KnowledgeAttachController {
 
     /**
      * 上传知识库附件
+     *
      * @param request
      * @return
      */
@@ -81,7 +83,7 @@ public class KnowledgeAttachController {
     @CommonLog("上传知识库附件")
     @SaCheckPermission("/knowledge/attach/add")
     @PostMapping(value = "/knowledge/attach/add")
-    public CommonResult<String> upload(@Valid KnowledgeUploadParam request){
+    public CommonResult<String> upload(@Valid KnowledgeUploadParam request) {
         knowledgeService.upload(request);
         return CommonResult.ok("上传知识库文件成功");
     }
@@ -90,7 +92,7 @@ public class KnowledgeAttachController {
      * 编辑知识库附件名称
      *
      * @author Ranger
-     * @date  2023/12/27 14:00
+     * @date 2023/12/27 14:00
      */
     @ApiOperationSupport(order = 3)
     @ApiOperation("编辑知识库附件名称")
@@ -106,7 +108,7 @@ public class KnowledgeAttachController {
      * 删除知识库附件
      *
      * @author Ranger
-     * @date  2023/12/27 14:00
+     * @date 2023/12/27 14:00
      */
     @ApiOperationSupport(order = 4)
     @ApiOperation("删除知识库附件")
@@ -114,7 +116,7 @@ public class KnowledgeAttachController {
     @SaCheckPermission("/knowledge/attach/delete")
     @PostMapping("/knowledge/attach/delete")
     public CommonResult<String> delete(@RequestBody @Valid @NotEmpty(message = "集合不能为空")
-                                                   CommonValidList<KnowledgeAttachIdParam> knowledgeAttachIdParamList) {
+                                       CommonValidList<KnowledgeAttachIdParam> knowledgeAttachIdParamList) {
         knowledgeAttachService.delete(knowledgeAttachIdParamList);
         return CommonResult.ok();
     }
@@ -123,13 +125,13 @@ public class KnowledgeAttachController {
      * 获取知识库附件详情
      *
      * @author Ranger
-     * @date  2023/12/27 14:00
+     * @date 2023/12/27 14:00
      */
     @ApiOperationSupport(order = 5)
     @ApiOperation("获取知识库附件详情")
     @SaCheckPermission("/knowledge/attach/detail")
     @GetMapping("/knowledge/attach/detail")
-    public CommonResult<List<Map<String, Object>>> detail(@Valid KnowledgeAttachIdParam knowledgeAttachIdParam) {
+    public CommonResult<KnowledgeAttach> detail(@Valid KnowledgeAttachIdParam knowledgeAttachIdParam) {
         return CommonResult.data(knowledgeAttachService.detail(knowledgeAttachIdParam));
     }
 }

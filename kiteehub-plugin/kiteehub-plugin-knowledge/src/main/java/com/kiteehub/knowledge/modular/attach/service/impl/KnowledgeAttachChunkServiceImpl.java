@@ -18,6 +18,9 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttach;
+import com.kiteehub.knowledge.modular.attach.service.KnowledgeAttachService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.kiteehub.common.enums.CommonSortOrderEnum;
@@ -40,17 +43,23 @@ import java.util.List;
  * @date  2023/12/28 14:52
  **/
 @Service
+@AllArgsConstructor
 public class KnowledgeAttachChunkServiceImpl extends ServiceImpl<KnowledgeAttachChunkMapper, KnowledgeAttachChunk> implements KnowledgeAttachChunkService {
+
+    private final KnowledgeAttachService knowledgeAttachService;
 
     @Override
     public Page<KnowledgeAttachChunk> page(KnowledgeAttachChunkPageParam knowledgeAttachChunkPageParam) {
+        KnowledgeAttach knowledgeAttach = knowledgeAttachService.queryEntity(knowledgeAttachChunkPageParam.getId());
         QueryWrapper<KnowledgeAttachChunk> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(KnowledgeAttachChunk::getKid,knowledgeAttach.getKid());
+        queryWrapper.lambda().eq(KnowledgeAttachChunk::getDocId,knowledgeAttach.getDocId());
         if(ObjectUtil.isAllNotEmpty(knowledgeAttachChunkPageParam.getSortField(), knowledgeAttachChunkPageParam.getSortOrder())) {
             CommonSortOrderEnum.validate(knowledgeAttachChunkPageParam.getSortOrder());
             queryWrapper.orderBy(true, knowledgeAttachChunkPageParam.getSortOrder().equals(CommonSortOrderEnum.ASC.getValue()),
                     StrUtil.toUnderlineCase(knowledgeAttachChunkPageParam.getSortField()));
         } else {
-            queryWrapper.lambda().orderByAsc(KnowledgeAttachChunk::getId);
+            queryWrapper.lambda().orderByAsc(KnowledgeAttachChunk::getRowId);
         }
         return this.page(CommonPageRequest.defaultPage(), queryWrapper);
     }

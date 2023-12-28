@@ -59,8 +59,8 @@ public class KnowledgeAttachChunkController {
      */
     @ApiOperationSupport(order = 1)
     @ApiOperation("获取知识附件分片表分页")
-    @SaCheckPermission("/knowledge/attach/page")
-    @GetMapping("/knowledge/attach/page")
+    @SaCheckPermission("/knowledge/attach-chunk/page")
+    @GetMapping("/knowledge/attach-chunk/page")
     public CommonResult<Page<KnowledgeAttachChunk>> page(KnowledgeAttachChunkPageParam knowledgeAttachChunkPageParam) {
         return CommonResult.data(knowledgeAttachChunkService.page(knowledgeAttachChunkPageParam));
     }
@@ -74,8 +74,8 @@ public class KnowledgeAttachChunkController {
     @ApiOperationSupport(order = 2)
     @ApiOperation("添加知识附件分片表")
     @CommonLog("添加知识附件分片表")
-    @SaCheckPermission("/knowledge/attach/add")
-    @PostMapping("/knowledge/attach/add")
+    @SaCheckPermission("/knowledge/attach-chunk/add")
+    @PostMapping("/knowledge/attach-chunk/add")
     public CommonResult<String> add(@RequestBody @Valid KnowledgeAttachChunkAddParam knowledgeAttachChunkAddParam) {
         knowledgeAttachChunkService.add(knowledgeAttachChunkAddParam);
         return CommonResult.ok();
@@ -90,8 +90,8 @@ public class KnowledgeAttachChunkController {
     @ApiOperationSupport(order = 3)
     @ApiOperation("编辑知识附件分片表")
     @CommonLog("编辑知识附件分片表")
-    @SaCheckPermission("/knowledge/attach/edit")
-    @PostMapping("/knowledge/attach/edit")
+    @SaCheckPermission("/knowledge/attach-chunk/edit")
+    @PostMapping("/knowledge/attach-chunk/edit")
     public CommonResult<String> edit(@RequestBody @Valid KnowledgeAttachChunkEditParam knowledgeAttachChunkEditParam) {
         knowledgeAttachChunkService.edit(knowledgeAttachChunkEditParam);
         return CommonResult.ok();
@@ -106,8 +106,8 @@ public class KnowledgeAttachChunkController {
     @ApiOperationSupport(order = 4)
     @ApiOperation("删除知识附件分片表")
     @CommonLog("删除知识附件分片表")
-    @SaCheckPermission("/knowledge/attach/delete")
-    @PostMapping("/knowledge/attach/delete")
+    @SaCheckPermission("/knowledge/attach-chunk/delete")
+    @PostMapping("/knowledge/attach-chunk/delete")
     public CommonResult<String> delete(@RequestBody @Valid @NotEmpty(message = "集合不能为空")
                                                    CommonValidList<KnowledgeAttachChunkIdParam> knowledgeAttachChunkIdParamList) {
         knowledgeAttachChunkService.delete(knowledgeAttachChunkIdParamList);
@@ -122,8 +122,8 @@ public class KnowledgeAttachChunkController {
      */
     @ApiOperationSupport(order = 5)
     @ApiOperation("获取知识附件分片表详情")
-    @SaCheckPermission("/knowledge/attach/detail")
-    @GetMapping("/knowledge/attach/detail")
+    @SaCheckPermission("/knowledge/attach-chunk/detail")
+    @GetMapping("/knowledge/attach-chunk/detail")
     public CommonResult<KnowledgeAttachChunk> detail(@Valid KnowledgeAttachChunkIdParam knowledgeAttachChunkIdParam) {
         return CommonResult.data(knowledgeAttachChunkService.detail(knowledgeAttachChunkIdParam));
     }

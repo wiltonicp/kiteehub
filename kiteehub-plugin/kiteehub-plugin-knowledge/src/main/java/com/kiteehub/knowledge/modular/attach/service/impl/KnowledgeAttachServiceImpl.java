@@ -41,7 +41,7 @@ import java.util.Map;
  * 知识库附件Service接口实现类
  *
  * @author Ranger
- * @date  2023/12/27 14:00
+ * @date 2023/12/27 14:00
  **/
 @Service
 @AllArgsConstructor
@@ -52,13 +52,13 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
     @Override
     public Page<KnowledgeAttach> page(KnowledgeAttachPageParam knowledgeAttachPageParam) {
         QueryWrapper<KnowledgeAttach> queryWrapper = new QueryWrapper<>();
-        if(ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getDocName())) {
+        if (ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getDocName())) {
             queryWrapper.lambda().like(KnowledgeAttach::getDocName, knowledgeAttachPageParam.getDocName());
         }
-        if(ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getGatherState())) {
+        if (ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getGatherState())) {
             queryWrapper.lambda().eq(KnowledgeAttach::getGatherState, knowledgeAttachPageParam.getGatherState());
         }
-        if(ObjectUtil.isAllNotEmpty(knowledgeAttachPageParam.getSortField(), knowledgeAttachPageParam.getSortOrder())) {
+        if (ObjectUtil.isAllNotEmpty(knowledgeAttachPageParam.getSortField(), knowledgeAttachPageParam.getSortOrder())) {
             CommonSortOrderEnum.validate(knowledgeAttachPageParam.getSortOrder());
             queryWrapper.orderBy(true, knowledgeAttachPageParam.getSortOrder().equals(CommonSortOrderEnum.ASC.getValue()),
                     StrUtil.toUnderlineCase(knowledgeAttachPageParam.getSortField()));
@@ -87,25 +87,24 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
     @Override
     public void delete(List<KnowledgeAttachIdParam> knowledgeAttachIdParamList) {
         List<KnowledgeAttach> knowledgeAttaches = this.listByIds(CollStreamUtil.toList(knowledgeAttachIdParamList, KnowledgeAttachIdParam::getId));
-        knowledgeAttaches.forEach(attache ->{
-            Map<String,Object> map = new HashMap<>();
-            map.put("kid",attache.getKid());
-            map.put("doc_id",attache.getDocId());
+        knowledgeAttaches.forEach(attache -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("kid", attache.getKid());
+            map.put("doc_id", attache.getDocId());
             this.removeByMap(map);
-            embeddingService.removeByDocId(attache.getKid(),attache.getDocId());
+            embeddingService.removeByDocId(attache.getKid(), attache.getDocId());
         });
     }
 
     @Override
-    public List<Map<String, Object>> detail(KnowledgeAttachIdParam knowledgeAttachIdParam) {
-        KnowledgeAttach knowledgeAttach = this.queryEntity(knowledgeAttachIdParam.getId());
-        return embeddingService.getListByKId(knowledgeAttach.getKid(), knowledgeAttach.getDocId());
+    public KnowledgeAttach detail(KnowledgeAttachIdParam knowledgeAttachIdParam) {
+        return this.queryEntity(knowledgeAttachIdParam.getId());
     }
 
     @Override
-    public KnowledgeAttach queryEntity(Long id) {
+    public KnowledgeAttach queryEntity(String id) {
         KnowledgeAttach knowledgeAttach = this.getById(id);
-        if(ObjectUtil.isEmpty(knowledgeAttach)) {
+        if (ObjectUtil.isEmpty(knowledgeAttach)) {
             throw new CommonException("知识库附件不存在，id值为：{}", id);
         }
         return knowledgeAttach;
