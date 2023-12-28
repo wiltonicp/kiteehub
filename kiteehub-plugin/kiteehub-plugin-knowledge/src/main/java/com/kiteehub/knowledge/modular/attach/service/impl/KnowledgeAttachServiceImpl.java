@@ -18,6 +18,8 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kiteehub.knowledge.modular.knowledge.service.EmbeddingService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.kiteehub.common.enums.CommonSortOrderEnum;
@@ -31,7 +33,9 @@ import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachIdParam;
 import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachPageParam;
 import com.kiteehub.knowledge.modular.attach.service.KnowledgeAttachService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 知识库附件Service接口实现类
@@ -40,7 +44,10 @@ import java.util.List;
  * @date  2023/12/27 14:00
  **/
 @Service
+@AllArgsConstructor
 public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMapper, KnowledgeAttach> implements KnowledgeAttachService {
+
+    private final EmbeddingService embeddingService;
 
     @Override
     public Page<KnowledgeAttach> page(KnowledgeAttachPageParam knowledgeAttachPageParam) {
@@ -79,13 +86,20 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(List<KnowledgeAttachIdParam> knowledgeAttachIdParamList) {
-        // 执行删除
-        this.removeByIds(CollStreamUtil.toList(knowledgeAttachIdParamList, KnowledgeAttachIdParam::getId));
+        List<KnowledgeAttach> knowledgeAttaches = this.listByIds(CollStreamUtil.toList(knowledgeAttachIdParamList, KnowledgeAttachIdParam::getId));
+        knowledgeAttaches.forEach(attache ->{
+            Map<String,Object> map = new HashMap<>();
+            map.put("kid",attache.getKid());
+            map.put("doc_id",attache.getDocId());
+            this.removeByMap(map);
+            embeddingService.removeByDocId(attache.getKid(),attache.getDocId());
+        });
     }
 
     @Override
-    public KnowledgeAttach detail(KnowledgeAttachIdParam knowledgeAttachIdParam) {
-        return this.queryEntity(knowledgeAttachIdParam.getId());
+    public List<Map<String, Object>> detail(KnowledgeAttachIdParam knowledgeAttachIdParam) {
+        KnowledgeAttach knowledgeAttach = this.queryEntity(knowledgeAttachIdParam.getId());
+        return embeddingService.getListByKId(knowledgeAttach.getKid(), knowledgeAttach.getDocId());
     }
 
     @Override

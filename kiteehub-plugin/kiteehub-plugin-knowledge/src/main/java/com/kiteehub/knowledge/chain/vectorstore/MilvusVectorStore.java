@@ -1,12 +1,13 @@
 package com.kiteehub.knowledge.chain.vectorstore;
 
+import com.alibaba.fastjson.JSON;
+import com.google.protobuf.ProtocolStringList;
 import io.milvus.client.MilvusServiceClient;
 import io.milvus.grpc.DataType;
+import io.milvus.grpc.MutationResult;
 import io.milvus.grpc.SearchResults;
-import io.milvus.param.ConnectParam;
-import io.milvus.param.IndexType;
-import io.milvus.param.MetricType;
-import io.milvus.param.R;
+import io.milvus.grpc.ShowPartitionsResponse;
+import io.milvus.param.*;
 import io.milvus.param.collection.CreateCollectionParam;
 import io.milvus.param.collection.DropCollectionParam;
 import io.milvus.param.collection.FieldType;
@@ -14,8 +15,10 @@ import io.milvus.param.collection.LoadCollectionParam;
 import io.milvus.param.dml.DeleteParam;
 import io.milvus.param.dml.InsertParam;
 import io.milvus.param.dml.SearchParam;
+import io.milvus.param.highlevel.dml.SearchSimpleParam;
 import io.milvus.param.index.CreateIndexParam;
 import io.milvus.param.partition.CreatePartitionParam;
+import io.milvus.param.partition.ShowPartitionsParam;
 import io.milvus.response.QueryResultsWrapper;
 import io.milvus.response.SearchResultsWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -23,17 +26,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
- *
  * Created by Ranger on 2023/11/21.
  */
 @Slf4j
 @Service
-public class MilvusVectorStore implements VectorStore{
+public class MilvusVectorStore implements VectorStore {
 
     @Value("${chain.vector.milvus.host}")
     private String host;
@@ -49,7 +49,7 @@ public class MilvusVectorStore implements VectorStore{
     private MilvusServiceClient milvusServiceClient;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         milvusServiceClient = new MilvusServiceClient(
                 ConnectParam.newBuilder()
                         .withHost(host)
@@ -68,7 +68,7 @@ public class MilvusVectorStore implements VectorStore{
                 .withName("row_id")
                 .withDataType(DataType.Int64)
                 .withPrimaryKey(true)
-                .withAutoID(true)
+                .withAutoID(false)
                 .build();
         FieldType contentField = FieldType.newBuilder()
                 .withName("content")
@@ -158,31 +158,71 @@ public class MilvusVectorStore implements VectorStore{
         milvusServiceClient.loadCollection(LoadCollectionParam.newBuilder().withCollectionName(collectionName + kid).build());
     }
 
+    @Override
+    public List<Map<String, Object>> listByKId(String kid, String docId) {
+        List<List<Float>> vector = new ArrayList<>();
+        SearchParam searchParam = SearchParam.newBuilder()
+                .withCollectionName(collectionName + kid)
+                .withVectors(vector)
+                .withTopK(100).build();
+        R<SearchResults> respSearch = milvusServiceClient.search(searchParam);
+        SearchResultsWrapper wrapperSearch = new SearchResultsWrapper(respSearch.getData().getResults());
+        List<QueryResultsWrapper.RowRecord> rowRecords = wrapperSearch.getRowRecords();
 
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        if (resultList != null && resultList.size() > 0) {
+            for (int i = 0; i < rowRecords.size(); i++) {
+                String rowId = rowRecords.get(i).get("row_id").toString();
+                String content = rowRecords.get(i).get("content").toString();
+                String fv = rowRecords.get(i).get("fv").toString();
+                Map<String, Object> objectHashMap = new HashMap<>();
+                objectHashMap.put("rowId", rowId);
+                objectHashMap.put("content", content);
+                objectHashMap.put("fv", fv);
+                resultList.add(objectHashMap);
+            }
+        }
+        log.info("分区下的所有数据:{}", JSON.toJSONString(resultList));
+        return resultList;
+    }
+
+    @Override
+    public void removeByRowId(String kid, String docId, Long rowId) {
+        R<MutationResult> response = milvusServiceClient.delete(
+                DeleteParam.newBuilder()
+                        .withCollectionName(collectionName + kid)
+                        .withPartitionName(docId)
+                        .withExpr("row == " + rowId)
+                        .build()
+        );
+        log.info("removeByDocId------------->{}", response);
+    }
 
     @Override
     public void removeByDocId(String kid, String docId) {
-        milvusServiceClient.delete(
+        R<MutationResult> response = milvusServiceClient.delete(
                 DeleteParam.newBuilder()
                         .withCollectionName(collectionName + kid)
-                        .withExpr("1 == 1")
                         .withPartitionName(docId)
+                        .withExpr("1 == 1")
                         .build()
         );
+        log.info("removeByDocId------------->{}", response);
     }
 
     @Override
     public void removeByKid(String kid) {
-        milvusServiceClient.dropCollection(
+        R<RpcStatus> response = milvusServiceClient.dropCollection(
                 DropCollectionParam.newBuilder()
                         .withCollectionName(collectionName + kid)
                         .build()
         );
+        log.info("removeByKid------------->{}", response);
     }
 
     @Override
     public List<String> nearest(List<Double> queryVector, String kid) {
-        List<String> search_output_fields = Arrays.asList("content","fv");
+        List<String> search_output_fields = Arrays.asList("content", "fv");
         List<Float> fv = new ArrayList<>();
         for (int i = 0; i < queryVector.size(); i++) {
             fv.add(queryVector.get(i).floatValue());
@@ -204,7 +244,7 @@ public class MilvusVectorStore implements VectorStore{
         List<QueryResultsWrapper.RowRecord> rowRecords = wrapperSearch.getRowRecords();
 
         List<String> resultList = new ArrayList<>();
-        if (resultList!=null && resultList.size() > 0){
+        if (resultList != null && resultList.size() > 0) {
             for (int i = 0; i < rowRecords.size(); i++) {
                 String content = rowRecords.get(i).get("content").toString();
                 resultList.add(content);
@@ -215,6 +255,7 @@ public class MilvusVectorStore implements VectorStore{
 
     /**
      * milvus 不支持通过文本检索相似性
+     *
      * @param query
      * @param kid
      * @return

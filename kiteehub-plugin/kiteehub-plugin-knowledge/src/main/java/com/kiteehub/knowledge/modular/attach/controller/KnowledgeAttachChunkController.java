@@ -15,8 +15,6 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
-import com.kiteehub.knowledge.modular.knowledge.param.KnowledgeUploadParam;
-import com.kiteehub.knowledge.modular.knowledge.service.KnowledgeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
@@ -27,109 +25,106 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kiteehub.common.annotation.CommonLog;
 import com.kiteehub.common.pojo.CommonResult;
 import com.kiteehub.common.pojo.CommonValidList;
-import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttach;
-import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachAddParam;
-import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachEditParam;
-import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachIdParam;
-import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachPageParam;
-import com.kiteehub.knowledge.modular.attach.service.KnowledgeAttachService;
+import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachChunk;
+import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachChunkAddParam;
+import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachChunkEditParam;
+import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachChunkIdParam;
+import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachChunkPageParam;
+import com.kiteehub.knowledge.modular.attach.service.KnowledgeAttachChunkService;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-import java.util.List;
-import java.util.Map;
 
 /**
- * 知识库附件控制器
+ * 知识附件分片表控制器
  *
  * @author Ranger
- * @date  2023/12/27 14:00
+ * @date  2023/12/28 14:52
  */
-@Api(tags = "知识库附件控制器")
+@Api(tags = "知识附件分片表控制器")
 @ApiSupport(author = "KITEEHUB_TEAM", order = 1)
 @RestController
 @Validated
-public class KnowledgeAttachController {
+public class KnowledgeAttachChunkController {
 
     @Resource
-    private KnowledgeAttachService knowledgeAttachService;
-    @Resource
-    private KnowledgeService knowledgeService;
+    private KnowledgeAttachChunkService knowledgeAttachChunkService;
 
     /**
-     * 获取知识库附件分页
+     * 获取知识附件分片表分页
      *
      * @author Ranger
-     * @date  2023/12/27 14:00
+     * @date  2023/12/28 14:52
      */
     @ApiOperationSupport(order = 1)
-    @ApiOperation("获取知识库附件分页")
+    @ApiOperation("获取知识附件分片表分页")
     @SaCheckPermission("/knowledge/attach/page")
     @GetMapping("/knowledge/attach/page")
-    public CommonResult<Page<KnowledgeAttach>> page(KnowledgeAttachPageParam knowledgeAttachPageParam) {
-        return CommonResult.data(knowledgeAttachService.page(knowledgeAttachPageParam));
+    public CommonResult<Page<KnowledgeAttachChunk>> page(KnowledgeAttachChunkPageParam knowledgeAttachChunkPageParam) {
+        return CommonResult.data(knowledgeAttachChunkService.page(knowledgeAttachChunkPageParam));
     }
 
     /**
-     * 上传知识库附件
-     * @param request
-     * @return
-     */
-    @ApiOperationSupport(order = 2)
-    @ApiOperation("上传知识库附件")
-    @CommonLog("上传知识库附件")
-    @SaCheckPermission("/knowledge/attach/add")
-    @PostMapping(value = "/knowledge/attach/add")
-    public CommonResult<String> upload(@Valid KnowledgeUploadParam request){
-        knowledgeService.upload(request);
-        return CommonResult.ok("上传知识库文件成功");
-    }
-
-    /**
-     * 编辑知识库附件名称
+     * 添加知识附件分片表
      *
      * @author Ranger
-     * @date  2023/12/27 14:00
+     * @date  2023/12/28 14:52
      */
-    @ApiOperationSupport(order = 3)
-    @ApiOperation("编辑知识库附件名称")
-    @CommonLog("编辑知识库附件名称")
-    @SaCheckPermission("/knowledge/attach/edit")
-    @PostMapping("/knowledge/attach/edit")
-    public CommonResult<String> edit(@RequestBody @Valid KnowledgeAttachEditParam knowledgeAttachEditParam) {
-        knowledgeAttachService.edit(knowledgeAttachEditParam);
+    @ApiOperationSupport(order = 2)
+    @ApiOperation("添加知识附件分片表")
+    @CommonLog("添加知识附件分片表")
+    @SaCheckPermission("/knowledge/attach/add")
+    @PostMapping("/knowledge/attach/add")
+    public CommonResult<String> add(@RequestBody @Valid KnowledgeAttachChunkAddParam knowledgeAttachChunkAddParam) {
+        knowledgeAttachChunkService.add(knowledgeAttachChunkAddParam);
         return CommonResult.ok();
     }
 
     /**
-     * 删除知识库附件
+     * 编辑知识附件分片表
      *
      * @author Ranger
-     * @date  2023/12/27 14:00
+     * @date  2023/12/28 14:52
+     */
+    @ApiOperationSupport(order = 3)
+    @ApiOperation("编辑知识附件分片表")
+    @CommonLog("编辑知识附件分片表")
+    @SaCheckPermission("/knowledge/attach/edit")
+    @PostMapping("/knowledge/attach/edit")
+    public CommonResult<String> edit(@RequestBody @Valid KnowledgeAttachChunkEditParam knowledgeAttachChunkEditParam) {
+        knowledgeAttachChunkService.edit(knowledgeAttachChunkEditParam);
+        return CommonResult.ok();
+    }
+
+    /**
+     * 删除知识附件分片表
+     *
+     * @author Ranger
+     * @date  2023/12/28 14:52
      */
     @ApiOperationSupport(order = 4)
-    @ApiOperation("删除知识库附件")
-    @CommonLog("删除知识库附件")
+    @ApiOperation("删除知识附件分片表")
+    @CommonLog("删除知识附件分片表")
     @SaCheckPermission("/knowledge/attach/delete")
     @PostMapping("/knowledge/attach/delete")
     public CommonResult<String> delete(@RequestBody @Valid @NotEmpty(message = "集合不能为空")
-                                                   CommonValidList<KnowledgeAttachIdParam> knowledgeAttachIdParamList) {
-        knowledgeAttachService.delete(knowledgeAttachIdParamList);
+                                                   CommonValidList<KnowledgeAttachChunkIdParam> knowledgeAttachChunkIdParamList) {
+        knowledgeAttachChunkService.delete(knowledgeAttachChunkIdParamList);
         return CommonResult.ok();
     }
 
     /**
-     * 获取知识库附件详情
+     * 获取知识附件分片表详情
      *
      * @author Ranger
-     * @date  2023/12/27 14:00
+     * @date  2023/12/28 14:52
      */
     @ApiOperationSupport(order = 5)
-    @ApiOperation("获取知识库附件详情")
+    @ApiOperation("获取知识附件分片表详情")
     @SaCheckPermission("/knowledge/attach/detail")
     @GetMapping("/knowledge/attach/detail")
-    public CommonResult<List<Map<String, Object>>> detail(@Valid KnowledgeAttachIdParam knowledgeAttachIdParam) {
-        return CommonResult.data(knowledgeAttachService.detail(knowledgeAttachIdParam));
+    public CommonResult<KnowledgeAttachChunk> detail(@Valid KnowledgeAttachChunkIdParam knowledgeAttachChunkIdParam) {
+        return CommonResult.data(knowledgeAttachChunkService.detail(knowledgeAttachChunkIdParam));
     }
 }

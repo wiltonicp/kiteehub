@@ -154,11 +154,8 @@
                     <!-- install阶段上传镜像 -->
                     <pushImage>true</pushImage>
                     <!-- 远程仓库地址 -->
-                    <!--                        <registryUrl>${docker.registry}</registryUrl>-->
                     <dockerDirectory>src/main/docker</dockerDirectory>
-                    <!--                    <dockerHost>http://192.168.1.169:2375</dockerHost>-->
                     <imageName>kitee-knowledge</imageName>
-                    <!--                    <imageName>${docker.registry}/${project.artifactId}:${project.version}</imageName>-->
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>
