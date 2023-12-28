@@ -4,7 +4,7 @@
 		:width="1200"
 		:visible="visible"
 		:destroy-on-close="true"
-		@close="onClose"
+		@close="formData.id ? onClose() : addOnClose()"
 	>
 		<!-- 新增 -->
 		<div class="card-container" v-if="!formData.id">
@@ -114,6 +114,10 @@ const onOpen = (record) => {
 const onClose = () => {
 	formRef.value.resetFields()
 	formData.value = {}
+	visible.value = false
+}
+// 新增导入关闭抽屉
+const addOnClose = () => {
 	visible.value = false
 }
 // 默认要校验的
