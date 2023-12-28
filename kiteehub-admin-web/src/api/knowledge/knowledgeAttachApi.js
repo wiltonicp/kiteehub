@@ -2,6 +2,9 @@ import { baseRequest } from '@/utils/request'
 
 const request = (url, ...arg) => baseRequest(`/knowledge/attach/` + url, ...arg)
 
+
+const requestSelf = (url, ...arg) => baseRequest(`/knowledge/attach-chunk/` + url, ...arg)
+
 /**
  * 知识库附件Api接口管理器
  *
@@ -28,5 +31,10 @@ export default {
 	// 获取知识库附件详情
 	knowledgeAttachDetail(data) {
 		return request('detail', data, 'get')
-	}
+	},
+	
+	// 获取知识库附件分页
+	knowledAttachChunk(data) {
+		return requestSelf('page', data, 'get')
+	},
 }
