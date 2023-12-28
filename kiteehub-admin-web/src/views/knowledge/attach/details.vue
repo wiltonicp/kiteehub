@@ -1,28 +1,35 @@
 <template>
-	<xn-form-container :title="record.docName" :width="1400" :visible="visible" :destroy-on-close="true" @close="onClose">
+	<xn-form-container :title="record.docName" :width="900" :visible="visible" :destroy-on-close="true" @close="onClose">
+		<a-alert :message="`分段预览：（${totalVal}组）`" type="success" show-icon style="margin: 10px 0;">
+			<template #icon><smile-outlined /></template>
+		</a-alert>
 		<div style="background-color: #ececec5f; padding: 10px">
 			<a-row :gutter="[16, 16]">
 				<a-col :span="8" v-for="(item, index) in recordsList" :key="index">
-					<a-card title="Card title" :bordered="false">
+					<a-card :title="item.id" :bordered="false">
 						<template #extra
 							><a href="#"
 								><a-tag color="blue">{{ index }}#</a-tag></a
 							></template
 						>
 
-						<p class="chunk">card content</p>
+						<p class="chunk">{{ item.content }}</p>
 					</a-card>
 				</a-col>
 			</a-row>
 		</div>
 
-		<a-pagination
-			v-model:current="current"
-			v-model:pageSize="pageSize"
-			show-size-changer
-			:total="totalVal"
-			@showSizeChange="onShowSizeChange"
-		/>
+		<template #footer>
+			<div class="pagination">
+				<a-pagination
+					v-model:current="current"
+					v-model:pageSize="size"
+					show-size-changer
+					:total="totalVal"
+					@showSizeChange="onShowSizeChange"
+				/>
+			</div>
+		</template>
 	</xn-form-container>
 </template>
 
@@ -31,7 +38,7 @@ import tool from '@/utils/tool'
 import { cloneDeep } from 'lodash-es'
 import { required } from '@/utils/formRules'
 import knowledgeAttachApi from '@/api/knowledge/knowledgeAttachApi'
-const pageSize = ref(10)
+const size = ref(10)
 const current = ref(1)
 const totalVal = ref(0)
 const recordsList = ref([])
@@ -39,13 +46,13 @@ let dataObj = reactive({
 	record: {}
 })
 
-const onShowSizeChange = (current, pageSize) => {
-	console.log(current, pageSize)
-	pageSize.value = pageSize
-	current.value = current
+const onShowSizeChange = (currentVal, pageSize) => {
+	console.log(currentVal, pageSize)
+	size.value = pageSize
+	current.value = currentVal
 }
-watch(pageSize, () => {
-	console.log('pageSize', pageSize.value)
+watch(size, () => {
+	console.log('size', size.value)
 	knowledAttachChunk()
 })
 watch(current, () => {
@@ -76,17 +83,12 @@ const knowledAttachChunk = async () => {
 	let parame = {
 		id: dataObj.record.id,
 		current: current.value,
-		size: pageSize.value
+		size: size.value
 	}
-	console.log('parame', parame)
-	let {
-        total,
-        records
-    } = await knowledgeAttachApi.knowledAttachChunk(parame)
-    console.log('records', records)
+	let { total, records } = await knowledgeAttachApi.knowledAttachChunk(parame)
+	console.log('records', records)
 	totalVal.value = total
 	recordsList.value = records
-
 }
 
 const { record } = toRefs(dataObj)
@@ -99,8 +101,25 @@ defineExpose({
 
 <style  scoped>
 .chunk {
-	height: 120px;
+	height: 130px;
 	overflow: auto;
+}
+*::-webkit-scrollbar {
+	/*滚动条整体样式*/
+	width: 6px; /*高宽分别对应横竖滚动条的尺寸*/
+	height: 1px;
+}
+*::-webkit-scrollbar-thumb {
+	/*滚动条里面深色条*/
+	border-radius: 10px;
+	box-shadow: inset 0 0 5px rgba(236, 236, 236, 0.1);
+	background: #ccc;
+}
+*::-webkit-scrollbar-track {
+	/*滚动条里面轨道*/
+	box-shadow: inset 0 0 5px rgba(236, 236, 236, 0.1);
+	border-radius: 10px;
+	background: #ededed;
 }
 </style>
 

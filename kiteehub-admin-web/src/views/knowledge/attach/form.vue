@@ -14,7 +14,9 @@
 						v-model:fileList="fileList"
 						name="file"
 						:multiple="true"
-						action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+						action="http://111.229.203.199:8299/knowledge/attach/add"
+						:headers="headers"
+						:data="{ kid: '5k6ithwioi' }"
 						@change="handleChange"
 						@drop="handleDrop"
 					>
@@ -86,11 +88,14 @@
 import tool from '@/utils/tool'
 import { cloneDeep } from 'lodash-es'
 import { required } from '@/utils/formRules'
+import sysConfig from '@/config/index'
+import { message } from 'ant-design-vue';
 import knowledgeAttachApi from '@/api/knowledge/knowledgeAttachApi'
+
 // 抽屉状态
 const visible = ref(false)
 const emit = defineEmits({ successful: null })
-
+const headers = ref({})
 const activeKey = ref('1')
 const fileList = ref([])
 const url = ref('http://')
@@ -100,6 +105,13 @@ const formRef = ref()
 const formData = ref({})
 const submitLoading = ref(false)
 const gatherStateOptions = ref([])
+
+onMounted(() => {
+	console.log('123123')
+	const token = tool.data.get('TOKEN')
+	headers.value[sysConfig.TOKEN_NAME] = sysConfig.TOKEN_PREFIX + token
+	console.log(headers.value, '111')
+})
 
 // 打开抽屉
 const onOpen = (record) => {
@@ -141,6 +153,7 @@ const onSubmit = () => {
 // 上传
 const handleChange = (info) => {
 	const status = info.file.status
+	console.log(info, '123')
 	if (status !== 'uploading') {
 		console.log(info.file, info.fileList)
 	}
