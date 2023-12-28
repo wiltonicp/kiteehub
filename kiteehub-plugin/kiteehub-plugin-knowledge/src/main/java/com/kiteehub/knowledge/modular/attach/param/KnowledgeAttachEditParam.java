@@ -33,7 +33,7 @@ public class KnowledgeAttachEditParam {
     /** ID */
     @ApiModelProperty(value = "ID", required = true, position = 1)
     @NotNull(message = "id不能为空")
-    private Long id;
+    private String id;
 
     /** 文档名称 */
     @ApiModelProperty(value = "文档名称", position = 2)

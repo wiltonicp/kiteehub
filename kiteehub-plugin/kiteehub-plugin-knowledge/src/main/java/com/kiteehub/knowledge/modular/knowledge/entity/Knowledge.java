@@ -33,7 +33,7 @@ public class Knowledge extends CommonEntity {
     /** ID */
     @TableId
     @ApiModelProperty(value = "ID", position = 1)
-    private Long id;
+    private String id;
 
     /** ID */
     @ApiModelProperty(value = "ID", position = 2)
@@ -41,7 +41,7 @@ public class Knowledge extends CommonEntity {
 
     /** 用户ID */
     @ApiModelProperty(value = "用户ID", position = 3)
-    private Long uid;
+    private String uid;
 
     /** 名称 */
     @ApiModelProperty(value = "名称", position = 4)

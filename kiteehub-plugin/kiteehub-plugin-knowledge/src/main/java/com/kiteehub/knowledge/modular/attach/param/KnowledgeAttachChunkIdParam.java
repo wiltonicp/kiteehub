@@ -30,5 +30,5 @@ public class KnowledgeAttachChunkIdParam {
     /** 主键 */
     @ApiModelProperty(value = "主键", required = true)
     @NotBlank(message = "id不能为空")
-    private Long id;
+    private String id;
 }

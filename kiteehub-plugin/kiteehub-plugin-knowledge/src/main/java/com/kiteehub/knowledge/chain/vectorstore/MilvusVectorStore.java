@@ -2,6 +2,7 @@ package com.kiteehub.knowledge.chain.vectorstore;
 
 import com.alibaba.fastjson.JSON;
 import com.google.protobuf.ProtocolStringList;
+import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachChunk;
 import io.milvus.client.MilvusServiceClient;
 import io.milvus.grpc.DataType;
 import io.milvus.grpc.MutationResult;
@@ -118,7 +119,7 @@ public class MilvusVectorStore implements VectorStore {
     }
 
     @Override
-    public void storeEmbeddings(List<String> chunkList, List<List<Double>> vectorList, String kid, String docId, Boolean firstTime) {
+    public void storeEmbeddings(List<KnowledgeAttachChunk> attachChunkList, List<List<Double>> vectorList, String kid, String docId, Boolean firstTime) {
         if (firstTime) {
             createSchema(kid);
         }
@@ -131,18 +132,23 @@ public class MilvusVectorStore implements VectorStore {
         List<List<Float>> vectorFloatList = new ArrayList<>();
         List<String> kidList = new ArrayList<>();
         List<String> docIdList = new ArrayList<>();
-        for (int i = 0; i < chunkList.size(); i++) {
+        List<String> chunkList = new ArrayList<>();
+        List<Long> rowIds = new ArrayList<>();
+        for (int i = 0; i < attachChunkList.size(); i++) {
             List<Double> vector = vectorList.get(i);
             List<Float> vfList = new ArrayList<>();
             for (int j = 0; j < vector.size(); j++) {
                 Double value = vector.get(j);
                 vfList.add(value.floatValue());
             }
+            rowIds.add(attachChunkList.get(i).getRowId());
+            chunkList.add(attachChunkList.get(i).getContent());
             vectorFloatList.add(vfList);
             kidList.add(kid);
             docIdList.add(docId);
         }
         List<InsertParam.Field> fields = new ArrayList<>();
+        fields.add(new InsertParam.Field("row_id", rowIds));
         fields.add(new InsertParam.Field("content", chunkList));
         fields.add(new InsertParam.Field("kid", kidList));
         fields.add(new InsertParam.Field("docId", docIdList));

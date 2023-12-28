@@ -33,7 +33,7 @@ public class KnowledgeAttach extends CommonEntity {
     /** ID */
     @TableId
     @ApiModelProperty(value = "ID", position = 1)
-    private Long id;
+    private String id;
 
     /** 知识库ID */
     @ApiModelProperty(value = "知识库ID", position = 2)

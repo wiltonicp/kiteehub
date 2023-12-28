@@ -33,7 +33,7 @@ public class KnowledgeAttachChunkEditParam {
     /** 主键 */
     @ApiModelProperty(value = "主键", required = true, position = 1)
     @NotNull(message = "id不能为空")
-    private Long id;
+    private String id;
 
     /** 知识库ID */
     @ApiModelProperty(value = "知识库ID", position = 2)

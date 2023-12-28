@@ -12,6 +12,7 @@
 package com.kiteehub.knowledge.modular.attach.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.kiteehub.common.pojo.CommonEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,17 +23,17 @@ import java.util.Date;
  * 知识附件分片表实体
  *
  * @author Ranger
- * @date  2023/12/28 14:52
+ * @date  2023/12/28
  **/
 @Getter
 @Setter
 @TableName("knowledge_attach_chunk")
-public class KnowledgeAttachChunk {
+public class KnowledgeAttachChunk extends CommonEntity {
 
     /** 主键 */
     @TableId
     @ApiModelProperty(value = "主键", position = 1)
-    private Long id;
+    private String id;
 
     /** 知识库ID */
     @ApiModelProperty(value = "知识库ID", position = 2)
@@ -49,30 +50,4 @@ public class KnowledgeAttachChunk {
     /** 切片文章内容 */
     @ApiModelProperty(value = "切片文章内容", position = 5)
     private String content;
-
-    /** 删除标志 */
-    @ApiModelProperty(value = "删除标志", position = 6)
-    @TableLogic
-    @TableField(fill = FieldFill.INSERT)
-    private String deleteFlag;
-
-    /** 创建时间 */
-    @ApiModelProperty(value = "创建时间", position = 7)
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-
-    /** 创建用户 */
-    @ApiModelProperty(value = "创建用户", position = 8)
-    @TableField(fill = FieldFill.INSERT)
-    private String createUser;
-
-    /** 修改时间 */
-    @ApiModelProperty(value = "修改时间", position = 9)
-    @TableField(fill = FieldFill.UPDATE)
-    private Date updateTime;
-
-    /** 修改用户 */
-    @ApiModelProperty(value = "修改用户", position = 10)
-    @TableField(fill = FieldFill.UPDATE)
-    private String updateUser;
 }

@@ -1,5 +1,8 @@
 package com.kiteehub.knowledge.modular.knowledge.service;
 
+import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachChunk;
+import org.springframework.scheduling.annotation.Async;
+
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +14,7 @@ import java.util.Map;
  **/
 public interface EmbeddingService {
 
-    void storeEmbeddings(List<String> chunkList, String kid, String docId,Boolean firstTime);
+    void storeEmbeddings(List<KnowledgeAttachChunk> attachChunkList, String kid, String docId, Boolean firstTime);
 
     void removeByDocId(String kid,String docId);
 

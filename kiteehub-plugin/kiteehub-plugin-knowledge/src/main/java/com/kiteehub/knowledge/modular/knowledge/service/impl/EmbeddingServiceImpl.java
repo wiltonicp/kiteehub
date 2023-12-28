@@ -3,12 +3,15 @@ package com.kiteehub.knowledge.modular.knowledge.service.impl;
 import com.kiteehub.knowledge.chain.vectorizer.Vectorization;
 import com.kiteehub.knowledge.chain.vectorizer.VectorizationFactory;
 import com.kiteehub.knowledge.chain.vectorstore.VectorStore;
+import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachChunk;
 import com.kiteehub.knowledge.modular.knowledge.service.EmbeddingService;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 向量数据库库接口
@@ -25,15 +28,15 @@ public class EmbeddingServiceImpl implements EmbeddingService {
 
     /**
      * 保存向量数据库
-     * @param chunkList         文档按行切分的片段
+     * @param attachChunkList   文档按行切分的片段
      * @param kid               知识库ID
      * @param docId             文档ID
      */
     @Override
-    public void storeEmbeddings(List<String> chunkList, String kid, String docId, Boolean firstTime) {
+    public void storeEmbeddings(List<KnowledgeAttachChunk> attachChunkList, String kid, String docId, Boolean firstTime) {
         Vectorization vectorization = vectorizationFactory.getEmbedding();
-        List<List<Double>> vectorList = vectorization.batchVectorization(chunkList);
-        vectorStore.storeEmbeddings(chunkList,vectorList,kid,docId,firstTime);
+        List<List<Double>> vectorList = vectorization.batchVectorization(attachChunkList.stream().map(KnowledgeAttachChunk::getContent).collect(Collectors.toList()));
+        vectorStore.storeEmbeddings(attachChunkList,vectorList,kid,docId,firstTime);
     }
 
     @Override

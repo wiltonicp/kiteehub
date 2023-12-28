@@ -12,9 +12,11 @@
 package com.kiteehub.knowledge.modular.knowledge.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
+import com.kiteehub.knowledge.modular.knowledge.param.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
@@ -26,10 +28,6 @@ import com.kiteehub.common.annotation.CommonLog;
 import com.kiteehub.common.pojo.CommonResult;
 import com.kiteehub.common.pojo.CommonValidList;
 import com.kiteehub.knowledge.modular.knowledge.entity.Knowledge;
-import com.kiteehub.knowledge.modular.knowledge.param.KnowledgeAddParam;
-import com.kiteehub.knowledge.modular.knowledge.param.KnowledgeEditParam;
-import com.kiteehub.knowledge.modular.knowledge.param.KnowledgeIdParam;
-import com.kiteehub.knowledge.modular.knowledge.param.KnowledgePageParam;
 import com.kiteehub.knowledge.modular.knowledge.service.KnowledgeService;
 
 import javax.annotation.Resource;
@@ -76,8 +74,8 @@ public class KnowledgeController {
     @CommonLog("添加知识库")
     @SaCheckPermission("/knowledge/knowledge/add")
     @PostMapping("/knowledge/knowledge/add")
-    public CommonResult<String> add(@RequestBody @Valid KnowledgeAddParam knowledgeAddParam) {
-        knowledgeService.add(knowledgeAddParam);
+    public CommonResult<String> add(@Valid KnowledgeSaveParam request) {
+        knowledgeService.saveOne(request, StpUtil.getLoginIdAsString());
         return CommonResult.ok();
     }
 
