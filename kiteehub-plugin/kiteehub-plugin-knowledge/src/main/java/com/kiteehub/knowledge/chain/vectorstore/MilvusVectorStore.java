@@ -16,9 +16,13 @@ import io.milvus.param.collection.LoadCollectionParam;
 import io.milvus.param.dml.DeleteParam;
 import io.milvus.param.dml.InsertParam;
 import io.milvus.param.dml.SearchParam;
+import io.milvus.param.highlevel.dml.DeleteIdsParam;
 import io.milvus.param.highlevel.dml.SearchSimpleParam;
+import io.milvus.param.highlevel.dml.response.DeleteResponse;
 import io.milvus.param.index.CreateIndexParam;
 import io.milvus.param.partition.CreatePartitionParam;
+import io.milvus.param.partition.DropPartitionParam;
+import io.milvus.param.partition.ReleasePartitionsParam;
 import io.milvus.param.partition.ShowPartitionsParam;
 import io.milvus.response.QueryResultsWrapper;
 import io.milvus.response.SearchResultsWrapper;
@@ -194,23 +198,28 @@ public class MilvusVectorStore implements VectorStore {
 
     @Override
     public void removeByRowId(String kid, String docId, Long rowId) {
-        R<MutationResult> response = milvusServiceClient.delete(
-                DeleteParam.newBuilder()
-                        .withCollectionName(collectionName + kid)
-                        .withPartitionName(docId)
-                        .withExpr("row_id == " + rowId)
-                        .build()
-        );
+        R<DeleteResponse> response = milvusServiceClient.delete(
+                DeleteIdsParam.newBuilder()
+                .withCollectionName(collectionName + kid)
+                .withPrimaryIds(Collections.singletonList(rowId))
+                .build());
         log.info("removeByDocId------------->{}", response);
     }
 
     @Override
     public void removeByDocId(String kid, String docId) {
-        R<MutationResult> response = milvusServiceClient.delete(
-                DeleteParam.newBuilder()
+        /*释放分区*/
+        milvusServiceClient.releasePartitions(
+                ReleasePartitionsParam.newBuilder()
+                        .withCollectionName(collectionName + kid)
+                        .withPartitionNames(Collections.singletonList(docId))
+                        .build()
+        );
+        /*删除分区*/
+        R<RpcStatus> response = milvusServiceClient.dropPartition(
+                DropPartitionParam.newBuilder()
                         .withCollectionName(collectionName + kid)
                         .withPartitionName(docId)
-                        .withExpr("1 == 1")
                         .build()
         );
         log.info("removeByDocId------------->{}", response);
