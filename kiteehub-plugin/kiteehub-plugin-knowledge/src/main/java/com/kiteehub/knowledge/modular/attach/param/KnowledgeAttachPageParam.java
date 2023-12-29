@@ -47,6 +47,10 @@ public class KnowledgeAttachPageParam {
     @ApiModelProperty(value = "关键词")
     private String searchKey;
 
+    /** 文档ID */
+    @ApiModelProperty(value = "文档ID")
+    private String kid;
+
     /** 文档名称 */
     @ApiModelProperty(value = "文档名称")
     private String docName;

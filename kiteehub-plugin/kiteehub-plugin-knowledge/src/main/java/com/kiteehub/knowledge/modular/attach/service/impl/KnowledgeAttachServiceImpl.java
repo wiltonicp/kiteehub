@@ -54,6 +54,9 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
     @Override
     public Page<KnowledgeAttach> page(KnowledgeAttachPageParam knowledgeAttachPageParam) {
         QueryWrapper<KnowledgeAttach> queryWrapper = new QueryWrapper<>();
+        if (ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getKid())) {
+            queryWrapper.lambda().eq(KnowledgeAttach::getKid, knowledgeAttachPageParam.getKid());
+        }
         if (ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getDocName())) {
             queryWrapper.lambda().like(KnowledgeAttach::getDocName, knowledgeAttachPageParam.getDocName());
         }
