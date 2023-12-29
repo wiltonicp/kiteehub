@@ -1,7 +1,7 @@
 <template>
 	<xn-form-container
-		:title="formData.id ? '重命名文件' : '新增导入文件'"
-		:width="1200"
+		:title="formData.id ? '重命名知识' : '新增导入知识'"
+		:width="500"
 		:visible="visible"
 		:destroy-on-close="true"
 		@close="formData.id ? onClose() : addOnClose()"
@@ -42,18 +42,18 @@
 
 		<!-- 重命名 -->
 		<a-form ref="formRef" :model="formData" :rules="formRules" layout="vertical" v-else>
-			<a-form-item label="知识库ID：" name="kid">
-				<a-input v-model:value="formData.kid" placeholder="请输入知识库ID" allow-clear disabled />
-			</a-form-item>
-			<a-form-item label="文档ID：" name="docId">
-				<a-input v-model:value="formData.docId" placeholder="请输入文档ID" allow-clear disabled />
+<!--			<a-form-item label="知识库ID：" name="kid">-->
+<!--				<a-input v-model:value="formData.kid" placeholder="请输入知识库ID" allow-clear disabled />-->
+<!--			</a-form-item>-->
+			<a-form-item label="知识ID：" name="docId">
+				<a-input v-model:value="formData.docId" placeholder="请输入知识ID" allow-clear disabled />
 			</a-form-item>
 
-			<a-form-item label="文档名称：" name="docName">
-				<a-input v-model:value="formData.docName" placeholder="请输入文档名称" allow-clear />
+			<a-form-item label="知识名称：" name="docName">
+				<a-input v-model:value="formData.docName" placeholder="请输入知识名称" allow-clear />
 			</a-form-item>
-			<a-form-item label="文档类型：" name="docType">
-				<a-input v-model:value="formData.docType" placeholder="请输入文档类型" allow-clear disabled />
+			<a-form-item label="知识类型：" name="docType">
+				<a-input v-model:value="formData.docType" placeholder="请输入知识类型" allow-clear disabled />
 			</a-form-item>
 
 			<!-- <a-form-item label="文档内容：" name="content">
@@ -63,6 +63,12 @@
 			<a-form-item label="数据总量：" name="totalData">
 				<a-input v-model:value="formData.totalData" placeholder="请输入数据总量" allow-clear disabled />
 			</a-form-item>
+      <a-form-item label="索引模型：" name="indexModel">
+        <a-input v-model:value="formData.indexModel" allow-clear disabled />
+      </a-form-item>
+      <a-form-item label="知识处理模型：" name="fileModel">
+        <a-input v-model:value="formData.fileModel" allow-clear disabled />
+      </a-form-item>
 			<a-form-item label="状态：" name="gatherState">
 				<a-select
 					v-model:value="formData.gatherState"

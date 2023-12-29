@@ -1,18 +1,21 @@
 <template>
 	<xn-form-container :title="record.docName" :width="900" :visible="visible" :destroy-on-close="true" @close="onClose">
-		<a-alert :message="`分段预览：（${totalVal}组）`" type="success" show-icon style="margin: 10px 0;">
+		<a-alert :message="`分段预览：（${totalVal} 组）` + `\n 索引模型： Embedding-ada-002`" type="success" show-icon style="margin: 10px 0;">
 			<template #icon><smile-outlined /></template>
 		</a-alert>
 		<div style="background-color: #ececec5f; padding: 10px">
 			<a-row :gutter="[18, 18]">
 				<a-col :span="8" v-for="(item, index) in recordsList" :key="index">
-					<a-card :title="'ID:'+item.id" :bordered="false">
-						<template #extra
-							><a href="#"
-								><a-tag color="blue">{{ item.sorted }}#</a-tag></a
-							></template
-						>
-
+					<a-card :title="'ID:'+item.id" :bordered="false" :hoverable="true">
+						<template #extra>
+              <a href="#">
+                <a-tag color="blue">{{ item.sorted }}#</a-tag>
+              </a>
+            </template>
+<!--            <template #actions>-->
+<!--                <FontSizeOutlined />-->
+<!--                <DeleteOutlined />-->
+<!--            </template>-->
 						<p class="chunk">{{ item.content }}</p>
 					</a-card>
 				</a-col>
