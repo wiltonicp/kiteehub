@@ -62,4 +62,14 @@ public class KnowledgeAttach extends CommonEntity {
     /** 状态 */
     @ApiModelProperty(value = "状态", position = 8)
     private String gatherState;
+
+    /** 索引模型 */
+    @TableField(exist = false)
+    @ApiModelProperty(value = "索引模型", position = 9)
+    private String indexModel = "Embedding-ada-002";
+
+    /** 知识处理模型 */
+    @TableField(exist = false)
+    @ApiModelProperty(value = "知识处理模型", position = 10)
+    private String fileModel = "Kite-Ai-16k";
 }

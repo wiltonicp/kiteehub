@@ -3,8 +3,8 @@
 		<a-form ref="searchFormRef" name="advanced_search" :model="searchFormState" class="ant-advanced-search-form">
 			<a-row :gutter="24">
 				<a-col :span="6">
-					<a-form-item label="文档名称" name="docName">
-						<a-input v-model:value="searchFormState.docName" placeholder="请输入文档名称" />
+					<a-form-item label="知识名称" name="docName">
+						<a-input v-model:value="searchFormState.docName" placeholder="请输入知识名称" />
 					</a-form-item>
 				</a-col>
 				<a-col :span="6">
@@ -55,7 +55,7 @@
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>
 						<a @click="examine(record)">查看</a>
-						<a @click="formRef.onOpen(record)" v-if="hasPerm('knowledgeAttachEdit')">重命名</a>
+						<a @click="formRef.onOpen(record)" v-if="hasPerm('knowledgeAttachEdit')">编辑</a>
 						<a-divider type="vertical" v-if="hasPerm(['knowledgeAttachEdit', 'knowledgeAttachDelete'], 'and')" />
 						<a-popconfirm title="确定要删除吗？" @confirm="deleteKnowledgeAttach(record)">
 							<a-button type="link" danger size="small" v-if="hasPerm('knowledgeAttachDelete')">删除</a-button>
@@ -92,11 +92,11 @@ const columns = [
 	// 	dataIndex: 'docId'
 	// },
 	{
-		title: '文档名称',
+		title: '知识名称',
 		dataIndex: 'docName'
 	},
 	{
-		title: '文档类型',
+		title: '知识类型',
 		dataIndex: 'docType'
 	},
 	// {
@@ -107,6 +107,14 @@ const columns = [
 		title: '数据总量',
 		dataIndex: 'totalData'
 	},
+  {
+    title: '索引模型',
+    dataIndex: 'indexModel'
+  },
+  {
+    title: '知识处理模型',
+    dataIndex: 'fileModel'
+  },
 	{
 		title: '状态',
 		dataIndex: 'gatherState'
