@@ -18,6 +18,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kiteehub.knowledge.modular.attach.mapper.KnowledgeAttachChunkMapper;
 import com.kiteehub.knowledge.modular.knowledge.service.EmbeddingService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,7 @@ import java.util.Map;
 public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMapper, KnowledgeAttach> implements KnowledgeAttachService {
 
     private final EmbeddingService embeddingService;
+    private KnowledgeAttachChunkMapper knowledgeAttachChunkMapper;
 
     @Override
     public Page<KnowledgeAttach> page(KnowledgeAttachPageParam knowledgeAttachPageParam) {
@@ -87,11 +89,13 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
     @Override
     public void delete(List<KnowledgeAttachIdParam> knowledgeAttachIdParamList) {
         List<KnowledgeAttach> knowledgeAttaches = this.listByIds(CollStreamUtil.toList(knowledgeAttachIdParamList, KnowledgeAttachIdParam::getId));
+        // 执行删除
         knowledgeAttaches.forEach(attache -> {
             Map<String, Object> map = new HashMap<>();
             map.put("kid", attache.getKid());
             map.put("doc_id", attache.getDocId());
             this.removeByMap(map);
+            this.knowledgeAttachChunkMapper.deleteByMap(map);
             embeddingService.removeByDocId(attache.getKid(), attache.getDocId());
         });
     }
@@ -106,6 +110,18 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
         KnowledgeAttach knowledgeAttach = this.getById(id);
         if (ObjectUtil.isEmpty(knowledgeAttach)) {
             throw new CommonException("知识库附件不存在，id值为：{}", id);
+        }
+        return knowledgeAttach;
+    }
+
+    @Override
+    public KnowledgeAttach queryEntity(String kid, String docId) {
+        KnowledgeAttach knowledgeAttach = this.lambdaQuery()
+                .eq(KnowledgeAttach::getKid, kid)
+                .eq(KnowledgeAttach::getDocId, docId)
+                .one();
+        if (ObjectUtil.isEmpty(knowledgeAttach)) {
+            throw new CommonException("知识库附件不存在，kid值为：{}, docId值为：{}", kid, docId);
         }
         return knowledgeAttach;
     }

@@ -74,4 +74,12 @@ public interface KnowledgeAttachService extends IService<KnowledgeAttach> {
      * @date 2023/12/27 14:00
      **/
     KnowledgeAttach queryEntity(String id);
+
+    /**
+     * 获取知识库附件详情
+     *
+     * @author Ranger
+     * @date 2023/12/27 14:00
+     **/
+    KnowledgeAttach queryEntity(String kid,String docId);
 }

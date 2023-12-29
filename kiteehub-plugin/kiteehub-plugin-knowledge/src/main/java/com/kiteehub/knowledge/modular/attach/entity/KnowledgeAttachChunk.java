@@ -50,4 +50,9 @@ public class KnowledgeAttachChunk extends CommonEntity {
     /** 切片文章内容 */
     @ApiModelProperty(value = "切片文章内容", position = 5)
     private String content;
+
+    /** 排序 */
+    @TableField(exist = false)
+    @ApiModelProperty(value = "文章顺序", position = 6)
+    private Integer sorted;
 }

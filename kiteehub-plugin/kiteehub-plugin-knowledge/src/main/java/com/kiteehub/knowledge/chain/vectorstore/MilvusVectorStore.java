@@ -198,7 +198,7 @@ public class MilvusVectorStore implements VectorStore {
                 DeleteParam.newBuilder()
                         .withCollectionName(collectionName + kid)
                         .withPartitionName(docId)
-                        .withExpr("row == " + rowId)
+                        .withExpr("row_id == " + rowId)
                         .build()
         );
         log.info("removeByDocId------------->{}", response);

@@ -19,7 +19,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttach;
+import com.kiteehub.knowledge.modular.attach.param.*;
 import com.kiteehub.knowledge.modular.attach.service.KnowledgeAttachService;
+import com.kiteehub.knowledge.modular.knowledge.service.EmbeddingService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,40 +30,44 @@ import com.kiteehub.common.exception.CommonException;
 import com.kiteehub.common.page.CommonPageRequest;
 import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachChunk;
 import com.kiteehub.knowledge.modular.attach.mapper.KnowledgeAttachChunkMapper;
-import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachChunkAddParam;
-import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachChunkEditParam;
-import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachChunkIdParam;
-import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachChunkPageParam;
 import com.kiteehub.knowledge.modular.attach.service.KnowledgeAttachChunkService;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 知识附件分片表Service接口实现类
  *
  * @author Ranger
- * @date  2023/12/28 14:52
+ * @date 2023/12/28 14:52
  **/
 @Service
 @AllArgsConstructor
 public class KnowledgeAttachChunkServiceImpl extends ServiceImpl<KnowledgeAttachChunkMapper, KnowledgeAttachChunk> implements KnowledgeAttachChunkService {
 
+    private final EmbeddingService embeddingService;
     private final KnowledgeAttachService knowledgeAttachService;
 
     @Override
     public Page<KnowledgeAttachChunk> page(KnowledgeAttachChunkPageParam knowledgeAttachChunkPageParam) {
         KnowledgeAttach knowledgeAttach = knowledgeAttachService.queryEntity(knowledgeAttachChunkPageParam.getId());
         QueryWrapper<KnowledgeAttachChunk> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(KnowledgeAttachChunk::getKid,knowledgeAttach.getKid());
-        queryWrapper.lambda().eq(KnowledgeAttachChunk::getDocId,knowledgeAttach.getDocId());
-        if(ObjectUtil.isAllNotEmpty(knowledgeAttachChunkPageParam.getSortField(), knowledgeAttachChunkPageParam.getSortOrder())) {
+        queryWrapper.lambda().eq(KnowledgeAttachChunk::getKid, knowledgeAttach.getKid());
+        queryWrapper.lambda().eq(KnowledgeAttachChunk::getDocId, knowledgeAttach.getDocId());
+        if (ObjectUtil.isAllNotEmpty(knowledgeAttachChunkPageParam.getSortField(), knowledgeAttachChunkPageParam.getSortOrder())) {
             CommonSortOrderEnum.validate(knowledgeAttachChunkPageParam.getSortOrder());
             queryWrapper.orderBy(true, knowledgeAttachChunkPageParam.getSortOrder().equals(CommonSortOrderEnum.ASC.getValue()),
                     StrUtil.toUnderlineCase(knowledgeAttachChunkPageParam.getSortField()));
         } else {
             queryWrapper.lambda().orderByAsc(KnowledgeAttachChunk::getRowId);
         }
-        return this.page(CommonPageRequest.defaultPage(), queryWrapper);
+        AtomicInteger sorted = new AtomicInteger(knowledgeAttachChunkPageParam.getCurrent() + (knowledgeAttachChunkPageParam.getCurrent() - 1) * (knowledgeAttachChunkPageParam.getSize() - 1));
+        Page<KnowledgeAttachChunk> page = this.page(CommonPageRequest.defaultPage(), queryWrapper);
+        page.getRecords().forEach(record ->{
+            record.setSorted(sorted.getAndIncrement());
+        });
+        return page;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -82,8 +88,23 @@ public class KnowledgeAttachChunkServiceImpl extends ServiceImpl<KnowledgeAttach
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(List<KnowledgeAttachChunkIdParam> knowledgeAttachChunkIdParamList) {
+        List<KnowledgeAttachChunk> knowledgeAttacheChunks = this.listByIds(CollStreamUtil.toList(knowledgeAttachChunkIdParamList, KnowledgeAttachChunkIdParam::getId));
         // 执行删除
-        this.removeByIds(CollStreamUtil.toList(knowledgeAttachChunkIdParamList, KnowledgeAttachChunkIdParam::getId));
+        AtomicReference<String> kid = new AtomicReference<>("");
+        AtomicReference<String> docId = new AtomicReference<>("");
+        knowledgeAttacheChunks.forEach(attachChunk -> {
+            kid.set(attachChunk.getKid());
+            docId.set(attachChunk.getDocId());
+            this.removeById(attachChunk.getId());
+            embeddingService.removeByRowId(attachChunk.getKid(), attachChunk.getDocId(), attachChunk.getRowId());
+        });
+
+        KnowledgeAttach knowledgeAttach = knowledgeAttachService.queryEntity(kid.get(), docId.get());
+        //修改附件totalData
+        knowledgeAttachService.lambdaUpdate()
+                .set(KnowledgeAttach::getTotalData, knowledgeAttach.getTotalData() - knowledgeAttachChunkIdParamList.size())
+                .eq(KnowledgeAttach::getId, knowledgeAttach.getId())
+                .update();
     }
 
     @Override
@@ -94,7 +115,7 @@ public class KnowledgeAttachChunkServiceImpl extends ServiceImpl<KnowledgeAttach
     @Override
     public KnowledgeAttachChunk queryEntity(String id) {
         KnowledgeAttachChunk knowledgeAttachChunk = this.getById(id);
-        if(ObjectUtil.isEmpty(knowledgeAttachChunk)) {
+        if (ObjectUtil.isEmpty(knowledgeAttachChunk)) {
             throw new CommonException("知识附件分片表不存在，id值为：{}", id);
         }
         return knowledgeAttachChunk;

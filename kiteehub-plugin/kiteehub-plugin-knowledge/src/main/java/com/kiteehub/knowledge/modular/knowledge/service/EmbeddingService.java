@@ -18,6 +18,8 @@ public interface EmbeddingService {
 
     void removeByDocId(String kid,String docId);
 
+    void removeByRowId(String kid,String docId, Long rowId);
+
     void removeByKid(String kid);
 
     List<Double> getQueryVector(String query);

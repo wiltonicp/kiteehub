@@ -148,6 +148,8 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
         }
         knowledgeAttach.setContent(content);
         knowledgeAttach.setCreateTime(new Date());
+        knowledgeAttach.setUpdateTime(new Date());
+        knowledgeAttach.setTotalData(chunkList.size());
         knowledgeAttach.setGatherState(EnumUtil.toString(KnowledgeGatherEnum.PROGRESSING));
         knowledgeAttachService.save(knowledgeAttach);
 

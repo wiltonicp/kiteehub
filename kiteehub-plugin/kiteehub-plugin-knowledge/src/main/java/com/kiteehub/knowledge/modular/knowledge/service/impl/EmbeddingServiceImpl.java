@@ -45,6 +45,11 @@ public class EmbeddingServiceImpl implements EmbeddingService {
     }
 
     @Override
+    public void removeByRowId(String kid, String docId, Long rowId) {
+        vectorStore.removeByRowId(kid, docId, rowId);
+    }
+
+    @Override
     public void removeByKid(String kid) {
         vectorStore.removeByKid(kid);
     }
