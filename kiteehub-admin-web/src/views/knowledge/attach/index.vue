@@ -67,7 +67,7 @@
 	</a-card>
 	<Form ref="formRef" @successful="table.refresh(true)" />
 
-	<Details ref="detailsRef" @successful="detailsRef.refresh(true)"/>
+	<Details ref="detailsRef" @successful="detailsRef.refresh(true)" />
 </template>
 
 <script setup name="attach">
@@ -130,6 +130,11 @@ if (hasPerm(['knowledgeAttachEdit', 'knowledgeAttachDelete'])) {
 	})
 }
 const selectedRowKeys = ref([])
+
+onMounted(() => {
+	getParameUrl()
+})
+
 // 列表选择配置
 const options = {
 	// columns数字类型字段加入 needTotal: true 可以勾选自动算账
@@ -177,6 +182,23 @@ const deleteBatchKnowledgeAttach = (params) => {
 	knowledgeAttachApi.knowledgeAttachDelete(params).then(() => {
 		table.value.clearRefreshSelected()
 	})
+}
+watch(
+	() => router.currentRoute.value.path,
+	(newValue, oldValue) => {
+		console.log('watch', newValue)
+		if(oldValue){
+			getParameUrl()
+		}
+		
+	},
+	{ immediate: true }
+)
+
+const getParameUrl = () => {
+	const url = window.location.href // 获取当前页面的URL
+	const lastSegment = url.substring(url.lastIndexOf('/') + 1) // 获取最后一个斜杠后的内容
+	console.log(lastSegment, 'lastSegment')
 }
 const gatherStateOptions = tool.dictList('Gather')
 </script>

@@ -14,7 +14,7 @@
 						v-model:fileList="fileList"
 						name="file"
 						:multiple="true"
-						action="http://111.229.203.199:8299/knowledge/attach/add"
+						:action="action"
 						:headers="headers"
 						:data="{ kid: '5k6ithwioi' }"
 						@change="handleChange"
@@ -95,6 +95,7 @@ import knowledgeAttachApi from '@/api/knowledge/knowledgeAttachApi'
 // 抽屉状态
 const visible = ref(false)
 const emit = defineEmits({ successful: null })
+const action = ref(`${import.meta.env.VITE_API_BASEURL}/knowledge/attach/add`)
 const headers = ref({})
 const activeKey = ref('1')
 const fileList = ref([])
@@ -107,7 +108,7 @@ const submitLoading = ref(false)
 const gatherStateOptions = ref([])
 
 onMounted(() => {
-	console.log('123123')
+	console.log('123123',import.meta.env.VITE_API_BASEURL)
 	const token = tool.data.get('TOKEN')
 	headers.value[sysConfig.TOKEN_NAME] = sysConfig.TOKEN_PREFIX + token
 	console.log(headers.value, '111')
