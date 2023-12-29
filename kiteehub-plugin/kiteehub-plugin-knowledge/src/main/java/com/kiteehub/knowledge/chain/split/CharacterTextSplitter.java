@@ -24,29 +24,24 @@ public class CharacterTextSplitter implements TextSplitter{
             String[] chunks = content.split(splitterProperties.getEndSpliter());
             chunkList.addAll(Arrays.asList(chunks));
         }else {
-            int indexMin = 0;
-            int len = content.length();
-            int i = 0;
-            int right = 0;
-            while (true) {
-                if (len > right ){
-                    int begin = i*splitterProperties.getSize() - splitterProperties.getOverlay();
-                    if (begin < indexMin){
-                        begin = indexMin;
-                    }
-                    int end = splitterProperties.getSize()*(i+1) + splitterProperties.getOverlay();
-                    if (end > len){
-                        end = len;
-                    }
-                    String chunk = content.substring(begin,end);
-                    chunkList.add(chunk);
-                    i++;
-                    right = right + splitterProperties.getSize();
-                }else {
-                    break;
+            int start = 0;
+            int end = Math.min(splitterProperties.getSize(), content.length());
+            while (start < content.length()) {
+                // 在切分点后找到最近的标点符号、换行符或文本结尾
+                while (end < content.length() && (!isPunctuation(content.charAt(end)) && content.charAt(end) != '\n')) {
+                    end++;
                 }
+                // 切分文本
+                chunkList.add(content.substring(start, end));
+                // 更新切分点
+                start = end;
+                end = Math.min(start + splitterProperties.getSize(), content.length());
             }
         }
         return chunkList;
+    }
+
+    private static boolean isPunctuation(char c) {
+        return c == '.' || c == ',' || c == '!' || c == '?' || c == ';' || c == ':' || c == '。' || c == '，' || c == '！' || c == '？' || c == '；' || c == '：';
     }
 }

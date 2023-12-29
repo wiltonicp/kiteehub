@@ -65,7 +65,7 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
             queryWrapper.orderBy(true, knowledgeAttachPageParam.getSortOrder().equals(CommonSortOrderEnum.ASC.getValue()),
                     StrUtil.toUnderlineCase(knowledgeAttachPageParam.getSortField()));
         } else {
-            queryWrapper.lambda().orderByAsc(KnowledgeAttach::getId);
+            queryWrapper.lambda().orderByDesc(KnowledgeAttach::getUpdateTime);
         }
         return this.page(CommonPageRequest.defaultPage(), queryWrapper);
     }

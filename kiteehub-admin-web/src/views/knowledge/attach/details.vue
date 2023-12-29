@@ -4,12 +4,12 @@
 			<template #icon><smile-outlined /></template>
 		</a-alert>
 		<div style="background-color: #ececec5f; padding: 10px">
-			<a-row :gutter="[16, 16]">
+			<a-row :gutter="[18, 18]">
 				<a-col :span="8" v-for="(item, index) in recordsList" :key="index">
-					<a-card :title="item.id" :bordered="false">
+					<a-card :title="'ID:'+item.id" :bordered="false">
 						<template #extra
 							><a href="#"
-								><a-tag color="blue">{{ index }}#</a-tag></a
+								><a-tag color="blue">{{ item.sorted }}#</a-tag></a
 							></template
 						>
 
