@@ -31,6 +31,7 @@
 			:row-key="(record) => record.id"
 			:tool-config="toolConfig"
 			:row-selection="options.rowSelection"
+			v-if="sign"
 		>
 			<template #operator class="table-operator">
 				<a-space>
@@ -78,19 +79,13 @@ import Details from './details.vue'
 import knowledgeAttachApi from '@/api/knowledge/knowledgeAttachApi'
 let searchFormState = reactive({})
 const searchFormRef = ref()
+const typeUrl = ref('')
 const table = ref()
 const formRef = ref()
 const detailsRef = ref()
+const sign = ref()
 const toolConfig = { refresh: true, height: true, columnSetting: true, striped: false }
 const columns = [
-	// {
-	// 	title: '知识库ID',
-	// 	dataIndex: 'kid'
-	// },
-	// {
-	// 	title: '文档ID',
-	// 	dataIndex: 'docId'
-	// },
 	{
 		title: '知识名称',
 		dataIndex: 'docName'
@@ -99,22 +94,19 @@ const columns = [
 		title: '知识类型',
 		dataIndex: 'docType'
 	},
-	// {
-	// 	title: '文档内容',
-	// 	dataIndex: 'content'
-	// },
+
 	{
 		title: '数据总量',
 		dataIndex: 'totalData'
 	},
-  {
-    title: '索引模型',
-    dataIndex: 'indexModel'
-  },
-  {
-    title: '知识处理模型',
-    dataIndex: 'fileModel'
-  },
+	{
+		title: '索引模型',
+		dataIndex: 'indexModel'
+	},
+	{
+		title: '知识处理模型',
+		dataIndex: 'fileModel'
+	},
 	{
 		title: '状态',
 		dataIndex: 'gatherState'
@@ -123,10 +115,6 @@ const columns = [
 		title: '最后修改时间',
 		dataIndex: 'updateTime'
 	}
-	// {
-	// 	title: '修改用户',
-	// 	dataIndex: 'updateUser'
-	// },
 ]
 // 操作栏通过权限判断是否显示
 if (hasPerm(['knowledgeAttachEdit', 'knowledgeAttachDelete'])) {
@@ -160,6 +148,8 @@ const options = {
 }
 const loadData = (parameter) => {
 	const searchFormParam = JSON.parse(JSON.stringify(searchFormState))
+	parameter.kid = typeUrl.value
+	console.log(parameter, 'parameter')
 	return knowledgeAttachApi.knowledgeAttachPage(Object.assign(parameter, searchFormParam)).then((data) => {
 		return data
 	})
@@ -195,18 +185,25 @@ watch(
 	() => router.currentRoute.value.path,
 	(newValue, oldValue) => {
 		console.log('watch', newValue)
-		if(oldValue){
+		if (oldValue) {
 			getParameUrl()
 		}
-		
 	},
 	{ immediate: true }
 )
-
-const getParameUrl = () => {
+// url 参数
+const getParameUrl = async () => {
+	sign.value = false
 	const url = window.location.href // 获取当前页面的URL
 	const lastSegment = url.substring(url.lastIndexOf('/') + 1) // 获取最后一个斜杠后的内容
-	console.log(lastSegment, 'lastSegment')
+	typeUrl.value = lastSegment
+	let parameter = {
+		current: 1,
+		size: 10,
+		kid: typeUrl.value
+	}
+	await loadData(parameter)
+	sign.value = true
 }
 const gatherStateOptions = tool.dictList('Gather')
 </script>
