@@ -19,6 +19,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 知识库附件编辑参数
@@ -39,5 +40,8 @@ public class KnowledgeAttachEditParam {
     @ApiModelProperty(value = "文档名称", position = 2)
     @NotNull(message = "docName不能为空")
     private String docName;
+
+    @ApiModelProperty(value = "区域ids", position = 3)
+    private List<String> areaIds;
 
 }

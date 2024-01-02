@@ -13,12 +13,15 @@ package com.kiteehub.knowledge.modular.attach.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollStreamUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachArea;
 import com.kiteehub.knowledge.modular.attach.mapper.KnowledgeAttachChunkMapper;
+import com.kiteehub.knowledge.modular.attach.service.KnowledgeAttachAreaService;
 import com.kiteehub.knowledge.modular.knowledge.service.EmbeddingService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,6 +40,7 @@ import com.kiteehub.knowledge.modular.attach.service.KnowledgeAttachService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 知识库附件Service接口实现类
@@ -49,11 +53,13 @@ import java.util.Map;
 public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMapper, KnowledgeAttach> implements KnowledgeAttachService {
 
     private final EmbeddingService embeddingService;
-    private KnowledgeAttachChunkMapper knowledgeAttachChunkMapper;
+    private final KnowledgeAttachChunkMapper knowledgeAttachChunkMapper;
+    private final KnowledgeAttachAreaService knowledgeAttachAreaService;
 
     @Override
     public Page<KnowledgeAttach> page(KnowledgeAttachPageParam knowledgeAttachPageParam) {
         QueryWrapper<KnowledgeAttach> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select(KnowledgeAttach.class,attach -> !attach.getColumn().equals("content"));
         if (ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getKid())) {
             queryWrapper.lambda().eq(KnowledgeAttach::getKid, knowledgeAttachPageParam.getKid());
         }
@@ -70,7 +76,16 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
         } else {
             queryWrapper.lambda().orderByDesc(KnowledgeAttach::getUpdateTime);
         }
-        return this.page(CommonPageRequest.defaultPage(), queryWrapper);
+        Page<KnowledgeAttach> page = this.page(CommonPageRequest.defaultPage(), queryWrapper);
+        page.getRecords().forEach(record ->{
+            //区域处理
+            QueryWrapper<KnowledgeAttachArea> areaQueryWrapper = new QueryWrapper<>();
+            areaQueryWrapper.lambda().eq(KnowledgeAttachArea::getAttachId,record.getId());
+            List<KnowledgeAttachArea> listArea = knowledgeAttachAreaService.list(areaQueryWrapper);
+            List<String> collect = listArea.stream().map(KnowledgeAttachArea::getAreaId).collect(Collectors.toList());
+            record.setAreaIds(collect);
+        });
+        return page;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -86,6 +101,21 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
         KnowledgeAttach knowledgeAttach = this.queryEntity(knowledgeAttachEditParam.getId());
         BeanUtil.copyProperties(knowledgeAttachEditParam, knowledgeAttach);
         this.updateById(knowledgeAttach);
+
+        if(CollectionUtil.isNotEmpty(knowledgeAttachEditParam.getAreaIds())){
+            //区域处理
+            QueryWrapper<KnowledgeAttachArea> queryWrapper = new QueryWrapper<>();
+            queryWrapper.lambda().eq(KnowledgeAttachArea::getAttachId,knowledgeAttach.getId());
+            knowledgeAttachAreaService.remove(queryWrapper);
+            List<KnowledgeAttachArea> collect = knowledgeAttachEditParam.getAreaIds().stream()
+                    .map(c ->
+                            KnowledgeAttachArea.builder()
+                                    .attachId(knowledgeAttach.getId())
+                                    .areaId(c)
+                                    .build())
+                    .collect(Collectors.toList());
+            knowledgeAttachAreaService.saveBatch(collect,200);
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
