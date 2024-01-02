@@ -78,22 +78,34 @@
 			<a-form-item label="区域选择：" name="areaSelection">
 				<!-- <a-input v-model:value="formData.areaSelection" allow-clear disabled /> -->
 
-				<a-tree-select
+
+			 <a-tree-select
 					v-model:value="checkedKeys"
 					style="width: 100%"
 					tree-checkable
 					tree-default-expand-all
 					:show-checked-strategy="SHOW_PARENT"
 					:height="233"
-					:tree-data="treeData"
+					:tree-data="areaList.children"
 					:max-tag-count="10"
-					tree-node-filter-prop="title"
+					tree-node-filter-prop="name"
 				>
-					<template #title="{ title, value }">
-						<span v-if="value === '0-0-1-0'" style="color: #1890ff">{{ title }}</span>
-						<template v-else>{{ title }}</template>
+					<template #title="{ name, id }">
+						<span v-if="id === '1742079833179033600'" style="color: #1890ff">{{ name }}</span>
+						<template v-else>{{ name }}</template>
 					</template>
-				</a-tree-select>
+				</a-tree-select> 
+
+				<!-- <a-tree
+					v-model:checkedKeys="checkedKeys"
+					checkable
+					:tree-data="areaList.children"
+				>
+					<template #title="{ name, id  }">
+						<span v-if="id === '0-0-1'" style="color: #1890ff">{{ name }}</span>
+						<template v-else>{{ name }}</template>
+					</template>
+				</a-tree> -->
 			</a-form-item>
 		</a-form>
 		<template #footer>
@@ -115,7 +127,7 @@ import { required } from '@/utils/formRules'
 import sysConfig from '@/config/index'
 import { message, TreeSelect } from 'ant-design-vue'
 import knowledgeAttachApi from '@/api/knowledge/knowledgeAttachApi'
-const SHOW_PARENT = TreeSelect.SHOW_PARENT;
+const SHOW_PARENT = TreeSelect.SHOW_PARENT
 
 // 抽屉状态
 const visible = ref(false)
@@ -127,20 +139,27 @@ const fileList = ref([])
 const url = ref('http://')
 const typeUrlItem = ref('')
 const formRef = ref()
+const areaList = ref([])
 // 表单数据
 const formData = ref({})
 const submitLoading = ref(false)
 const gatherStateOptions = ref([])
 
 onMounted(() => {
+	getToken()
+	getArea()
+})
+// 获取token
+const getToken = () => {
 	const token = tool.data.get('TOKEN')
 	headers.value[sysConfig.TOKEN_NAME] = sysConfig.TOKEN_PREFIX + token
-
-
+}
+// 获取字典区域
+const getArea = () => {
 	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
-	console.log(DICT_TYPE_TREE_DATA,'DICT_TYPE_TREE_DATA')
-})
-
+	areaList.value = DICT_TYPE_TREE_DATA.find((item) => item.dictValue === 'AREA')
+	console.log(areaList.value, 'areaList')
+}
 // 打开抽屉
 const onOpen = (typeUrl, record) => {
 	visible.value = true
@@ -226,27 +245,27 @@ const confirm = () => {
 	emit('getParameUrl')
 }
 
-const dig = (path = '0', level = 3) => {
-	const list = []
-	for (let i = 0; i < 10; i += 1) {
-		const value = `${path}-${i}`
-		const treeNode = {
-			title: value,
-			value
-		}
-		if (level > 0) {
-			treeNode.children = dig(value, level - 1)
-		}
-		list.push(treeNode)
-	}
-	return list
-}
-const checkedKeys = ref(['0-0-0-0-0'])
+// const dig = (path = '0', level = 3) => {
+// 	const list = []
+// 	for (let i = 0; i < 10; i += 1) {
+// 		const value = `${path}-${i}`
+// 		const treeNode = {
+// 			title: value,
+// 			value
+// 		}
+// 		if (level > 0) {
+// 			treeNode.children = dig(value, level - 1)
+// 		}
+// 		list.push(treeNode)
+// 	}
+// 	return list
+// }
+const checkedKeys = ref([])
 watch(checkedKeys, () => {
 	console.log('checkedKeys', checkedKeys)
 })
 
-const treeData = ref(dig())
+// const treeData = ref(dig())
 
 // 抛出函数
 defineExpose({
