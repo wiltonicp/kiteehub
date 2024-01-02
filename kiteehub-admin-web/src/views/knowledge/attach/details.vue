@@ -1,21 +1,29 @@
 <template>
 	<xn-form-container :title="record.docName" :width="900" :visible="visible" :destroy-on-close="true" @close="onClose">
-		<a-alert :message="`分段预览：（${totalVal} 组）` + `\n 索引模型： Embedding-ada-002`" type="success" show-icon style="margin: 10px 0;">
+		<a-alert
+			:message="`分段预览：（${totalVal} 组）` + `\n 索引模型： Embedding-ada-002`"
+			type="success"
+			show-icon
+			style="margin: 10px 0"
+		>
 			<template #icon><smile-outlined /></template>
 		</a-alert>
 		<div style="background-color: #ececec5f; padding: 10px">
 			<a-row :gutter="[18, 18]">
 				<a-col :span="8" v-for="(item, index) in recordsList" :key="index">
-					<a-card :title="'ID:'+item.id" :bordered="false" :hoverable="true">
+					<a-card :title="'ID:' + item.id" :bordered="false" :hoverable="true">
 						<template #extra>
-              <a href="#">
-                <a-tag color="blue">{{ item.sorted }}#</a-tag>
-              </a>
-            </template>
-<!--            <template #actions>-->
-<!--                <FontSizeOutlined />-->
-<!--                <DeleteOutlined />-->
-<!--            </template>-->
+							<a href="#">
+								<a-tag color="blue">{{ item.sorted }}#</a-tag>
+							</a>
+						</template>
+						<template #actions>
+							<div>
+								<FontSizeOutlined />
+								<span style="margin-left: 10px">{{ item.content.length }}</span>
+							</div>
+							<DeleteOutlined @click="del(item)" />
+						</template>
 						<p class="chunk">{{ item.content }}</p>
 					</a-card>
 				</a-col>
@@ -34,9 +42,18 @@
 			</div>
 		</template>
 	</xn-form-container>
+
+	<!-- <a-modal v-model:open="open" title="Modal" ok-text="确认" cancel-text="取消" @ok="hideModal">
+		<p>Bla bla ...</p>
+		<p>Bla bla ...</p>
+		<p>Bla bla ...</p>
+	</a-modal> -->
 </template>
 
 <script setup name="knowledgeAttachForm">
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
+import { Modal } from 'ant-design-vue'
+import { createVNode } from 'vue'
 import tool from '@/utils/tool'
 import { cloneDeep } from 'lodash-es'
 import { required } from '@/utils/formRules'
@@ -45,6 +62,7 @@ const size = ref(10)
 const current = ref(1)
 const totalVal = ref(0)
 const recordsList = ref([])
+const open = ref(false)
 let dataObj = reactive({
 	record: {}
 })
@@ -92,6 +110,25 @@ const knowledAttachChunk = async () => {
 	console.log('records', records)
 	totalVal.value = total
 	recordsList.value = records
+}
+
+// 删除某一项
+const del = (item) => {
+	Modal.confirm({
+		title: '提示',
+		icon: createVNode(ExclamationCircleOutlined),
+		content: `是否删除ID为：${item.id}的文本？`,
+		okText: '确认',
+		cancelText: '取消',
+		async onOk() {
+			await knowledgeAttachApi.knowledAttachDelete([
+				{
+					id: item.id
+				}
+			])
+			knowledAttachChunk()
+		}
+	})
 }
 
 const { record } = toRefs(dataObj)

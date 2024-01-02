@@ -37,4 +37,8 @@ export default {
 	knowledAttachChunk(data) {
 		return requestSelf('page', data, 'get')
 	},
+	// 删除知识库分片
+	knowledAttachDelete(data) {
+		return requestSelf('delete', data)
+	},
 }
