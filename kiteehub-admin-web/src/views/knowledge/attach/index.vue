@@ -35,7 +35,7 @@
 		>
 			<template #operator class="table-operator">
 				<a-space>
-					<a-button type="primary" @click="formRef.onOpen()" v-if="hasPerm('knowledgeAttachAdd')">
+					<a-button type="primary" @click="formRef.onOpen(typeUrl)" v-if="hasPerm('knowledgeAttachAdd')">
 						<template #icon><plus-outlined /></template>
 						新增/导入
 					</a-button>
@@ -56,7 +56,7 @@
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>
 						<a @click="examine(record)">查看</a>
-						<a @click="formRef.onOpen(record)" v-if="hasPerm('knowledgeAttachEdit')">编辑</a>
+						<a @click="formRef.onOpen(typeUrl,record)" v-if="hasPerm('knowledgeAttachEdit')">编辑</a>
 						<a-divider type="vertical" v-if="hasPerm(['knowledgeAttachEdit', 'knowledgeAttachDelete'], 'and')" />
 						<a-popconfirm title="确定要删除吗？" @confirm="deleteKnowledgeAttach(record)">
 							<a-button type="link" danger size="small" v-if="hasPerm('knowledgeAttachDelete')">删除</a-button>
@@ -66,7 +66,7 @@
 			</template>
 		</s-table>
 	</a-card>
-	<Form ref="formRef" @successful="table.refresh(true)" />
+	<Form ref="formRef" @successful="table.refresh(true)"  @getParameUrl="getParameUrl" />
 
 	<Details ref="detailsRef" @successful="detailsRef.refresh(true)" />
 </template>
@@ -172,7 +172,6 @@ const deleteKnowledgeAttach = (record) => {
 }
 // 查看
 const examine = (record) => {
-	console.log(record, 'examine(record)')
 	detailsRef.value.onOpen(record)
 }
 // 批量删除
@@ -197,6 +196,7 @@ const getParameUrl = async () => {
 	const url = window.location.href // 获取当前页面的URL
 	const lastSegment = url.substring(url.lastIndexOf('/') + 1) // 获取最后一个斜杠后的内容
 	typeUrl.value = lastSegment
+	console.log(typeUrl.value, 'typeUrl')
 	let parameter = {
 		current: 1,
 		size: 10,

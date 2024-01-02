@@ -1,7 +1,7 @@
 <template>
 	<xn-form-container
 		:title="formData.id ? '重命名知识' : '新增导入知识'"
-		:width="500"
+		:width="700"
 		:visible="visible"
 		:destroy-on-close="true"
 		@close="formData.id ? onClose() : addOnClose()"
@@ -10,13 +10,18 @@
 		<div class="card-container" v-if="!formData.id">
 			<a-tabs v-model:activeKey="activeKey" type="card">
 				<a-tab-pane key="1" tab="文件上传导入">
+					<div style="margin-bottom: 30px">
+						<a-upload style="float: left; width: 100%" :fileList="fileList"></a-upload>
+					</div>
+
 					<a-upload-dragger
 						v-model:fileList="fileList"
 						name="file"
 						:multiple="true"
 						:action="action"
 						:headers="headers"
-						:data="{ kid: '5k6ithwioi' }"
+						:progress="progress"
+						:data="{ kid: typeUrlItem }"
 						@change="handleChange"
 						@drop="handleDrop"
 					>
@@ -42,13 +47,9 @@
 
 		<!-- 重命名 -->
 		<a-form ref="formRef" :model="formData" :rules="formRules" layout="vertical" v-else>
-<!--			<a-form-item label="知识库ID：" name="kid">-->
-<!--				<a-input v-model:value="formData.kid" placeholder="请输入知识库ID" allow-clear disabled />-->
-<!--			</a-form-item>-->
 			<a-form-item label="知识ID：" name="docId">
 				<a-input v-model:value="formData.docId" placeholder="请输入知识ID" allow-clear disabled />
 			</a-form-item>
-
 			<a-form-item label="知识名称：" name="docName">
 				<a-input v-model:value="formData.docName" placeholder="请输入知识名称" allow-clear />
 			</a-form-item>
@@ -56,19 +57,15 @@
 				<a-input v-model:value="formData.docType" placeholder="请输入知识类型" allow-clear disabled />
 			</a-form-item>
 
-			<!-- <a-form-item label="文档内容：" name="content">
-				<a-input v-model:value="formData.content" placeholder="请输入文档内容" allow-clear />
-			</a-form-item> -->
-
 			<a-form-item label="数据总量：" name="totalData">
 				<a-input v-model:value="formData.totalData" placeholder="请输入数据总量" allow-clear disabled />
 			</a-form-item>
-      <a-form-item label="索引模型：" name="indexModel">
-        <a-input v-model:value="formData.indexModel" allow-clear disabled />
-      </a-form-item>
-      <a-form-item label="知识处理模型：" name="fileModel">
-        <a-input v-model:value="formData.fileModel" allow-clear disabled />
-      </a-form-item>
+			<a-form-item label="索引模型：" name="indexModel">
+				<a-input v-model:value="formData.indexModel" allow-clear disabled />
+			</a-form-item>
+			<a-form-item label="知识处理模型：" name="fileModel">
+				<a-input v-model:value="formData.fileModel" allow-clear disabled />
+			</a-form-item>
 			<a-form-item label="状态：" name="gatherState">
 				<a-select
 					v-model:value="formData.gatherState"
@@ -76,6 +73,27 @@
 					:options="gatherStateOptions"
 					disabled
 				/>
+			</a-form-item>
+
+			<a-form-item label="区域选择：" name="areaSelection">
+				<!-- <a-input v-model:value="formData.areaSelection" allow-clear disabled /> -->
+
+				<a-tree-select
+					v-model:value="checkedKeys"
+					style="width: 100%"
+					tree-checkable
+					tree-default-expand-all
+					:show-checked-strategy="SHOW_PARENT"
+					:height="233"
+					:tree-data="treeData"
+					:max-tag-count="10"
+					tree-node-filter-prop="title"
+				>
+					<template #title="{ title, value }">
+						<span v-if="value === '0-0-1-0'" style="color: #1890ff">{{ title }}</span>
+						<template v-else>{{ title }}</template>
+					</template>
+				</a-tree-select>
 			</a-form-item>
 		</a-form>
 		<template #footer>
@@ -95,18 +113,19 @@ import tool from '@/utils/tool'
 import { cloneDeep } from 'lodash-es'
 import { required } from '@/utils/formRules'
 import sysConfig from '@/config/index'
-import { message } from 'ant-design-vue';
+import { message, TreeSelect } from 'ant-design-vue'
 import knowledgeAttachApi from '@/api/knowledge/knowledgeAttachApi'
+const SHOW_PARENT = TreeSelect.SHOW_PARENT;
 
 // 抽屉状态
 const visible = ref(false)
-const emit = defineEmits({ successful: null })
+const emit = defineEmits({ successful: null, getParameUrl: null })
 const action = ref(`${import.meta.env.VITE_API_BASEURL}/knowledge/attach/add`)
 const headers = ref({})
 const activeKey = ref('1')
 const fileList = ref([])
 const url = ref('http://')
-
+const typeUrlItem = ref('')
 const formRef = ref()
 // 表单数据
 const formData = ref({})
@@ -114,15 +133,19 @@ const submitLoading = ref(false)
 const gatherStateOptions = ref([])
 
 onMounted(() => {
-	console.log('123123',import.meta.env.VITE_API_BASEURL)
 	const token = tool.data.get('TOKEN')
 	headers.value[sysConfig.TOKEN_NAME] = sysConfig.TOKEN_PREFIX + token
-	console.log(headers.value, '111')
+
+
+	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
+	console.log(DICT_TYPE_TREE_DATA,'DICT_TYPE_TREE_DATA')
 })
 
 // 打开抽屉
-const onOpen = (record) => {
+const onOpen = (typeUrl, record) => {
 	visible.value = true
+	fileList.value = []
+	typeUrlItem.value = typeUrl
 	if (record) {
 		let recordData = cloneDeep(record)
 		formData.value = Object.assign({}, recordData)
@@ -137,6 +160,7 @@ const onClose = () => {
 }
 // 新增导入关闭抽屉
 const addOnClose = () => {
+	if (submitLoading.value) return
 	visible.value = false
 }
 // 默认要校验的
@@ -159,6 +183,7 @@ const onSubmit = () => {
 }
 // 上传
 const handleChange = (info) => {
+	submitLoading.value = true
 	const status = info.file.status
 	console.log(info, '123')
 	if (status !== 'uploading') {
@@ -169,14 +194,59 @@ const handleChange = (info) => {
 	} else if (status === 'error') {
 		message.error(`${info.file.name} file upload failed.`)
 	}
+
+	// info参数包含了上传信息，如文件列表、错误信息等
+	const fileList = [...info.fileList]
+
+	if (fileList.every((item) => item.status === 'done')) {
+		console.log('所有文件都已上传')
+		submitLoading.value = false
+		// 此处可以编写其他业务逻辑
+	} else {
+		console.log('还有未上传的文件')
+	}
 }
+
+const progress = {
+	strokeColor: {
+		'0%': '#108ee9',
+		'100%': '#87d068'
+	},
+	strokeWidth: 5,
+	format: (percent) => `${parseFloat(percent.toFixed(2))}%`,
+	class: 'test'
+}
+
 const handleDrop = (e) => {
 	console.log(e)
 }
 const confirm = () => {
 	submitLoading.value = false
 	visible.value = false
+	emit('getParameUrl')
 }
+
+const dig = (path = '0', level = 3) => {
+	const list = []
+	for (let i = 0; i < 10; i += 1) {
+		const value = `${path}-${i}`
+		const treeNode = {
+			title: value,
+			value
+		}
+		if (level > 0) {
+			treeNode.children = dig(value, level - 1)
+		}
+		list.push(treeNode)
+	}
+	return list
+}
+const checkedKeys = ref(['0-0-0-0-0'])
+watch(checkedKeys, () => {
+	console.log('checkedKeys', checkedKeys)
+})
+
+const treeData = ref(dig())
 
 // 抛出函数
 defineExpose({
