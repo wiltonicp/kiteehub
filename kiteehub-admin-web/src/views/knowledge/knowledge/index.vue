@@ -8,11 +8,6 @@
 					</a-form-item>
 				</a-col>
 				<a-col :span="6">
-					<a-form-item label="区域" name="area">
-						<a-input v-model:value="searchFormState.area" placeholder="请输入区域" />
-					</a-form-item>
-				</a-col>
-				<a-col :span="6">
 					<a-button type="primary" @click="table.refresh(true)">查询</a-button>
 					<a-button style="margin: 0 8px" @click="reset">重置</a-button>
 				</a-col>
