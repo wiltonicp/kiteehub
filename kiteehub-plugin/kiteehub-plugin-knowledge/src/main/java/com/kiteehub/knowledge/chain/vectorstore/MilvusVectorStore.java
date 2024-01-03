@@ -68,7 +68,7 @@ public class MilvusVectorStore implements VectorStore {
 
     }
 
-    private void createSchema(String kid) {
+    private void createSchema(String kid, String kname) {
         FieldType primaryField = FieldType.newBuilder()
                 .withName("row_id")
                 .withDataType(DataType.Int64)
@@ -97,7 +97,7 @@ public class MilvusVectorStore implements VectorStore {
                 .build();
         CreateCollectionParam createCollectionReq = CreateCollectionParam.newBuilder()
                 .withCollectionName(collectionName + kid)
-                .withDescription("local knowledge")
+                .withDescription(kname)
                 .addFieldType(primaryField)
                 .addFieldType(contentField)
                 .addFieldType(kidField)
@@ -123,9 +123,9 @@ public class MilvusVectorStore implements VectorStore {
     }
 
     @Override
-    public void storeEmbeddings(List<KnowledgeAttachChunk> attachChunkList, List<List<Double>> vectorList, String kid, String docId, Boolean firstTime) {
+    public void storeEmbeddings(List<KnowledgeAttachChunk> attachChunkList, List<List<Double>> vectorList, String kid, String kname, String docId, Boolean firstTime) {
         if (firstTime) {
-            createSchema(kid);
+            createSchema(kid,kname);
         }
         milvusServiceClient.createPartition(
                 CreatePartitionParam.newBuilder()

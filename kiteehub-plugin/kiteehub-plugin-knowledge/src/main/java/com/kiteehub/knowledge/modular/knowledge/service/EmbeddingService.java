@@ -14,7 +14,7 @@ import java.util.Map;
  **/
 public interface EmbeddingService {
 
-    void storeEmbeddings(List<KnowledgeAttachChunk> attachChunkList, String kid, String docId, Boolean firstTime);
+    void storeEmbeddings(List<KnowledgeAttachChunk> attachChunkList, String kid, String kname, String docId, Boolean firstTime);
 
     void removeByDocId(String kid,String docId);
 

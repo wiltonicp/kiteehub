@@ -119,16 +119,16 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
         knowledge.setKname(request.getKname());
         knowledge.setCreateTime(new Date());
         save(knowledge);
-        storeContent(request.getFile(), knowledge.getKid(), true);
+        storeContent(request.getFile(), knowledge.getKid(), request.getKname(), true);
     }
 
     @Override
     public void upload(KnowledgeUploadParam request) {
-        storeContent(request.getFile(), request.getKid(), false);
+        storeContent(request.getFile(), request.getKid(), "",false);
     }
 
     @Override
-    public void storeContent(MultipartFile file, String kid, Boolean firstTime) {
+    public void storeContent(MultipartFile file, String kid, String kname, Boolean firstTime) {
         String fileName = file.getOriginalFilename();
         List<String> chunkList = new ArrayList<>();
         KnowledgeAttach knowledgeAttach = new KnowledgeAttach();
@@ -164,7 +164,7 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
         }).collect(Collectors.toList());
         knowledgeAttachChunkService.saveBatch(attachChunkList, 100);
 
-        embeddingService.storeEmbeddings(attachChunkList, kid, docId, firstTime);
+        embeddingService.storeEmbeddings(attachChunkList, kid, kname, docId, firstTime);
 
         knowledgeAttachService.lambdaUpdate()
                 .set(KnowledgeAttach::getGatherState, EnumUtil.toString(KnowledgeGatherEnum.READY))

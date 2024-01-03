@@ -83,7 +83,7 @@ public interface KnowledgeService extends IService<Knowledge> {
 
     void upload(KnowledgeUploadParam request);
 
-    void storeContent(MultipartFile file, String kid, Boolean firstTime) throws IOException;
+    void storeContent(MultipartFile file, String kid, String kname, Boolean firstTime) throws IOException;
 
     KnowledgeDetailResult detail(String kid);
 

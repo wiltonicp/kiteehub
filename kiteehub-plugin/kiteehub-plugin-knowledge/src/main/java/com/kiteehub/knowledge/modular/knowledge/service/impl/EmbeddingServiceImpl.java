@@ -33,10 +33,10 @@ public class EmbeddingServiceImpl implements EmbeddingService {
      * @param docId             文档ID
      */
     @Override
-    public void storeEmbeddings(List<KnowledgeAttachChunk> attachChunkList, String kid, String docId, Boolean firstTime) {
+    public void storeEmbeddings(List<KnowledgeAttachChunk> attachChunkList, String kid, String kname, String docId, Boolean firstTime) {
         Vectorization vectorization = vectorizationFactory.getEmbedding();
         List<List<Double>> vectorList = vectorization.batchVectorization(attachChunkList.stream().map(KnowledgeAttachChunk::getContent).collect(Collectors.toList()));
-        vectorStore.storeEmbeddings(attachChunkList,vectorList,kid,docId,firstTime);
+        vectorStore.storeEmbeddings(attachChunkList,vectorList,kid,kname,docId,firstTime);
     }
 
     @Override
