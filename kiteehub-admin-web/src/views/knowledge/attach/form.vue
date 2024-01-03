@@ -75,26 +75,22 @@
 				/>
 			</a-form-item>
 
-			<a-form-item label="区域选择：" name="areaSelection">
+			<a-form-item label="区域选择：" name="areaSelection" v-if="areaList.length>0">
 				<!-- <a-input v-model:value="formData.areaSelection" allow-clear disabled /> -->
 
-
-			 <a-tree-select
+				<a-tree-select
 					v-model:value="checkedKeys"
 					style="width: 100%"
 					tree-checkable
 					tree-default-expand-all
 					:show-checked-strategy="SHOW_PARENT"
 					:height="233"
-					:tree-data="areaList.children"
+					:tree-data="areaList"
 					:max-tag-count="10"
 					tree-node-filter-prop="name"
+					:fieldNames="{ children:'children',label: 'name', value: 'id' }"
 				>
-					<template #title="{ name, id }">
-						<span v-if="id === '1742079833179033600'" style="color: #1890ff">{{ name }}</span>
-						<template v-else>{{ name }}</template>
-					</template>
-				</a-tree-select> 
+				</a-tree-select>
 
 				<!-- <a-tree
 					v-model:checkedKeys="checkedKeys"
@@ -157,7 +153,7 @@ const getToken = () => {
 // 获取字典区域
 const getArea = () => {
 	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
-	areaList.value = DICT_TYPE_TREE_DATA.find((item) => item.dictValue === 'AREA')
+	areaList.value = DICT_TYPE_TREE_DATA.find((item) => item.dictValue === 'AREA').children
 	console.log(areaList.value, 'areaList')
 }
 // 打开抽屉
@@ -260,7 +256,7 @@ const confirm = () => {
 // 	}
 // 	return list
 // }
-const checkedKeys = ref([])
+const checkedKeys = ref(['1742079833212588035'])
 watch(checkedKeys, () => {
 	console.log('checkedKeys', checkedKeys)
 })
