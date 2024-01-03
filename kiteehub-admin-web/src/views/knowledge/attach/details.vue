@@ -1,7 +1,21 @@
 <template>
 	<xn-form-container :title="record.docName" :width="900" :visible="visible" :destroy-on-close="true" @close="onClose">
+		<a-form layout="inline" >
+			<a-form-item label="知识处理模型">
+				<a-input v-model:value="record.fileModel" placeholder="知识处理模型" disabled />
+			</a-form-item>
+			<a-form-item label="知识类型">
+				<a-input v-model:value="record.docType" placeholder="知识类型" disabled />
+			</a-form-item>
+			<a-form-item label="最后修改时间">
+				<a-input v-model:value="record.updateTime" placeholder="最后修改时间" disabled />
+			</a-form-item>
+			<a-form-item label="索引模型">
+				<a-input v-model:value="record.indexModel" placeholder="索引模型" disabled />
+			</a-form-item>
+		</a-form>
 		<a-alert
-			:message="`分段预览：（${totalVal} 组）` + `\n 索引模型： Embedding-ada-002`"
+			:message="`分段预览：（${totalVal} 组）`"
 			type="success"
 			show-icon
 			style="margin: 10px 0"
@@ -42,12 +56,6 @@
 			</div>
 		</template>
 	</xn-form-container>
-
-	<!-- <a-modal v-model:open="open" title="Modal" ok-text="确认" cancel-text="取消" @ok="hideModal">
-		<p>Bla bla ...</p>
-		<p>Bla bla ...</p>
-		<p>Bla bla ...</p>
-	</a-modal> -->
 </template>
 
 <script setup name="knowledgeAttachForm">
@@ -95,10 +103,6 @@ const onOpen = (record) => {
 const onClose = () => {
 	visible.value = false
 }
-// 默认要校验的
-const formRules = {}
-// 验证并提交数据
-const onSubmit = () => {}
 
 const knowledAttachChunk = async () => {
 	let parame = {

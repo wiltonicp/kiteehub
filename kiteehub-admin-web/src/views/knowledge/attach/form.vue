@@ -75,11 +75,9 @@
 				/>
 			</a-form-item>
 
-			<a-form-item label="区域选择：" name="areaSelection" v-if="areaList.length>0">
-				<!-- <a-input v-model:value="formData.areaSelection" allow-clear disabled /> -->
-
+			<a-form-item label="区域选择：" name="areaSelection" v-if="areaList.length > 0">
 				<a-tree-select
-					v-model:value="checkedKeys"
+					v-model:value="formData.areaIds"
 					style="width: 100%"
 					tree-checkable
 					tree-default-expand-all
@@ -88,20 +86,9 @@
 					:tree-data="areaList"
 					:max-tag-count="10"
 					tree-node-filter-prop="name"
-					:fieldNames="{ children:'children',label: 'name', value: 'id' }"
+					:fieldNames="{ children: 'children', label: 'name', value: 'id' }"
 				>
 				</a-tree-select>
-
-				<!-- <a-tree
-					v-model:checkedKeys="checkedKeys"
-					checkable
-					:tree-data="areaList.children"
-				>
-					<template #title="{ name, id  }">
-						<span v-if="id === '0-0-1'" style="color: #1890ff">{{ name }}</span>
-						<template v-else>{{ name }}</template>
-					</template>
-				</a-tree> -->
 			</a-form-item>
 		</a-form>
 		<template #footer>
@@ -241,27 +228,9 @@ const confirm = () => {
 	emit('getParameUrl')
 }
 
-// const dig = (path = '0', level = 3) => {
-// 	const list = []
-// 	for (let i = 0; i < 10; i += 1) {
-// 		const value = `${path}-${i}`
-// 		const treeNode = {
-// 			title: value,
-// 			value
-// 		}
-// 		if (level > 0) {
-// 			treeNode.children = dig(value, level - 1)
-// 		}
-// 		list.push(treeNode)
-// 	}
-// 	return list
-// }
-const checkedKeys = ref(['1742079833212588035'])
-watch(checkedKeys, () => {
-	console.log('checkedKeys', checkedKeys)
+watch(formData.areaIds, () => {
+	console.log('areaIds', formData.areaIds)
 })
-
-// const treeData = ref(dig())
 
 // 抛出函数
 defineExpose({
