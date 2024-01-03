@@ -82,6 +82,11 @@
 			dataIndex: 'name'
 		},
 		{
+			title: '描述',
+			dataIndex: 'description',
+			ellipsis: true
+		},
+		{
 			title: '知识库',
 			dataIndex: 'kids',
 			width: '160px'
@@ -108,11 +113,6 @@
 		{
 			title: '对话开场白',
 			dataIndex: 'prologue',
-			ellipsis: true
-		},
-		{
-			title: '描述',
-			dataIndex: 'description',
 			ellipsis: true
 		},
 		{
