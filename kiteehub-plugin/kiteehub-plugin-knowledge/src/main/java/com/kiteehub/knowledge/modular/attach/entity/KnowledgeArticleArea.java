@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
-@TableName("knowledge_article_area")
+@TableName("knowledge_hot_article_area")
 public class KnowledgeArticleArea {
 
     /** 主键 */
