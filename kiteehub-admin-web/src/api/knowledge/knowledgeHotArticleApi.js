@@ -11,7 +11,7 @@ const request = (url, ...arg) => baseRequest(`/knowledge/article/` + url, ...arg
 export default {
 	// 获取热门动态分页
 	knowledgeHotArticlePage(data) {
-		return request('page', data, 'get')
+		return request('page', data)
 	},
 	// 获取热门动态列表
 	knowledgeHotArticleList(data) {

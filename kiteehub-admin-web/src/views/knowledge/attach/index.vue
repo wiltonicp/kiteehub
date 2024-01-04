@@ -18,7 +18,6 @@
 				</a-col>
 				<a-col :span="5">
 					<a-form-item label="区域" name="areaId">
-						{{ searchFormState.areaId }}
 						<a-tree-select
 							v-model:value="searchFormState.areaIds"
 							style="width: 100%"
@@ -184,6 +183,7 @@ const loadData = (parameter) => {
 }
 // 重置
 const reset = () => {
+	searchFormState.areaIds = []
 	searchFormRef.value.resetFields()
 	table.value.refresh(true)
 }
