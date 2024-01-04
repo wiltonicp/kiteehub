@@ -43,7 +43,7 @@
 			</template>
 			<template #bodyCell="{ column, record }">
 				<template v-if="column.dataIndex === 'kid'">
-					{{ $TOOL.dictTypeData('KNOWLEDGE_GATHER', record.kid) }}
+					<a-tag color="blue">{{ $TOOL.dictTypeData('KNOWLEDGE_GATHER', record.kid) }}</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>

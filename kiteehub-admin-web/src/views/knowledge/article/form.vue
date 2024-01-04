@@ -55,6 +55,8 @@
 	}
 	// 默认要校验的
 	const formRules = {
+		kid: [required('请选择知识类别')],
+		title: [required('请输入标题')],
 	}
 	// 验证并提交数据
 	const onSubmit = () => {
