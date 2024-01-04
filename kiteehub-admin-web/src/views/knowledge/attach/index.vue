@@ -2,18 +2,36 @@
 	<a-card :bordered="false">
 		<a-form ref="searchFormRef" name="advanced_search" :model="searchFormState" class="ant-advanced-search-form">
 			<a-row :gutter="24">
-				<a-col :span="6">
+				<a-col :span="5">
 					<a-form-item label="知识名称" name="docName">
 						<a-input v-model:value="searchFormState.docName" placeholder="请输入知识名称" />
 					</a-form-item>
 				</a-col>
-				<a-col :span="6">
+				<a-col :span="5">
 					<a-form-item label="状态" name="gatherState">
 						<a-select
 							v-model:value="searchFormState.gatherState"
 							placeholder="请选择状态"
 							:options="gatherStateOptions"
 						/>
+					</a-form-item>
+				</a-col>
+				<a-col :span="5">
+					<a-form-item label="区域" name="areaId">
+						{{ searchFormState.areaId }}
+						<a-tree-select
+							v-model:value="searchFormState.areaIds"
+							style="width: 100%"
+							tree-checkable
+							tree-default-expand-all
+							:show-checked-strategy="SHOW_PARENT"
+							:height="233"
+							:tree-data="areaList"
+							:max-tag-count="10"
+							tree-node-filter-prop="name"
+							:fieldNames="{ children: 'children', label: 'name', value: 'id' }"
+						>
+						</a-tree-select>
 					</a-form-item>
 				</a-col>
 				<a-col :span="6">
@@ -56,7 +74,7 @@
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>
 						<a @click="examine(record)">查看</a>
-						<a @click="formRef.onOpen(typeUrl,record)" v-if="hasPerm('knowledgeAttachEdit')">编辑</a>
+						<a @click="formRef.onOpen(typeUrl, record)" v-if="hasPerm('knowledgeAttachEdit')">编辑</a>
 						<a-divider type="vertical" v-if="hasPerm(['knowledgeAttachEdit', 'knowledgeAttachDelete'], 'and')" />
 						<a-popconfirm title="确定要删除吗？" @confirm="deleteKnowledgeAttach(record)">
 							<a-button type="link" danger size="small" v-if="hasPerm('knowledgeAttachDelete')">删除</a-button>
@@ -66,7 +84,7 @@
 			</template>
 		</s-table>
 	</a-card>
-	<Form ref="formRef" @successful="table.refresh(true)"  @getParameUrl="getParameUrl" />
+	<Form ref="formRef" @successful="table.refresh(true)" @getParameUrl="getParameUrl" />
 
 	<Details ref="detailsRef" @successful="detailsRef.refresh(true)" />
 </template>
@@ -77,6 +95,8 @@ import tool from '@/utils/tool'
 import Form from './form.vue'
 import Details from './details.vue'
 import knowledgeAttachApi from '@/api/knowledge/knowledgeAttachApi'
+import { message, TreeSelect } from 'ant-design-vue'
+const SHOW_PARENT = TreeSelect.SHOW_PARENT
 let searchFormState = reactive({})
 const searchFormRef = ref()
 const typeUrl = ref('')
@@ -84,6 +104,7 @@ const table = ref()
 const formRef = ref()
 const detailsRef = ref()
 const sign = ref()
+const areaList = ref([])
 const toolConfig = { refresh: true, height: true, columnSetting: true, striped: false }
 const columns = [
 	{
@@ -129,8 +150,14 @@ const selectedRowKeys = ref([])
 
 onMounted(() => {
 	getParameUrl()
+	getArea()
 })
-
+// 获取字典区域
+const getArea = () => {
+	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
+	areaList.value = DICT_TYPE_TREE_DATA.find((item) => item.dictValue === 'AREA').children
+	console.log(areaList.value, 'areaList.value')
+}
 // 列表选择配置
 const options = {
 	// columns数字类型字段加入 needTotal: true 可以勾选自动算账
@@ -149,6 +176,7 @@ const options = {
 const loadData = (parameter) => {
 	const searchFormParam = JSON.parse(JSON.stringify(searchFormState))
 	parameter.kid = typeUrl.value
+	parameter.areaIds =searchFormState.areaIds&&searchFormState.areaIds.join(',')
 	console.log(parameter, 'parameter')
 	return knowledgeAttachApi.knowledgeAttachPage(Object.assign(parameter, searchFormParam)).then((data) => {
 		return data
@@ -190,6 +218,9 @@ watch(
 	},
 	{ immediate: true }
 )
+watch(searchFormState.areaId, () => {
+	console.log('areaIds', searchFormState.areaId)
+})
 // url 参数
 const getParameUrl = async () => {
 	sign.value = false

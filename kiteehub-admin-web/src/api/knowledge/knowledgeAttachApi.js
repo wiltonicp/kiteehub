@@ -14,7 +14,7 @@ const requestSelf = (url, ...arg) => baseRequest(`/knowledge/attach-chunk/` + ur
 export default {
 	// 获取知识库附件分页
 	knowledgeAttachPage(data) {
-		return request('page', data, 'get')
+		return request('page', data,)
 	},
 	// 获取知识库附件列表
 	knowledgeAttachList(data) {
