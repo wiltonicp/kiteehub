@@ -11,8 +11,8 @@
  */
 package com.kiteehub.knowledge.modular.article.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kiteehub.knowledge.modular.article.entity.KnowledgeHotArticle;
+import icu.mhb.mybatisplus.plugln.base.mapper.JoinBaseMapper;
 
 /**
  * 热门动态Mapper接口
@@ -20,5 +20,5 @@ import com.kiteehub.knowledge.modular.article.entity.KnowledgeHotArticle;
  * @author Ranger
  * @date  2024/01/04 09:54
  **/
-public interface KnowledgeHotArticleMapper extends BaseMapper<KnowledgeHotArticle> {
+public interface KnowledgeHotArticleMapper extends JoinBaseMapper<KnowledgeHotArticle> {
 }

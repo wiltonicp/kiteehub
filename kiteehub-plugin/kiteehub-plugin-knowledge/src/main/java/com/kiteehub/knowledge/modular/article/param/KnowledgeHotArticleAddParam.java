@@ -19,6 +19,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 热门动态添加参数
@@ -41,5 +42,9 @@ public class KnowledgeHotArticleAddParam {
     /** 正文 */
     @ApiModelProperty(value = "正文", position = 4)
     private String content;
+
+    /** 区域ID集合 */
+    @ApiModelProperty(value = "区域ID集合", position = 5)
+    private List<String> areaIds;
 
 }

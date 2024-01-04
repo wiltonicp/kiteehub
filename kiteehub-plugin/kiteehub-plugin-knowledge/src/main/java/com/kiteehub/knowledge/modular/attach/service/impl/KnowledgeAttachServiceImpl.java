@@ -134,12 +134,12 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
             this.removeByMap(map);
             this.knowledgeAttachChunkMapper.deleteByMap(map);
             embeddingService.removeByDocId(attache.getKid(), attache.getDocId());
-
-            //区域删除
-            QueryWrapper<KnowledgeAttachArea> queryWrapper = new QueryWrapper<>();
-            queryWrapper.lambda().eq(KnowledgeAttachArea::getAttachId,attache.getId());
-            knowledgeAttachAreaService.remove(queryWrapper);
         });
+
+        //区域删除
+        QueryWrapper<KnowledgeAttachArea> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().in(KnowledgeAttachArea::getAttachId,CollStreamUtil.toList(knowledgeAttachIdParamList, KnowledgeAttachIdParam::getId));
+        knowledgeAttachAreaService.remove(queryWrapper);
     }
 
     @Override

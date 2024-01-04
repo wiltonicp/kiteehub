@@ -18,6 +18,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kiteehub.knowledge.modular.article.param.KnowledgeHotArticleIdParam;
 import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttach;
 import com.kiteehub.knowledge.modular.attach.param.*;
 import com.kiteehub.knowledge.modular.attach.service.KnowledgeAttachService;
@@ -95,9 +96,9 @@ public class KnowledgeAttachChunkServiceImpl extends ServiceImpl<KnowledgeAttach
         knowledgeAttacheChunks.forEach(attachChunk -> {
             kid.set(attachChunk.getKid());
             docId.set(attachChunk.getDocId());
-            this.removeById(attachChunk.getId());
             embeddingService.removeByRowId(attachChunk.getKid(), attachChunk.getDocId(), attachChunk.getRowId());
         });
+        this.removeByIds(CollStreamUtil.toList(knowledgeAttachChunkIdParamList, KnowledgeAttachChunkIdParam::getId));
 
         KnowledgeAttach knowledgeAttach = knowledgeAttachService.queryEntity(kid.get(), docId.get());
         //修改附件totalData

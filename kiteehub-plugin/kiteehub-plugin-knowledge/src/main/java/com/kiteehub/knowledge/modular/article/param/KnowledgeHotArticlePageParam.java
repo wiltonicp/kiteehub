@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 热门动态查询参数
@@ -54,5 +55,9 @@ public class KnowledgeHotArticlePageParam {
     /** 标题 */
     @ApiModelProperty(value = "标题")
     private String title;
+
+    /** 区域id集合 */
+    @ApiModelProperty(value = "区域id集合")
+    private List<String> areaIds;
 
 }

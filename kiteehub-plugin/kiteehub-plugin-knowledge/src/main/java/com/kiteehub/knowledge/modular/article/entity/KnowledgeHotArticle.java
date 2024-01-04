@@ -12,11 +12,13 @@
 package com.kiteehub.knowledge.modular.article.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.kiteehub.common.pojo.CommonEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 热门动态实体
@@ -27,7 +29,7 @@ import java.util.Date;
 @Getter
 @Setter
 @TableName("knowledge_hot_article")
-public class KnowledgeHotArticle {
+public class KnowledgeHotArticle extends CommonEntity {
 
     /** 主键 */
     @TableId
@@ -46,29 +48,8 @@ public class KnowledgeHotArticle {
     @ApiModelProperty(value = "正文", position = 4)
     private String content;
 
-    /** 删除标志 */
-    @ApiModelProperty(value = "删除标志", position = 5)
-    @TableLogic
-    @TableField(fill = FieldFill.INSERT)
-    private String deleteFlag;
-
-    /** 创建时间 */
-    @ApiModelProperty(value = "创建时间", position = 6)
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-
-    /** 创建用户 */
-    @ApiModelProperty(value = "创建用户", position = 7)
-    @TableField(fill = FieldFill.INSERT)
-    private String createUser;
-
-    /** 修改时间 */
-    @ApiModelProperty(value = "修改时间", position = 8)
-    @TableField(fill = FieldFill.UPDATE)
-    private Date updateTime;
-
-    /** 修改用户 */
-    @ApiModelProperty(value = "修改用户", position = 9)
-    @TableField(fill = FieldFill.UPDATE)
-    private String updateUser;
+    /** 区域ID集合 */
+    @TableField(exist = false)
+    @ApiModelProperty(value = "区域ID集合", position = 5)
+    private List<String> areaIds;
 }

@@ -13,11 +13,18 @@ package com.kiteehub.knowledge.modular.article.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollStreamUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kiteehub.knowledge.modular.attach.entity.KnowledgeArticleArea;
+import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttach;
+import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachArea;
+import com.kiteehub.knowledge.modular.attach.service.KnowledgeArticleAreaService;
+import icu.mhb.mybatisplus.plugln.core.JoinLambdaWrapper;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.kiteehub.common.enums.CommonSortOrderEnum;
@@ -32,6 +39,7 @@ import com.kiteehub.knowledge.modular.article.param.KnowledgeHotArticlePageParam
 import com.kiteehub.knowledge.modular.article.service.KnowledgeHotArticleService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 热门动态Service接口实现类
@@ -40,25 +48,34 @@ import java.util.List;
  * @date  2024/01/04 09:54
  **/
 @Service
+@AllArgsConstructor
 public class KnowledgeHotArticleServiceImpl extends ServiceImpl<KnowledgeHotArticleMapper, KnowledgeHotArticle> implements KnowledgeHotArticleService {
+
+    private final KnowledgeArticleAreaService knowledgeArticleAreaService;
 
     @Override
     public Page<KnowledgeHotArticle> page(KnowledgeHotArticlePageParam knowledgeHotArticlePageParam) {
-        QueryWrapper<KnowledgeHotArticle> queryWrapper = new QueryWrapper<>();
+        JoinLambdaWrapper<KnowledgeHotArticle> wrapper = new JoinLambdaWrapper<>(KnowledgeHotArticle.class).distinct();
+        wrapper.leftJoin(KnowledgeArticleArea.class,KnowledgeArticleArea::getArticleId,KnowledgeHotArticle::getId,false)
+                .in(ObjectUtil.isNotEmpty(knowledgeHotArticlePageParam.getAreaIds()),KnowledgeArticleArea::getAreaId,knowledgeHotArticlePageParam.getAreaIds())
+                .end();
         if(ObjectUtil.isNotEmpty(knowledgeHotArticlePageParam.getKid())) {
-            queryWrapper.lambda().eq(KnowledgeHotArticle::getKid, knowledgeHotArticlePageParam.getKid());
+            wrapper.eq(KnowledgeHotArticle::getKid, knowledgeHotArticlePageParam.getKid());
         }
         if(ObjectUtil.isNotEmpty(knowledgeHotArticlePageParam.getTitle())) {
-            queryWrapper.lambda().like(KnowledgeHotArticle::getTitle, knowledgeHotArticlePageParam.getTitle());
+            wrapper.like(KnowledgeHotArticle::getTitle, knowledgeHotArticlePageParam.getTitle());
         }
-        if(ObjectUtil.isAllNotEmpty(knowledgeHotArticlePageParam.getSortField(), knowledgeHotArticlePageParam.getSortOrder())) {
-            CommonSortOrderEnum.validate(knowledgeHotArticlePageParam.getSortOrder());
-            queryWrapper.orderBy(true, knowledgeHotArticlePageParam.getSortOrder().equals(CommonSortOrderEnum.ASC.getValue()),
-                    StrUtil.toUnderlineCase(knowledgeHotArticlePageParam.getSortField()));
-        } else {
-            queryWrapper.lambda().orderByAsc(KnowledgeHotArticle::getId);
-        }
-        return this.page(CommonPageRequest.defaultPage(), queryWrapper);
+        wrapper.orderByDesc(KnowledgeHotArticle::getCreateTime);
+        Page<KnowledgeHotArticle> page = this.baseMapper.joinSelectPage(CommonPageRequest.defaultPage(), wrapper, KnowledgeHotArticle.class);
+        page.getRecords().forEach(record ->{
+            //区域处理
+            QueryWrapper<KnowledgeArticleArea> areaQueryWrapper = new QueryWrapper<>();
+            areaQueryWrapper.lambda().eq(KnowledgeArticleArea::getArticleId,record.getId());
+            List<KnowledgeArticleArea> listArea = knowledgeArticleAreaService.list(areaQueryWrapper);
+            List<String> collect = listArea.stream().map(KnowledgeArticleArea::getAreaId).collect(Collectors.toList());
+            record.setAreaIds(collect);
+        });
+        return page;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -66,6 +83,8 @@ public class KnowledgeHotArticleServiceImpl extends ServiceImpl<KnowledgeHotArti
     public void add(KnowledgeHotArticleAddParam knowledgeHotArticleAddParam) {
         KnowledgeHotArticle knowledgeHotArticle = BeanUtil.toBean(knowledgeHotArticleAddParam, KnowledgeHotArticle.class);
         this.save(knowledgeHotArticle);
+
+        knowledgeArticleAreaService.addOrEdit(knowledgeHotArticle.getId(),knowledgeHotArticleAddParam.getAreaIds());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -74,6 +93,8 @@ public class KnowledgeHotArticleServiceImpl extends ServiceImpl<KnowledgeHotArti
         KnowledgeHotArticle knowledgeHotArticle = this.queryEntity(knowledgeHotArticleEditParam.getId());
         BeanUtil.copyProperties(knowledgeHotArticleEditParam, knowledgeHotArticle);
         this.updateById(knowledgeHotArticle);
+
+        knowledgeArticleAreaService.addOrEdit(knowledgeHotArticle.getId(),knowledgeHotArticleEditParam.getAreaIds());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -81,6 +102,10 @@ public class KnowledgeHotArticleServiceImpl extends ServiceImpl<KnowledgeHotArti
     public void delete(List<KnowledgeHotArticleIdParam> knowledgeHotArticleIdParamList) {
         // 执行删除
         this.removeByIds(CollStreamUtil.toList(knowledgeHotArticleIdParamList, KnowledgeHotArticleIdParam::getId));
+
+        QueryWrapper<KnowledgeArticleArea> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().in(KnowledgeArticleArea::getArticleId,CollStreamUtil.toList(knowledgeHotArticleIdParamList, KnowledgeHotArticleIdParam::getId));
+        knowledgeArticleAreaService.remove(queryWrapper);
     }
 
     @Override
