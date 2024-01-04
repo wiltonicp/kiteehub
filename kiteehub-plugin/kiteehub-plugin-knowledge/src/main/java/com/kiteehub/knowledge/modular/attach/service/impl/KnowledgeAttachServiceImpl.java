@@ -23,6 +23,7 @@ import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachArea;
 import com.kiteehub.knowledge.modular.attach.mapper.KnowledgeAttachChunkMapper;
 import com.kiteehub.knowledge.modular.attach.service.KnowledgeAttachAreaService;
 import com.kiteehub.knowledge.modular.knowledge.service.EmbeddingService;
+import icu.mhb.mybatisplus.plugln.core.JoinLambdaWrapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,26 +59,29 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
 
     @Override
     public Page<KnowledgeAttach> page(KnowledgeAttachPageParam knowledgeAttachPageParam) {
-        QueryWrapper<KnowledgeAttach> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select(KnowledgeAttach.class,attach -> !attach.getColumn().equals("content"));
+        JoinLambdaWrapper<KnowledgeAttach> wrapper = new JoinLambdaWrapper<>(KnowledgeAttach.class).distinct();
+        wrapper.select(KnowledgeAttach.class,attach -> !attach.getColumn().equals("content"));
+        wrapper.leftJoin(KnowledgeAttachArea.class,KnowledgeAttachArea::getAttachId,KnowledgeAttach::getId,false)
+                .in(ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getAreaIds()),KnowledgeAttachArea::getAreaId,knowledgeAttachPageParam.getAreaIds())
+                .end();
+//        wrapper.selectSunQuery(KnowledgeAttachArea.class,w ->{
+//            w.eq(KnowledgeAttachArea::getAttachId,KnowledgeAttach::getId)
+//                    .selectAs(cb ->{
+//                        cb.add(KnowledgeAttachArea::getAreaId,"areaIds");
+//                    });
+//        });
         if (ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getKid())) {
-            queryWrapper.lambda().eq(KnowledgeAttach::getKid, knowledgeAttachPageParam.getKid());
+            wrapper.eq(KnowledgeAttach::getKid, knowledgeAttachPageParam.getKid());
         }
         if (ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getDocName())) {
-            queryWrapper.lambda().like(KnowledgeAttach::getDocName, knowledgeAttachPageParam.getDocName());
+            wrapper.like(KnowledgeAttach::getDocName, knowledgeAttachPageParam.getDocName());
         }
         if (ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getGatherState())) {
-            queryWrapper.lambda().eq(KnowledgeAttach::getGatherState, knowledgeAttachPageParam.getGatherState());
+            wrapper.eq(KnowledgeAttach::getGatherState, knowledgeAttachPageParam.getGatherState());
         }
-        if (ObjectUtil.isAllNotEmpty(knowledgeAttachPageParam.getSortField(), knowledgeAttachPageParam.getSortOrder())) {
-            CommonSortOrderEnum.validate(knowledgeAttachPageParam.getSortOrder());
-            queryWrapper.orderBy(true, knowledgeAttachPageParam.getSortOrder().equals(CommonSortOrderEnum.ASC.getValue()),
-                    StrUtil.toUnderlineCase(knowledgeAttachPageParam.getSortField()));
-        } else {
-            queryWrapper.lambda().orderByDesc(KnowledgeAttach::getUpdateTime);
-        }
-        Page<KnowledgeAttach> page = this.page(CommonPageRequest.defaultPage(), queryWrapper);
-        page.getRecords().forEach(record ->{
+        wrapper.orderByDesc(KnowledgeAttach::getUpdateTime);
+        Page<KnowledgeAttach> knowledgeAttachPage = this.baseMapper.joinSelectPage(CommonPageRequest.defaultPage(), wrapper, KnowledgeAttach.class);
+        knowledgeAttachPage.getRecords().forEach(record ->{
             //区域处理
             QueryWrapper<KnowledgeAttachArea> areaQueryWrapper = new QueryWrapper<>();
             areaQueryWrapper.lambda().eq(KnowledgeAttachArea::getAttachId,record.getId());
@@ -85,7 +89,7 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
             List<String> collect = listArea.stream().map(KnowledgeAttachArea::getAreaId).collect(Collectors.toList());
             record.setAreaIds(collect);
         });
-        return page;
+        return knowledgeAttachPage;
     }
 
     @Transactional(rollbackFor = Exception.class)

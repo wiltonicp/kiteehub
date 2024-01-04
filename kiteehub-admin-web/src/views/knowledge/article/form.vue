@@ -13,8 +13,21 @@
 			<a-form-item label="标题：" name="title">
 				<a-input v-model:value="formData.title" placeholder="请输入标题" allow-clear />
 			</a-form-item>
-			<a-form-item label="正文：" name="content">
-				<a-textarea v-model:value="formData.content" placeholder="请输入正文" :auto-size="{ minRows: 3, maxRows: 5 }" />
+			<a-form-item label="发送方式：" name="sendType">
+				<a-radio-group v-model:value="sendType">
+					<a-radio value="TXT">纯文本</a-radio>
+					<a-radio value="HTML">HTML</a-radio>
+				</a-radio-group>
+			</a-form-item>
+			<a-form-item label="正文" name="content" v-if="sendType === 'TXT'">
+				<a-textarea
+					v-model:value="formData.content"
+					placeholder="请输入正文"
+					:auto-size="{ minRows: 6, maxRows: 6 }"
+				/>
+			</a-form-item>
+			<a-form-item label="正文" name="content" v-if="sendType === 'HTML'">
+				<xn-editor v-model="formData.content" placeholder="请输入正文" :height="200"></xn-editor>
 			</a-form-item>
 		</a-form>
 		<template #footer>
@@ -29,6 +42,7 @@
 	import { cloneDeep } from 'lodash-es'
 	import { required } from '@/utils/formRules'
 	import knowledgeHotArticleApi from '@/api/knowledge/knowledgeHotArticleApi'
+	import XnEditor from "@/components/Editor/index.vue";
 	// 抽屉状态
 	const visible = ref(false)
 	const emit = defineEmits({ successful: null })
@@ -37,6 +51,8 @@
 	const formData = ref({})
 	const submitLoading = ref(false)
 	const kidOptions = ref([])
+	// 发送文本方式
+	const sendType = ref('TXT')
 
 	// 打开抽屉
 	const onOpen = (record) => {

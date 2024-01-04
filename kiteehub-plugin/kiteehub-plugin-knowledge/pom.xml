@@ -34,6 +34,12 @@
             <artifactId>kiteehub-plugin-dev-api</artifactId>
         </dependency>
 
+        <!-- mybatis-plus-join -->
+        <dependency>
+            <groupId>icu.mhb</groupId>
+            <artifactId>mybatis-plus-join</artifactId>
+        </dependency>
+
         <!--  PDF解析   -->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>

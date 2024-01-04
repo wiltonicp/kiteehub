@@ -60,6 +60,7 @@
         <minio.version>8.5.2</minio.version>
         <mssql.connector.java.version>9.2.1.jre8</mssql.connector.java.version>
         <mybatis.plus.version>3.5.3.1</mybatis.plus.version>
+        <mybatis.plus.join.version>1.3.6</mybatis.plus.join.version>
         <mybatis.version>3.5.10</mybatis.version>
         <mysql.connector.java.version>8.0.28</mysql.connector.java.version>
         <netty.common.version>4.1.89.Final</netty.common.version>
@@ -259,6 +260,14 @@
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis.plus.version}</version>
             </dependency>
+
+            <!-- mybatis-plus-join -->
+            <dependency>
+                <groupId>icu.mhb</groupId>
+                <artifactId>mybatis-plus-join</artifactId>
+                <version>${mybatis.plus.join.version}</version>
+            </dependency>
+
 
             <!-- easy-trans -->
             <dependency>
