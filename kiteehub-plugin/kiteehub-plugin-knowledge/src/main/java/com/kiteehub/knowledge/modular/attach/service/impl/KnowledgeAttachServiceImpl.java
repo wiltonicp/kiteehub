@@ -19,6 +19,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kiteehub.dev.api.DevDictApi;
 import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachArea;
 import com.kiteehub.knowledge.modular.attach.mapper.KnowledgeAttachChunkMapper;
 import com.kiteehub.knowledge.modular.attach.service.KnowledgeAttachAreaService;
@@ -53,17 +54,22 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMapper, KnowledgeAttach> implements KnowledgeAttachService {
 
+    private final DevDictApi devDictApi;
     private final EmbeddingService embeddingService;
     private final KnowledgeAttachChunkMapper knowledgeAttachChunkMapper;
     private final KnowledgeAttachAreaService knowledgeAttachAreaService;
 
     @Override
     public Page<KnowledgeAttach> page(KnowledgeAttachPageParam knowledgeAttachPageParam) {
+
         JoinLambdaWrapper<KnowledgeAttach> wrapper = new JoinLambdaWrapper<>(KnowledgeAttach.class).distinct();
         wrapper.select(KnowledgeAttach.class,attach -> !attach.getColumn().equals("content"));
-        wrapper.leftJoin(KnowledgeAttachArea.class,KnowledgeAttachArea::getAttachId,KnowledgeAttach::getId,false)
-                .in(ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getAreaIds()),KnowledgeAttachArea::getAreaId,knowledgeAttachPageParam.getAreaIds())
-                .end();
+        if(ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getAreaIds())){
+            List<String> areaIds = devDictApi.getIdsByParentIds(knowledgeAttachPageParam.getAreaIds());
+            wrapper.leftJoin(KnowledgeAttachArea.class,KnowledgeAttachArea::getAttachId,KnowledgeAttach::getId,false)
+                    .in(ObjectUtil.isNotEmpty(areaIds),KnowledgeAttachArea::getAreaId,areaIds)
+                    .end();
+        }
 //        wrapper.selectSunQuery(KnowledgeAttachArea.class,w ->{
 //            w.eq(KnowledgeAttachArea::getAttachId,KnowledgeAttach::getId)
 //                    .selectAs(cb ->{

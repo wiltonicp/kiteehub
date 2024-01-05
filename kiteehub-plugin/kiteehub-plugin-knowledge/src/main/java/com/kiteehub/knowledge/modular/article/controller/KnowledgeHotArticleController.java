@@ -60,8 +60,8 @@ public class KnowledgeHotArticleController {
     @ApiOperationSupport(order = 1)
     @ApiOperation("获取热门动态分页")
     @SaCheckPermission("/knowledge/article/page")
-    @GetMapping("/knowledge/article/page")
-    public CommonResult<Page<KnowledgeHotArticle>> page(KnowledgeHotArticlePageParam knowledgeHotArticlePageParam) {
+    @PostMapping("/knowledge/article/page")
+    public CommonResult<Page<KnowledgeHotArticle>> page(@RequestBody KnowledgeHotArticlePageParam knowledgeHotArticlePageParam) {
         return CommonResult.data(knowledgeHotArticleService.page(knowledgeHotArticlePageParam));
     }
 

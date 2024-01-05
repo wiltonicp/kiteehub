@@ -67,8 +67,8 @@ public class KnowledgeAttachController {
     @ApiOperationSupport(order = 1)
     @ApiOperation("获取知识库附件分页")
     @SaCheckPermission("/knowledge/attach/page")
-    @GetMapping("/knowledge/attach/page")
-    public CommonResult<Page<KnowledgeAttach>> page(KnowledgeAttachPageParam knowledgeAttachPageParam) {
+    @PostMapping("/knowledge/attach/page")
+    public CommonResult<Page<KnowledgeAttach>> page(@RequestBody KnowledgeAttachPageParam knowledgeAttachPageParam) {
         return CommonResult.data(knowledgeAttachService.page(knowledgeAttachPageParam));
     }
 

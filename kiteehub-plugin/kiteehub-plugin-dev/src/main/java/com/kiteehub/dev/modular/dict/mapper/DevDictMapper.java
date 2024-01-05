@@ -13,6 +13,9 @@ package com.kiteehub.dev.modular.dict.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kiteehub.dev.modular.dict.entity.DevDict;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 字典Mapper接口
@@ -21,4 +24,11 @@ import com.kiteehub.dev.modular.dict.entity.DevDict;
  * @date 2022/4/22 10:40
  **/
 public interface DevDictMapper extends BaseMapper<DevDict> {
+
+    /**
+     * 根据父ID集合获取所有的子ID集合
+     * @param parentIds
+     * @return
+     */
+    List<String> getIdsByParentIds(@Param("parentIds") List<String> parentIds);
 }

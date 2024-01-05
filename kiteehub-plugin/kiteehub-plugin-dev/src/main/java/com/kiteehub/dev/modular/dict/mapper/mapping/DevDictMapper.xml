@@ -3,4 +3,15 @@
 <mapper namespace="com.kiteehub.dev.modular.dict.mapper.DevDictMapper">
 
 
+    <select id="getIdsByParentIds" resultType="java.lang.String">
+        WITH RECURSIVE subordinates AS (
+            SELECT id FROM dev_dict WHERE id IN
+            <foreach collection="parentIds" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+            UNION ALL
+            SELECT e.id FROM dev_dict e INNER JOIN subordinates s ON e.parent_id = s.id WHERE e.DELETE_FLAG = 'NOT_DELETE'
+        )
+        SELECT * FROM subordinates
+    </select>
 </mapper>

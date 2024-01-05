@@ -11,8 +11,12 @@
  */
 package com.kiteehub.dev.modular.dict.provider;
 
+import com.kiteehub.dev.modular.dict.mapper.DevDictMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.kiteehub.dev.api.DevDictApi;
+
+import java.util.List;
 
 /**
  * 字典API接口实现类
@@ -21,5 +25,13 @@ import com.kiteehub.dev.api.DevDictApi;
  * @date 2022/9/2 16:05
  */
 @Service
+@AllArgsConstructor
 public class DevDictApiProvider implements DevDictApi {
+
+    private final DevDictMapper devDictMapper;
+
+    @Override
+    public List<String> getIdsByParentIds(List<String> parentIds) {
+        return devDictMapper.getIdsByParentIds(parentIds);
+    }
 }

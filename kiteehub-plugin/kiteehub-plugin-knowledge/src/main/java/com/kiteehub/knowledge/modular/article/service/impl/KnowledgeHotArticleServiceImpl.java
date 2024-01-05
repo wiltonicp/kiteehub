@@ -13,21 +13,17 @@ package com.kiteehub.knowledge.modular.article.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollStreamUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kiteehub.dev.api.DevDictApi;
 import com.kiteehub.knowledge.modular.attach.entity.KnowledgeArticleArea;
-import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttach;
-import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachArea;
 import com.kiteehub.knowledge.modular.attach.service.KnowledgeArticleAreaService;
 import icu.mhb.mybatisplus.plugln.core.JoinLambdaWrapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.kiteehub.common.enums.CommonSortOrderEnum;
 import com.kiteehub.common.exception.CommonException;
 import com.kiteehub.common.page.CommonPageRequest;
 import com.kiteehub.knowledge.modular.article.entity.KnowledgeHotArticle;
@@ -51,14 +47,19 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class KnowledgeHotArticleServiceImpl extends ServiceImpl<KnowledgeHotArticleMapper, KnowledgeHotArticle> implements KnowledgeHotArticleService {
 
+    private final DevDictApi devDictApi;
     private final KnowledgeArticleAreaService knowledgeArticleAreaService;
 
     @Override
     public Page<KnowledgeHotArticle> page(KnowledgeHotArticlePageParam knowledgeHotArticlePageParam) {
         JoinLambdaWrapper<KnowledgeHotArticle> wrapper = new JoinLambdaWrapper<>(KnowledgeHotArticle.class).distinct();
-        wrapper.leftJoin(KnowledgeArticleArea.class,KnowledgeArticleArea::getArticleId,KnowledgeHotArticle::getId,false)
-                .in(ObjectUtil.isNotEmpty(knowledgeHotArticlePageParam.getAreaIds()),KnowledgeArticleArea::getAreaId,knowledgeHotArticlePageParam.getAreaIds())
-                .end();
+        if(ObjectUtil.isNotEmpty(knowledgeHotArticlePageParam.getAreaIds())){
+            List<String> areaIds = devDictApi.getIdsByParentIds(knowledgeHotArticlePageParam.getAreaIds());
+            wrapper.leftJoin(KnowledgeArticleArea.class,KnowledgeArticleArea::getArticleId,KnowledgeHotArticle::getId,false)
+                    .in(ObjectUtil.isNotEmpty(areaIds),KnowledgeArticleArea::getAreaId,areaIds)
+                    .end();
+        }
+
         if(ObjectUtil.isNotEmpty(knowledgeHotArticlePageParam.getKid())) {
             wrapper.eq(KnowledgeHotArticle::getKid, knowledgeHotArticlePageParam.getKid());
         }
