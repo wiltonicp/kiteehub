@@ -44,12 +44,16 @@ public class KnowledgeHotArticle extends CommonEntity {
     @ApiModelProperty(value = "标题", position = 3)
     private String title;
 
+    /** 头图 */
+    @ApiModelProperty(value = "头图", position = 4)
+    private String headImg;
+
     /** 正文 */
-    @ApiModelProperty(value = "正文", position = 4)
+    @ApiModelProperty(value = "正文", position = 5)
     private String content;
 
     /** 区域ID集合 */
     @TableField(exist = false)
-    @ApiModelProperty(value = "区域ID集合", position = 5)
+    @ApiModelProperty(value = "区域ID集合", position = 6)
     private List<String> areaIds;
 }

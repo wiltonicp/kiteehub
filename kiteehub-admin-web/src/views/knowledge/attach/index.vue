@@ -1,88 +1,88 @@
 <template>
-	<a-card :bordered="false">
-		<a-form ref="searchFormRef" name="advanced_search" :model="searchFormState" class="ant-advanced-search-form">
-			<a-row :gutter="24">
-				<a-col :span="5">
-					<a-form-item label="知识名称" name="docName">
-						<a-input v-model:value="searchFormState.docName" placeholder="请输入知识名称" />
-					</a-form-item>
-				</a-col>
-				<a-col :span="5">
-					<a-form-item label="状态" name="gatherState">
-						<a-select
-							v-model:value="searchFormState.gatherState"
-							placeholder="请选择状态"
-							:options="gatherStateOptions"
-						/>
-					</a-form-item>
-				</a-col>
-				<a-col :span="5">
-					<a-form-item label="区域" name="areaId">
-						<a-tree-select
-							v-model:value="searchFormState.areaIds"
-							style="width: 100%"
-							tree-checkable
-							tree-default-expand-all
-							:show-checked-strategy="SHOW_PARENT"
-							:height="233"
-							:tree-data="areaList"
-							:max-tag-count="10"
-							tree-node-filter-prop="name"
-							:fieldNames="{ children: 'children', label: 'name', value: 'id' }"
-						>
-						</a-tree-select>
-					</a-form-item>
-				</a-col>
-				<a-col :span="6">
-					<a-button type="primary" @click="table.refresh(true)">查询</a-button>
-					<a-button style="margin: 0 8px" @click="reset">重置</a-button>
-				</a-col>
-			</a-row>
-		</a-form>
-		<s-table
-			ref="table"
-			:columns="columns"
-			:data="loadData"
-			:alert="options.alert.show"
-			bordered
-			:row-key="(record) => record.id"
-			:tool-config="toolConfig"
-			:row-selection="options.rowSelection"
-			v-if="sign"
-		>
-			<template #operator class="table-operator">
-				<a-space>
-					<a-button type="primary" @click="formRef.onOpen(typeUrl)" v-if="hasPerm('knowledgeAttachAdd')">
-						<template #icon><plus-outlined /></template>
-						新增/导入
-					</a-button>
-					<xn-batch-delete
-						v-if="hasPerm('knowledgeAttachBatchDelete')"
-						:selectedRowKeys="selectedRowKeys"
-						@batchDelete="deleteBatchKnowledgeAttach"
-					/>
-				</a-space>
-			</template>
-			<template #bodyCell="{ column, record }">
-				<template v-if="column.dataIndex === 'gatherState'">
-					<a-tag color="grey" v-if="record.gatherState == 'PROGRESSING'">{{
-						$TOOL.dictTypeData('Gather', record.gatherState)
-					}}</a-tag>
-					<a-tag color="green" v-else>{{ $TOOL.dictTypeData('Gather', record.gatherState) }}</a-tag>
-				</template>
-				<template v-if="column.dataIndex === 'action'">
-					<a-space>
-						<a @click="examine(record)">查看</a>
-						<a @click="formRef.onOpen(typeUrl, record)" v-if="hasPerm('knowledgeAttachEdit')">编辑</a>
-						<a-divider type="vertical" v-if="hasPerm(['knowledgeAttachEdit', 'knowledgeAttachDelete'], 'and')" />
-						<a-popconfirm title="确定要删除吗？" @confirm="deleteKnowledgeAttach(record)">
-							<a-button type="link" danger size="small" v-if="hasPerm('knowledgeAttachDelete')">删除</a-button>
-						</a-popconfirm>
-					</a-space>
-				</template>
-			</template>
-		</s-table>
-	</a-card>
+	<a-row>
+		<a-col :span="5">
+			<a-card class="cardImp" :bordered="false" :loading="cardLoading">
+				<a-tree
+					v-if="treeData.length > 0"
+					v-model:expandedKeys="defaultExpandedKeys"
+					:tree-data="treeData"
+					:field-names="treeFieldNames"
+					@select="treeSelect"
+				>
+				</a-tree>
+				<a-empty v-else :image="Empty.PRESENTED_IMAGE_SIMPLE" />
+			</a-card>
+		</a-col>
+		<a-col :span="19">
+			<a-card :bordered="false">
+				<a-form ref="searchFormRef" name="advanced_search" :model="searchFormState" class="ant-advanced-search-form">
+					<a-row :gutter="24">
+						<a-col :span="10">
+							<a-form-item label="知识名称" name="docName">
+								<a-input v-model:value="searchFormState.docName" placeholder="请输入知识名称" />
+							</a-form-item>
+						</a-col>
+						<a-col :span="5">
+							<a-form-item label="状态" name="gatherState">
+								<a-select
+									v-model:value="searchFormState.gatherState"
+									placeholder="请选择状态"
+									:options="gatherStateOptions"
+								/>
+							</a-form-item>
+						</a-col>
+						<a-col :span="6">
+							<a-button type="primary" @click="table.refresh(true)">查询</a-button>
+							<a-button style="margin: 0 8px" @click="reset">重置</a-button>
+						</a-col>
+					</a-row>
+				</a-form>
+				<s-table
+					ref="table"
+					:columns="columns"
+					:data="loadData"
+					:alert="options.alert.show"
+					bordered
+					:row-key="(record) => record.id"
+					:tool-config="toolConfig"
+					:row-selection="options.rowSelection"
+					v-if="sign"
+				>
+					<template #operator class="table-operator">
+						<a-space>
+							<a-button type="primary" @click="formRef.onOpen(typeUrl)" v-if="hasPerm('knowledgeAttachAdd')">
+								<template #icon><plus-outlined /></template>
+								新增/导入
+							</a-button>
+							<xn-batch-delete
+								v-if="hasPerm('knowledgeAttachBatchDelete')"
+								:selectedRowKeys="selectedRowKeys"
+								@batchDelete="deleteBatchKnowledgeAttach"
+							/>
+						</a-space>
+					</template>
+					<template #bodyCell="{ column, record }">
+						<template v-if="column.dataIndex === 'gatherState'">
+							<a-tag color="grey" v-if="record.gatherState == 'PROGRESSING'">{{
+								$TOOL.dictTypeData('Gather', record.gatherState)
+							}}</a-tag>
+							<a-tag color="green" v-else>{{ $TOOL.dictTypeData('Gather', record.gatherState) }}</a-tag>
+						</template>
+						<template v-if="column.dataIndex === 'action'">
+							<a-space>
+								<a @click="examine(record)">查看</a>
+								<a @click="formRef.onOpen(typeUrl, record)" v-if="hasPerm('knowledgeAttachEdit')">编辑</a>
+								<a-divider type="vertical" v-if="hasPerm(['knowledgeAttachEdit', 'knowledgeAttachDelete'], 'and')" />
+								<a-popconfirm title="确定要删除吗？" @confirm="deleteKnowledgeAttach(record)">
+									<a-button type="link" danger size="small" v-if="hasPerm('knowledgeAttachDelete')">删除</a-button>
+								</a-popconfirm>
+							</a-space>
+						</template>
+					</template>
+				</s-table>
+			</a-card>
+		</a-col>
+	</a-row>
 	<Form ref="formRef" @successful="table.refresh(true)" @getParameUrl="getParameUrl" />
 
 	<Details ref="detailsRef" @successful="detailsRef.refresh(true)" />
@@ -94,7 +94,7 @@ import tool from '@/utils/tool'
 import Form from './form.vue'
 import Details from './details.vue'
 import knowledgeAttachApi from '@/api/knowledge/knowledgeAttachApi'
-import { message, TreeSelect } from 'ant-design-vue'
+import {Empty, message, TreeSelect} from 'ant-design-vue'
 const SHOW_PARENT = TreeSelect.SHOW_PARENT
 let searchFormState = reactive({})
 const searchFormRef = ref()
@@ -147,10 +147,61 @@ if (hasPerm(['knowledgeAttachEdit', 'knowledgeAttachDelete'])) {
 }
 const selectedRowKeys = ref([])
 
+// 默认展开的节点
+let defaultExpandedKeys = ref([])
+const treeData = ref([])
+// 替换treeNode 中 title,key,children
+const treeFieldNames = { children: 'children', title: 'label', key: 'id' }
+const cardLoading = ref(true)
+
 onMounted(() => {
-	getParameUrl()
-	getArea()
+    let parameter = {
+        current: 1,
+        size: 10,
+        kid: typeUrl.value
+    }
+    loadData(parameter)
+    sign.value = true
 })
+
+// 加载左侧的树
+const loadTreeData = () => {
+	knowledgeAttachApi
+		.cityTree()
+		.then((res) => {
+			cardLoading.value = false
+			if (res !== null) {
+				treeData.value = res
+				// 默认展开2级
+				treeData.value.forEach((item) => {
+					// 因为0的顶级
+					if (item.parentId === '0') {
+						defaultExpandedKeys.value.push(item.id)
+						// 取到下级ID
+						if (item.children) {
+							item.children.forEach((items) => {
+								defaultExpandedKeys.value.push(items.id)
+							})
+						}
+					}
+				})
+			}
+		})
+		.finally(() => {
+			cardLoading.value = false
+		})
+}
+
+// 点击树查询
+const treeSelect = (selectedKeys) => {
+	if (selectedKeys.length > 0) {
+		searchFormState.areaIds = selectedKeys.toString()
+	} else {
+		delete searchFormState.parentId
+	}
+	table.value.refresh(true)
+}
+
 // 获取字典区域
 const getArea = () => {
 	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
@@ -172,6 +223,7 @@ const options = {
 	}
 }
 const loadData = (parameter) => {
+	loadTreeData()
 	const searchFormParam = JSON.parse(JSON.stringify(searchFormState))
 	parameter.kid = typeUrl.value
 	parameter.areaIds = searchFormState.areaIds && searchFormState.areaIds.join(',')
@@ -207,33 +259,9 @@ const deleteBatchKnowledgeAttach = (params) => {
 		table.value.clearRefreshSelected()
 	})
 }
-watch(
-	() => router.currentRoute.value.path,
-	(newValue, oldValue) => {
-		console.log('watch', newValue)
-		if (oldValue) {
-			getParameUrl()
-		}
-	},
-	{ immediate: true }
-)
 watch(searchFormState.areaId, () => {
 	console.log('areaIds', searchFormState.areaId)
 })
-// url 参数
-const getParameUrl = async () => {
-	sign.value = false
-	const url = window.location.href // 获取当前页面的URL
-	const lastSegment = url.substring(url.lastIndexOf('/') + 1) // 获取最后一个斜杠后的内容
-	typeUrl.value = lastSegment
-	console.log(typeUrl.value, 'typeUrl')
-	let parameter = {
-		current: 1,
-		size: 10,
-		kid: typeUrl.value
-	}
-	await loadData(parameter)
-	sign.value = true
-}
+
 const gatherStateOptions = tool.dictList('Gather')
 </script>

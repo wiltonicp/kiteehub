@@ -12,6 +12,7 @@
 package com.kiteehub.dev.modular.dict.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.kiteehub.dev.core.pojo.CityNode;
 import com.kiteehub.dev.modular.dict.entity.DevDict;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,4 +32,6 @@ public interface DevDictMapper extends BaseMapper<DevDict> {
      * @return
      */
     List<String> getIdsByParentIds(@Param("parentIds") List<String> parentIds);
+
+    List<CityNode> cityTree();
 }

@@ -134,4 +134,18 @@ public class KnowledgeAttachController {
     public CommonResult<KnowledgeAttach> detail(@Valid KnowledgeAttachIdParam knowledgeAttachIdParam) {
         return CommonResult.data(knowledgeAttachService.detail(knowledgeAttachIdParam));
     }
+
+    /**
+     * 获取知识库区域树
+     *
+     * @author Ranger
+     * @date 2023/12/27 14:00
+     */
+    @ApiOperationSupport(order = 6)
+    @ApiOperation("获取知识库区域树")
+    @SaCheckPermission("/knowledge/attach/area/tree")
+    @GetMapping("/knowledge/attach/area/tree")
+    public CommonResult<?> areaTree() {
+        return CommonResult.data(knowledgeAttachService.areaTree());
+    }
 }
