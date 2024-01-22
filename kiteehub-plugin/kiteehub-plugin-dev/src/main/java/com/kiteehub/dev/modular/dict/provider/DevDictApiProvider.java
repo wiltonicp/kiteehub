@@ -11,6 +11,7 @@
  */
 package com.kiteehub.dev.modular.dict.provider;
 
+import com.kiteehub.dev.core.pojo.CityNode;
 import com.kiteehub.dev.modular.dict.mapper.DevDictMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,5 +34,10 @@ public class DevDictApiProvider implements DevDictApi {
     @Override
     public List<String> getIdsByParentIds(List<String> parentIds) {
         return devDictMapper.getIdsByParentIds(parentIds);
+    }
+
+    @Override
+    public List<CityNode> cityTree() {
+        return devDictMapper.cityTree();
     }
 }

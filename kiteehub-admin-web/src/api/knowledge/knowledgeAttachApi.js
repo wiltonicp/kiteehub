@@ -32,7 +32,7 @@ export default {
 	knowledgeAttachDetail(data) {
 		return request('detail', data, 'get')
 	},
-	
+
 	// 获取知识库附件分页
 	knowledAttachChunk(data) {
 		return requestSelf('page', data, 'get')
@@ -40,5 +40,9 @@ export default {
 	// 删除知识库分片
 	knowledAttachDelete(data) {
 		return requestSelf('delete', data)
+	},
+	// 获取区域树
+	cityTree() {
+		return request('area/tree', null, 'get')
 	},
 }

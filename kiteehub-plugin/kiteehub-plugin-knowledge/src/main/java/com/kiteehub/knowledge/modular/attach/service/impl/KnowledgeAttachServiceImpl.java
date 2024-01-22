@@ -20,8 +20,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kiteehub.dev.api.DevDictApi;
+import com.kiteehub.dev.core.pojo.CityNode;
 import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachArea;
 import com.kiteehub.knowledge.modular.attach.mapper.KnowledgeAttachChunkMapper;
+import com.kiteehub.knowledge.modular.attach.pojo.Tree;
+import com.kiteehub.knowledge.modular.attach.pojo.TreeBuilder;
 import com.kiteehub.knowledge.modular.attach.service.KnowledgeAttachAreaService;
 import com.kiteehub.knowledge.modular.knowledge.service.EmbeddingService;
 import icu.mhb.mybatisplus.plugln.core.JoinLambdaWrapper;
@@ -172,5 +175,14 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
             throw new CommonException("知识库附件不存在，kid值为：{}, docId值为：{}", kid, docId);
         }
         return knowledgeAttach;
+    }
+
+    @Override
+    public List<? extends Tree<?>> areaTree() {
+        List<CityNode> cityNodes = devDictApi.cityTree();
+
+        List<KnowledgeAttachArea> areaList = knowledgeAttachAreaService.list();
+        List<? extends Tree<?>> trees = TreeBuilder.buildTree(cityNodes, areaList);
+        return trees;
     }
 }

@@ -15,6 +15,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttach;
 import com.kiteehub.knowledge.modular.attach.param.*;
+import com.kiteehub.knowledge.modular.attach.pojo.Tree;
 
 import java.util.List;
 import java.util.Map;
@@ -82,4 +83,7 @@ public interface KnowledgeAttachService extends IService<KnowledgeAttach> {
      * @date 2023/12/27 14:00
      **/
     KnowledgeAttach queryEntity(String kid,String docId);
+
+    List<? extends Tree<?>> areaTree();
+
 }

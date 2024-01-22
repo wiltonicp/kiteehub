@@ -11,6 +11,8 @@
  */
 package com.kiteehub.dev.api;
 
+import com.kiteehub.dev.core.pojo.CityNode;
+
 import java.util.List;
 
 /**
@@ -27,4 +29,10 @@ public interface DevDictApi {
      * @return
      */
     List<String> getIdsByParentIds(List<String> parentIds);
+
+    /**
+     * 查询省市树
+     * @return
+     */
+    List<CityNode> cityTree();
 }

@@ -37,7 +37,7 @@ public class BizOrgSelectorOrgListParam {
     @ApiModelProperty(value = "父id")
     private String parentId;
 
-    /** 名称关键词 */
+    /**  */
     @ApiModelProperty(value = "名称关键词")
     private String searchKey;
 }
