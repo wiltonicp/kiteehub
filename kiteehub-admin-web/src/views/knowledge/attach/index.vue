@@ -37,6 +37,13 @@
 						</a-col>
 					</a-row>
 				</a-form>
+				<div>
+					<a-form-item label="类型" name="docName">
+						<a-tabs v-model:activeKey="activeKey" type="card">
+							<a-tab-pane :tab="item.name" v-for="item in typeList" :key="item.id"> </a-tab-pane>
+						</a-tabs>
+					</a-form-item>
+				</div>
 				<s-table
 					ref="table"
 					:columns="columns"
@@ -94,7 +101,7 @@ import tool from '@/utils/tool'
 import Form from './form.vue'
 import Details from './details.vue'
 import knowledgeAttachApi from '@/api/knowledge/knowledgeAttachApi'
-import {Empty, message, TreeSelect} from 'ant-design-vue'
+import { Empty, message, TreeSelect } from 'ant-design-vue'
 const SHOW_PARENT = TreeSelect.SHOW_PARENT
 let searchFormState = reactive({})
 const searchFormRef = ref()
@@ -104,6 +111,8 @@ const formRef = ref()
 const detailsRef = ref()
 const sign = ref()
 const areaList = ref([])
+const typeList = ref([])
+const activeKey = ref('')
 const toolConfig = { refresh: true, height: true, columnSetting: true, striped: false }
 const columns = [
 	{
@@ -155,15 +164,22 @@ const treeFieldNames = { children: 'children', title: 'label', key: 'id' }
 const cardLoading = ref(true)
 
 onMounted(() => {
-    let parameter = {
-        current: 1,
-        size: 10,
-        kid: typeUrl.value
-    }
-    loadData(parameter)
-    sign.value = true
+	let parameter = {
+		current: 1,
+		size: 10,
+		kid: typeUrl.value
+	}
+	getType()
+	loadTreeData()
+	loadData(parameter)
+	sign.value = true
 })
-
+let getType = () => {
+	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
+	typeList.value = DICT_TYPE_TREE_DATA.find((item) => item.id === '1742384659893030914').children
+	console.log(typeList.value, '222222222')
+	activeKey.value = typeList.value[0].id
+}
 // 加载左侧的树
 const loadTreeData = () => {
 	knowledgeAttachApi
@@ -194,12 +210,16 @@ const loadTreeData = () => {
 
 // 点击树查询
 const treeSelect = (selectedKeys) => {
+	console.log(selectedKeys, 'selectedKeys')
 	if (selectedKeys.length > 0) {
-		searchFormState.areaIds = selectedKeys.toString()
+		searchFormState.areaIds = selectedKeys
+		console.log(searchFormState.areaIds, 'searchFormState.areaIds1111111111111111')
 	} else {
 		delete searchFormState.parentId
 	}
-	table.value.refresh(true)
+	// table.value.refresh(true)
+
+	loadData()
 }
 
 // 获取字典区域
@@ -223,10 +243,9 @@ const options = {
 	}
 }
 const loadData = (parameter) => {
-	loadTreeData()
 	const searchFormParam = JSON.parse(JSON.stringify(searchFormState))
-	parameter.kid = typeUrl.value
-	parameter.areaIds = searchFormState.areaIds && searchFormState.areaIds.join(',')
+	// parameter.kid = typeUrl.value
+	// parameter.areaIds = searchFormState.areaIds
 	console.log(parameter, 'parameter')
 	return knowledgeAttachApi.knowledgeAttachPage(Object.assign(parameter, searchFormParam)).then((data) => {
 		return data
