@@ -13,7 +13,26 @@
 			<a-form-item label="标题：" name="title">
 				<a-input v-model:value="formData.title" placeholder="请输入标题" allow-clear />
 			</a-form-item>
-
+			<a-form-item label="封面：" name="headImg">
+				<a-upload
+					v-model:file-list="fileList"
+					name="avatar"
+					list-type="picture-card"
+					class="avatar-uploader"
+					:show-upload-list="false"
+					:action="action"
+					:headers="headers"
+					:before-upload="beforeUpload"
+					@change="handleChange"
+				>
+					<img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+					<div v-else>
+						<loading-outlined v-if="loading"></loading-outlined>
+						<plus-outlined v-else></plus-outlined>
+						<div class="ant-upload-text">上传</div>
+					</div>
+				</a-upload>
+			</a-form-item>
 			<a-form-item label="区域选择：" name="areaIds" v-if="areaList.length > 0">
 				<a-tree-select
 					v-model:value="formData.areaIds"
@@ -54,8 +73,15 @@
 import tool from '@/utils/tool'
 import { cloneDeep } from 'lodash-es'
 import { required } from '@/utils/formRules'
+import { message } from 'ant-design-vue'
+import sysConfig from '@/config/index'
 import knowledgeHotArticleApi from '@/api/knowledge/knowledgeHotArticleApi'
 import XnEditor from '@/components/Editor/index.vue'
+
+const fileList = ref([])
+const loading = ref(false)
+const imageUrl = ref('')
+
 // 抽屉状态
 const visible = ref(false)
 const emit = defineEmits({ successful: null })
@@ -67,10 +93,46 @@ const kidOptions = ref([])
 // 发送文本方式
 const sendType = ref('TXT')
 const areaList = ref([])
-
+const action = ref(`${import.meta.env.VITE_API_BASEURL}/knowledge/article/add`)
+const headers = ref({})
 onMounted(() => {
+	getToken()
 	getArea()
 })
+// 获取token
+const getToken = () => {
+	const token = tool.data.get('TOKEN')
+	headers.value[sysConfig.TOKEN_NAME] = sysConfig.TOKEN_PREFIX + token
+}
+const handleChange = (info) => {
+	if (info.file.status === 'uploading') {
+		loading.value = true
+		return
+	}
+	if (info.file.status === 'done') {
+		// Get this url from response in real world.
+		// getBase64(info.file.originFileObj, (base64Url) => {
+		// 	imageUrl.value = base64Url
+		// 	loading.value = false
+		// })
+	}
+	if (info.file.status === 'error') {
+		loading.value = false
+		message.error('upload error')
+	}
+}
+const beforeUpload = (file) => {
+	const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+	if (!isJpgOrPng) {
+		message.error('You can only upload JPG file!')
+	}
+	const isLt2M = file.size / 1024 / 1024 < 2
+	if (!isLt2M) {
+		message.error('Image must smaller than 2MB!')
+	}
+	return isJpgOrPng && isLt2M
+}
+
 // 获取字典区域
 const getArea = () => {
 	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
