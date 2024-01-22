@@ -39,11 +39,12 @@
 				</a-form>
 				<div>
 					<a-form-item label="类型" name="docName">
-						<a-tabs v-model:activeKey="activeKey" type="card">
+						<a-tabs v-model:activeKey="activeKey" type="card" @change="changeTabs">
 							<a-tab-pane :tab="item.name" v-for="item in typeList" :key="item.id"> </a-tab-pane>
 						</a-tabs>
 					</a-form-item>
 				</div>
+
 				<s-table
 					ref="table"
 					:columns="columns"
@@ -109,7 +110,7 @@ const typeUrl = ref('')
 const table = ref()
 const formRef = ref()
 const detailsRef = ref()
-const sign = ref()
+const sign = ref(false)
 const areaList = ref([])
 const typeList = ref([])
 const activeKey = ref('')
@@ -163,22 +164,35 @@ const treeData = ref([])
 const treeFieldNames = { children: 'children', title: 'label', key: 'id' }
 const cardLoading = ref(true)
 
-onMounted(() => {
+onMounted(async () => {
+	loadTreeData()
+	await getType()
 	let parameter = {
 		current: 1,
 		size: 10,
-		kid: typeUrl.value
+		kid: typeList.value[0].id
 	}
-	getType()
-	loadTreeData()
 	loadData(parameter)
 	sign.value = true
 })
+// 类型
 let getType = () => {
 	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
 	typeList.value = DICT_TYPE_TREE_DATA.find((item) => item.id === '1742384659893030914').children
 	console.log(typeList.value, '222222222')
 	activeKey.value = typeList.value[0].id
+}
+// 切换类型
+let changeTabs = (val) => {
+	console.log(val, '切换类型')
+	sign.value = false
+	let parameter = {
+		current: 1,
+		size: 10,
+		kid: val
+	}
+	loadData(parameter)
+	// sign.value = true
 }
 // 加载左侧的树
 const loadTreeData = () => {
@@ -248,6 +262,7 @@ const loadData = (parameter) => {
 	// parameter.areaIds = searchFormState.areaIds
 	console.log(parameter, 'parameter')
 	return knowledgeAttachApi.knowledgeAttachPage(Object.assign(parameter, searchFormParam)).then((data) => {
+		console.log(data, 'data11111111111111')
 		return data
 	})
 }
