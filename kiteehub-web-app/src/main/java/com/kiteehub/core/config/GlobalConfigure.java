@@ -143,7 +143,10 @@ public class GlobalConfigure implements WebMvcConfigurer {
             "/sys/userCenter/findPasswordGetPhoneValidCode",
             "/sys/userCenter/findPasswordGetEmailValidCode",
             "/sys/userCenter/findPasswordByPhone",
-            "/sys/userCenter/findPasswordByEmail"
+            "/sys/userCenter/findPasswordByEmail",
+
+            /* 知识库相关*/
+            "/knowledge/client/**"
     };
 
     /**
