@@ -38,9 +38,9 @@
 					</a-row>
 				</a-form>
 				<div>
-					<a-form-item label="类型" name="docName">
+					<a-form-item label="保险类型" name="docName">
 						<a-tabs v-model:activeKey="activeKey" type="card" @change="changeTabs">
-							<a-tab-pane :tab="item.name" v-for="item in typeList" :key="item.id"> </a-tab-pane>
+							<a-tab-pane :tab="item.name" v-for="item in typeList" :key="item.dictValue"> </a-tab-pane>
 						</a-tabs>
 					</a-form-item>
 				</div>
@@ -56,9 +56,9 @@
 					:row-selection="options.rowSelection"
 					v-if="sign"
 				>
-					<template #operator class="table-operator">
+					<template #operator>
 						<a-space>
-							<a-button type="primary" @click="formRef.onOpen(typeUrl)" v-if="hasPerm('knowledgeAttachAdd')">
+							<a-button type="primary" @click="formRef.onOpen(activeKey)" v-if="hasPerm('knowledgeAttachAdd')">
 								<template #icon><plus-outlined /></template>
 								新增/导入
 							</a-button>
@@ -91,9 +91,9 @@
 			</a-card>
 		</a-col>
 	</a-row>
-	<Form ref="formRef" @successful="table.refresh(true)" @getParameUrl="getParameUrl" />
+	<Form ref="formRef" @successful="successfulFormRef"  />
 
-	<Details ref="detailsRef" @successful="detailsRef.refresh(true)" />
+	<Details ref="detailsRef" @successful="successfulDetailsRef" />
 </template>
 
 <script setup name="attach">
@@ -111,7 +111,6 @@ const table = ref()
 const formRef = ref()
 const detailsRef = ref()
 const sign = ref(false)
-const areaList = ref([])
 const typeList = ref([])
 const activeKey = ref('')
 const toolConfig = { refresh: true, height: true, columnSetting: true, striped: false }
@@ -167,12 +166,6 @@ const cardLoading = ref(true)
 onMounted(async () => {
 	loadTreeData()
 	await getType()
-	let parameter = {
-		current: 1,
-		size: 10,
-		kid: typeList.value[0].id
-	}
-	loadData(parameter)
 	sign.value = true
 })
 // 类型
@@ -180,20 +173,30 @@ let getType = () => {
 	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
 	typeList.value = DICT_TYPE_TREE_DATA.find((item) => item.id === '1742384659893030914').children
 	console.log(typeList.value, '222222222')
-	activeKey.value = typeList.value[0].id
+	activeKey.value = typeList.value[0].dictValue
 }
 // 切换类型
 let changeTabs = (val) => {
-	console.log(val, '切换类型')
 	sign.value = false
-	let parameter = {
-		current: 1,
-		size: 10,
-		kid: val
-	}
-	loadData(parameter)
-	// sign.value = true
+	activeKey.value = val
+	setTimeout(() => {
+		sign.value = true
+	}, 100)
 }
+// 表单更新
+let successfulFormRef = () => {
+	console.log('表单更新')
+	loadTreeData()
+	sign.value = false
+	setTimeout(() => {
+		sign.value = true
+	}, 100)
+}
+// 详情更新
+let successfulDetailsRef = () => {
+	detailsRef.refresh(true)
+}
+
 // 加载左侧的树
 const loadTreeData = () => {
 	knowledgeAttachApi
@@ -225,22 +228,17 @@ const loadTreeData = () => {
 // 点击树查询
 const treeSelect = (selectedKeys) => {
 	console.log(selectedKeys, 'selectedKeys')
+	sign.value = false
 	if (selectedKeys.length > 0) {
 		searchFormState.areaIds = selectedKeys
-		console.log(searchFormState.areaIds, 'searchFormState.areaIds1111111111111111')
 	} else {
 		delete searchFormState.parentId
 	}
-	// table.value.refresh(true)
-
-	loadData()
+	setTimeout(() => {
+		sign.value = true
+	}, 100)
 }
 
-// 获取字典区域
-const getArea = () => {
-	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
-	areaList.value = DICT_TYPE_TREE_DATA.find((item) => item.dictValue === 'AREA').children
-}
 // 列表选择配置
 const options = {
 	// columns数字类型字段加入 needTotal: true 可以勾选自动算账
@@ -258,11 +256,10 @@ const options = {
 }
 const loadData = (parameter) => {
 	const searchFormParam = JSON.parse(JSON.stringify(searchFormState))
-	// parameter.kid = typeUrl.value
-	// parameter.areaIds = searchFormState.areaIds
+	parameter.kid = activeKey.value
+	parameter.areaIds = searchFormState.areaIds || []
 	console.log(parameter, 'parameter')
 	return knowledgeAttachApi.knowledgeAttachPage(Object.assign(parameter, searchFormParam)).then((data) => {
-		console.log(data, 'data11111111111111')
 		return data
 	})
 }

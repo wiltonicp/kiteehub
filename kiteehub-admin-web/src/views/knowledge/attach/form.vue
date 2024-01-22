@@ -225,7 +225,7 @@ const handleDrop = (e) => {
 const confirm = () => {
 	submitLoading.value = false
 	visible.value = false
-	emit('getParameUrl')
+	emit('successful')
 }
 
 watch(formData.areaIds, () => {

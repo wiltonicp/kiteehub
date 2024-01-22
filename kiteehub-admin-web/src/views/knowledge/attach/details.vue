@@ -111,7 +111,6 @@ const knowledAttachChunk = async () => {
 		size: size.value
 	}
 	let { total, records } = await knowledgeAttachApi.knowledAttachChunk(parame)
-	console.log('records', records)
 	totalVal.value = total
 	recordsList.value = records
 }
