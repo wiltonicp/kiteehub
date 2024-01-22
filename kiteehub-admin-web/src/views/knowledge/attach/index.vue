@@ -206,7 +206,6 @@ const treeSelect = (selectedKeys) => {
 const getArea = () => {
 	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
 	areaList.value = DICT_TYPE_TREE_DATA.find((item) => item.dictValue === 'AREA').children
-	console.log(areaList.value, 'areaList.value')
 }
 // 列表选择配置
 const options = {
