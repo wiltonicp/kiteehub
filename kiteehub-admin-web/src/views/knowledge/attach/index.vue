@@ -155,7 +155,6 @@ onMounted(() => {
 const getArea = () => {
 	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
 	areaList.value = DICT_TYPE_TREE_DATA.find((item) => item.dictValue === 'AREA').children
-	console.log(areaList.value, 'areaList.value')
 }
 // 列表选择配置
 const options = {
@@ -175,7 +174,7 @@ const options = {
 const loadData = (parameter) => {
 	const searchFormParam = JSON.parse(JSON.stringify(searchFormState))
 	parameter.kid = typeUrl.value
-	parameter.areaIds =searchFormState.areaIds&&searchFormState.areaIds.join(',')
+	parameter.areaIds = searchFormState.areaIds && searchFormState.areaIds.join(',')
 	console.log(parameter, 'parameter')
 	return knowledgeAttachApi.knowledgeAttachPage(Object.assign(parameter, searchFormParam)).then((data) => {
 		return data
