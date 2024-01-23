@@ -18,6 +18,9 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kiteehub.knowledge.modular.robot.entity.KnowledgeRobot;
+import com.kiteehub.knowledge.modular.robot.service.KnowledgeRobotService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.kiteehub.common.enums.CommonSortOrderEnum;
@@ -40,7 +43,10 @@ import java.util.List;
  * @date  2024/01/23 17:00
  **/
 @Service
+@AllArgsConstructor
 public class ChatRecordServiceImpl extends ServiceImpl<ChatRecordMapper, ChatRecord> implements ChatRecordService {
+
+    private final KnowledgeRobotService knowledgeRobotService;
 
     @Override
     public Page<ChatRecord> page(ChatRecordPageParam chatRecordPageParam) {
@@ -64,7 +70,12 @@ public class ChatRecordServiceImpl extends ServiceImpl<ChatRecordMapper, ChatRec
         } else {
             queryWrapper.lambda().orderByAsc(ChatRecord::getId);
         }
-        return this.page(CommonPageRequest.defaultPage(), queryWrapper);
+        Page<ChatRecord> page = this.page(CommonPageRequest.defaultPage(), queryWrapper);
+        page.getRecords().forEach(x ->{
+            KnowledgeRobot knowledgeRobot = knowledgeRobotService.queryEntity(x.getRobotId());
+            x.setRobotName(knowledgeRobot.getName());
+        });
+        return page;
     }
 
     @Transactional(rollbackFor = Exception.class)

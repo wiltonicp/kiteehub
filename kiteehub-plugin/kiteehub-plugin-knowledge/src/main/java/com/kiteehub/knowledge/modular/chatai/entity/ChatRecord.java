@@ -41,7 +41,12 @@ public class ChatRecord extends CommonEntity {
     @ApiModelProperty(value = "客服ID", position = 3)
     private String robotId;
 
+    /** 客服名称 */
+    @TableField(exist = false)
+    @ApiModelProperty(value = "客服名称", position = 4)
+    private String robotName;
+
     /** 消息内容 */
-    @ApiModelProperty(value = "消息内容", position = 4)
+    @ApiModelProperty(value = "消息内容", position = 5)
     private String message;
 }

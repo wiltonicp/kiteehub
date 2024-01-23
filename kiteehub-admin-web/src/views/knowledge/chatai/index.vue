@@ -2,33 +2,29 @@
 	<a-card :bordered="false">
 		<a-form ref="searchFormRef" name="advanced_search" :model="searchFormState" class="ant-advanced-search-form">
 			<a-row :gutter="24">
-				<a-col :span="6">
-					<a-form-item label="消息类型" name="msgType">
+				<a-col :span="4">
+					<a-form-item label="类型" name="msgType">
 						<a-select v-model:value="searchFormState.msgType" placeholder="请选择消息类型" :options="msgTypeOptions" />
 					</a-form-item>
 				</a-col>
-				<a-col :span="6">
-					<a-form-item label="客服ID" name="robotId">
+				<a-col :span="4">
+					<a-form-item label="客服名称" name="robotId">
 						<a-input v-model:value="searchFormState.robotId" placeholder="请输入客服ID" />
 					</a-form-item>
 				</a-col>
-				<a-col :span="6">
+				<a-col :span="5">
 					<a-form-item label="消息内容" name="message">
 						<a-input v-model:value="searchFormState.message" placeholder="请输入消息内容" />
 					</a-form-item>
 				</a-col>
-				<a-col :span="6" v-show="advanced">
+				<a-col :span="6">
 					<a-form-item label="创建时间" name="createTime">
 						<a-range-picker v-model:value="searchFormState.createTime" show-time />
 					</a-form-item>
 				</a-col>
-				<a-col :span="6">
+				<a-col :span="4">
 					<a-button type="primary" @click="table.refresh(true)">查询</a-button>
 					<a-button style="margin: 0 8px" @click="reset">重置</a-button>
-					<a @click="toggleAdvanced" style="margin-left: 8px">
-						{{ advanced ? '收起' : '展开' }}
-						<component :is="advanced ? 'up-outlined' : 'down-outlined'"/>
-					</a>
 				</a-col>
 			</a-row>
 		</a-form>
@@ -90,12 +86,14 @@
 	}
 	const columns = [
 		{
-			title: '消息类型',
-			dataIndex: 'msgType'
+			title: '类型',
+			dataIndex: 'msgType',
+      width: '95px'
 		},
 		{
-			title: '客服ID',
-			dataIndex: 'robotId'
+			title: '客服名称',
+			dataIndex: 'robotName',
+      width: '130px'
 		},
 		{
 			title: '消息内容',
@@ -103,7 +101,8 @@
 		},
 		{
 			title: '创建时间',
-			dataIndex: 'createTime'
+			dataIndex: 'createTime',
+      width: '150px'
 		},
 	]
 	// 操作栏通过权限判断是否显示
