@@ -21,7 +21,7 @@
 						:action="action"
 						:headers="headers"
 						:progress="progress"
-						:data="{ kid: typeUrlItem }"
+						:data="{ kid: typeUrlItem, areaIds: areaIds }"
 						@change="handleChange"
 						@drop="handleDrop"
 					>
@@ -43,6 +43,24 @@
 					</a-input>
 				</a-tab-pane>
 			</a-tabs>
+
+			<div style="margin-top: 50px">
+				<a-form-item label="区域选择：" name="areaSelection" v-if="areaList.length > 0">
+					<a-tree-select
+						v-model:value="areaIds"
+						style="width: 100%"
+						tree-checkable
+						tree-default-expand-all
+						:show-checked-strategy="SHOW_PARENT"
+						:height="233"
+						:tree-data="areaList"
+						:max-tag-count="10"
+						tree-node-filter-prop="name"
+						:fieldNames="{ children: 'children', label: 'name', value: 'id' }"
+					>
+					</a-tree-select>
+				</a-form-item>
+			</div>
 		</div>
 
 		<!-- 重命名 -->
@@ -123,6 +141,9 @@ const url = ref('http://')
 const typeUrlItem = ref('')
 const formRef = ref()
 const areaList = ref([])
+
+const areaIds = ref([])
+
 // 表单数据
 const formData = ref({})
 const submitLoading = ref(false)
@@ -140,19 +161,26 @@ const getToken = () => {
 // 获取字典区域
 const getArea = () => {
 	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
-	areaList.value = DICT_TYPE_TREE_DATA.find((item) => item.dictValue === 'AREA').children
-	console.log(areaList.value, 'areaList')
+	if (DICT_TYPE_TREE_DATA) {
+		areaList.value = DICT_TYPE_TREE_DATA.find((item) => item.dictValue === 'AREA').children
+	}
 }
 // 打开抽屉
 const onOpen = (typeUrl, record) => {
 	visible.value = true
 	fileList.value = []
 	typeUrlItem.value = typeUrl
+	console.log(typeUrlItem.value, 'typeUrlItem')
 	if (record) {
 		let recordData = cloneDeep(record)
 		formData.value = Object.assign({}, recordData)
 	}
 	gatherStateOptions.value = tool.dictList('Gather')
+}
+//区域id
+let getAreaIds = (value) => {
+	areaIds.value = value
+	console.log(areaIds.value, 'areaIds')
 }
 // 关闭抽屉
 const onClose = () => {
@@ -234,6 +262,7 @@ watch(formData.areaIds, () => {
 
 // 抛出函数
 defineExpose({
-	onOpen
+	onOpen,
+	getAreaIds
 })
 </script>

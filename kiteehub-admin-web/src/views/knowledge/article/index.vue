@@ -13,7 +13,7 @@
 					</a-form-item>
 				</a-col>
 				<a-col :span="5">
-					<a-form-item label="区域" name="areaId">
+					<a-form-item label="区域" name="areaId" v-if="areaList.length > 0">
 						<a-tree-select
 							v-model:value="searchFormState.areaIds"
 							style="width: 100%"
@@ -45,7 +45,7 @@
 			:tool-config="toolConfig"
 			:row-selection="options.rowSelection"
 		>
-			<template #operator class="table-operator">
+			<template #operator>
 				<a-space>
 					<a-button type="primary" @click="formRef.onOpen()" v-if="hasPerm('knowledgeHotArticleAdd')">
 						<template #icon><plus-outlined /></template>
@@ -61,6 +61,9 @@
 			<template #bodyCell="{ column, record }">
 				<template v-if="column.dataIndex === 'kid'">
 					<a-tag color="blue">{{ $TOOL.dictTypeData('KNOWLEDGE_GATHER', record.kid) }}</a-tag>
+				</template>
+				<template v-if="column.dataIndex === 'headImg'">
+					<a-image :width="60" :src="record.headImg" />
 				</template>
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>
@@ -94,6 +97,10 @@ const columns = [
 	{
 		title: '知识类别',
 		dataIndex: 'kid'
+	},
+	{
+		title: '封面',
+		dataIndex: 'headImg'
 	},
 	{
 		title: '标题',
@@ -139,12 +146,14 @@ onMounted(() => {
 // 获取字典区域
 const getArea = () => {
 	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
-	areaList.value = DICT_TYPE_TREE_DATA.find((item) => item.dictValue === 'AREA').children
-	console.log(areaList.value, 'areaList.value')
+	if (DICT_TYPE_TREE_DATA) {
+		areaList.value = DICT_TYPE_TREE_DATA.find((item) => item.dictValue === 'AREA').children
+		console.log(areaList.value, 'areaList.value')
+	}
 }
 const loadData = (parameter) => {
 	const searchFormParam = JSON.parse(JSON.stringify(searchFormState))
-	parameter.areaIds =searchFormState.areaIds&&searchFormState.areaIds.join(',')
+	parameter.areaIds = searchFormState.areaIds && searchFormState.areaIds.join(',')
 	return knowledgeHotArticleApi.knowledgeHotArticlePage(Object.assign(parameter, searchFormParam)).then((data) => {
 		return data
 	})

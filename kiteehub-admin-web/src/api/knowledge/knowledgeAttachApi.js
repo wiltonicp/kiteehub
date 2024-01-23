@@ -45,4 +45,8 @@ export default {
 	cityTree() {
 		return request('area/tree', null, 'get')
 	},
+	// 获取区域数量
+	count() {
+		return request('area/count', null, 'get')
+	}
 }

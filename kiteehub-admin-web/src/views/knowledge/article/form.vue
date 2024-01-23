@@ -1,6 +1,6 @@
 <template>
 	<xn-form-container
-		:title="formData.id ? '编辑热门动态' : '增加热门动态'"
+		:title="formData && formData.id ? '编辑热门动态' : '增加热门动态'"
 		:width="700"
 		:visible="visible"
 		:destroy-on-close="true"
@@ -13,27 +13,26 @@
 			<a-form-item label="标题：" name="title">
 				<a-input v-model:value="formData.title" placeholder="请输入标题" allow-clear />
 			</a-form-item>
-			<a-form-item label="封面：" name="headImg">
+			<a-form-item label="封面：" name="headImgCopy">
 				<a-upload
-					v-model:file-list="fileList"
-					name="avatar"
-					list-type="picture-card"
-					class="avatar-uploader"
-					:show-upload-list="false"
+					v-model:file-list="formData.headImgCopy"
+					name="file"
 					:action="action"
 					:headers="headers"
-					:before-upload="beforeUpload"
+					list-type="picture-card"
 					@change="handleChange"
+					@preview="handlePreview"
 				>
-					<img v-if="imageUrl" :src="imageUrl" alt="avatar" />
-					<div v-else>
-						<loading-outlined v-if="loading"></loading-outlined>
-						<plus-outlined v-else></plus-outlined>
-						<div class="ant-upload-text">上传</div>
+					<div v-if="formData.headImgCopy && formData.headImgCopy.length < 1">
+						<plus-outlined />
+						<div style="margin-top: 8px">上传</div>
 					</div>
 				</a-upload>
+				<a-modal :open="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
+					<img alt="example" style="width: 100%" :src="previewImage" />
+				</a-modal>
 			</a-form-item>
-			<a-form-item label="区域选择：" name="areaIds" v-if="areaList.length > 0">
+			<a-form-item label="区域选择：" name="areaIds" v-if="areaList && areaList.length > 0">
 				<a-tree-select
 					v-model:value="formData.areaIds"
 					style="width: 100%"
@@ -78,26 +77,59 @@ import sysConfig from '@/config/index'
 import knowledgeHotArticleApi from '@/api/knowledge/knowledgeHotArticleApi'
 import XnEditor from '@/components/Editor/index.vue'
 
-const fileList = ref([])
-const loading = ref(false)
-const imageUrl = ref('')
-
 // 抽屉状态
 const visible = ref(false)
 const emit = defineEmits({ successful: null })
 const formRef = ref()
 // 表单数据
-const formData = ref({})
+const formData = ref()
 const submitLoading = ref(false)
 const kidOptions = ref([])
 // 发送文本方式
 const sendType = ref('TXT')
 const areaList = ref([])
-const action = ref(`${import.meta.env.VITE_API_BASEURL}/knowledge/article/add`)
+const action = ref(`${import.meta.env.VITE_API_BASEURL}/dev/file/uploadLocalReturnUrl`)
 const headers = ref({})
+
+function getBase64(file) {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader()
+		reader.readAsDataURL(file)
+		reader.onload = () => resolve(reader.result)
+		reader.onerror = (error) => reject(error)
+	})
+}
+
+const loading = ref(false)
+const previewVisible = ref(false)
+const previewImage = ref('')
+const previewTitle = ref('')
+
+const fileList = ref([
+	// {
+	// 	uid: '-1',
+	// 	name: 'image.png',
+	// 	status: 'done',
+	// 	url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+	// }
+])
+const handleCancel = () => {
+	previewVisible.value = false
+	previewTitle.value = ''
+}
+const handlePreview = async (file) => {
+	console.log(file, '执行！')
+	if (!file.url && !file.preview) {
+		file.preview = await getBase64(file.originFileObj)
+	}
+	previewImage.value = file.url || file.preview
+	previewVisible.value = true
+	previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1)
+}
+
 onMounted(() => {
-	getToken()
 	getArea()
+	getToken()
 })
 // 获取token
 const getToken = () => {
@@ -110,40 +142,42 @@ const handleChange = (info) => {
 		return
 	}
 	if (info.file.status === 'done') {
-		// Get this url from response in real world.
-		// getBase64(info.file.originFileObj, (base64Url) => {
-		// 	imageUrl.value = base64Url
-		// 	loading.value = false
-		// })
+		console.log(info.file, 'info.file.originFileObj')
+
+		formData.headImgCopy = info.file.response.data
+
+		console.log(formData.headImgCopy, 'formData.headImgCopy')
+		console.log(formData.value, '222222222222')
+		loading.value = false
 	}
 	if (info.file.status === 'error') {
 		loading.value = false
 		message.error('upload error')
 	}
 }
-const beforeUpload = (file) => {
-	const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-	if (!isJpgOrPng) {
-		message.error('You can only upload JPG file!')
-	}
-	const isLt2M = file.size / 1024 / 1024 < 2
-	if (!isLt2M) {
-		message.error('Image must smaller than 2MB!')
-	}
-	return isJpgOrPng && isLt2M
-}
 
 // 获取字典区域
 const getArea = () => {
 	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
-	areaList.value = DICT_TYPE_TREE_DATA.find((item) => item.dictValue === 'AREA').children
-	console.log(areaList.value, 'areaList')
+	if (DICT_TYPE_TREE_DATA) {
+		areaList.value = DICT_TYPE_TREE_DATA.find((item) => item.dictValue === 'AREA').children
+		console.log(areaList.value, 'areaList')
+	}
 }
 // 打开抽屉
 const onOpen = (record) => {
 	visible.value = true
 	if (record) {
 		let recordData = cloneDeep(record)
+		recordData.headImgCopy =
+			[
+				{
+					uid: '-1',
+					name: 'image.png',
+					status: 'done',
+					url: recordData.headImg
+				}
+			] || []
 		formData.value = Object.assign({}, recordData)
 	}
 	kidOptions.value = tool.dictList('KNOWLEDGE_GATHER')
@@ -158,13 +192,16 @@ const onClose = () => {
 const formRules = {
 	kid: [required('请选择知识类别')],
 	title: [required('请输入标题')],
-	areaIds: [required('请选择区域')]
+	areaIds: [required('请选择区域')],
+	headImgCopy: [required('请上传图片')]
 }
 // 验证并提交数据
 const onSubmit = () => {
 	formRef.value.validate().then(() => {
 		submitLoading.value = true
+		formData.value.headImg = formData.value.headImgCopy[0].response.data
 		const formDataParam = cloneDeep(formData.value)
+		console.log(formDataParam, 'formDataParam')
 		knowledgeHotArticleApi
 			.knowledgeHotArticleSubmitForm(formDataParam, formDataParam.id)
 			.then(() => {
@@ -181,3 +218,15 @@ defineExpose({
 	onOpen
 })
 </script>
+
+<style scoped>
+.ant-upload-select-picture-card i {
+	font-size: 32px;
+	color: #999;
+}
+
+.ant-upload-select-picture-card .ant-upload-text {
+	margin-top: 8px;
+	color: #666;
+}
+</style>

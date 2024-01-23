@@ -40,7 +40,8 @@
 				<div>
 					<a-form-item label="保险类型" name="docName">
 						<a-tabs v-model:activeKey="activeKey" type="card" @change="changeTabs">
-							<a-tab-pane :tab="item.name" v-for="item in typeList" :key="item.dictValue"> </a-tab-pane>
+							<a-tab-pane :tab="`${item.name} (${item.value || 0})`" v-for="item in typeList" :key="item.dictValue">
+							</a-tab-pane>
 						</a-tabs>
 					</a-form-item>
 				</div>
@@ -58,7 +59,7 @@
 				>
 					<template #operator>
 						<a-space>
-							<a-button type="primary" @click="formRef.onOpen(activeKey)" v-if="hasPerm('knowledgeAttachAdd')">
+							<a-button type="primary" @click="formRefOpen" v-if="hasPerm('knowledgeAttachAdd')">
 								<template #icon><plus-outlined /></template>
 								新增/导入
 							</a-button>
@@ -91,7 +92,7 @@
 			</a-card>
 		</a-col>
 	</a-row>
-	<Form ref="formRef" @successful="successfulFormRef"  />
+	<Form ref="formRef" @successful="successfulFormRef" />
 
 	<Details ref="detailsRef" @successful="successfulDetailsRef" />
 </template>
@@ -164,17 +165,32 @@ const treeFieldNames = { children: 'children', title: 'label', key: 'id' }
 const cardLoading = ref(true)
 
 onMounted(async () => {
-	loadTreeData()
 	await getType()
+	loadTreeData()
 	sign.value = true
 })
 // 类型
 let getType = () => {
-	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
-	typeList.value = DICT_TYPE_TREE_DATA.find((item) => item.id === '1742384659893030914').children
-	console.log(typeList.value, '222222222')
-	activeKey.value = typeList.value[0].dictValue
+	try {
+		return new Promise((resolve, reject) => {
+			setTimeout(async () => {
+				try {
+					console.log('类型', await tool.data.get('DICT_TYPE_TREE_DATA'))
+					const DICT_TYPE_TREE_DATA = await tool.data.get('DICT_TYPE_TREE_DATA')
+					typeList.value =
+						DICT_TYPE_TREE_DATA && DICT_TYPE_TREE_DATA.find((item) => item.id === '1742384659893030914').children
+					activeKey.value = typeList.value[0].dictValue
+					resolve()
+				} catch (error) {
+					reject(error)
+				}
+			}, 500)
+		})
+	} catch (error) {
+		console.log(error)
+	}
 }
+
 // 切换类型
 let changeTabs = (val) => {
 	sign.value = false
@@ -182,6 +198,11 @@ let changeTabs = (val) => {
 	setTimeout(() => {
 		sign.value = true
 	}, 100)
+}
+// 表单打开
+let formRefOpen = () => {
+	formRef.value.onOpen(activeKey.value)
+	formRef.value.getAreaIds(searchFormState.areaIds)
 }
 // 表单更新
 let successfulFormRef = () => {
@@ -203,6 +224,7 @@ const loadTreeData = () => {
 		.cityTree()
 		.then((res) => {
 			cardLoading.value = false
+			count()
 			if (res !== null) {
 				treeData.value = res
 				// 默认展开2级
@@ -261,6 +283,24 @@ const loadData = (parameter) => {
 	console.log(parameter, 'parameter')
 	return knowledgeAttachApi.knowledgeAttachPage(Object.assign(parameter, searchFormParam)).then((data) => {
 		return data
+	})
+}
+
+let count = async () => {
+	let parame = {
+		areaId: searchFormState.areaIds
+	}
+	let res = await knowledgeAttachApi.count(parame)
+	// 遍历 b 数组
+	res.forEach((itemB) => {
+		// 找到 a 数组中与 b 数组对应 id 的对象
+		var matchedObj = typeList.value.find((itemA) => {
+			return itemA.dictValue === itemB.name
+		})
+		// 如果找到了对应的对象，则将 b 数组的 num 值赋值给 a 数组的对象
+		if (matchedObj) {
+			matchedObj.value = itemB.value
+		}
 	})
 }
 // 重置
