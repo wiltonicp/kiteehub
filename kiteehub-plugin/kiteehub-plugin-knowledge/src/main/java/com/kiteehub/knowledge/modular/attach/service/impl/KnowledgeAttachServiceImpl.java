@@ -42,9 +42,7 @@ import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachIdParam;
 import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachPageParam;
 import com.kiteehub.knowledge.modular.attach.service.KnowledgeAttachService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -66,11 +64,11 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
     public Page<KnowledgeAttach> page(KnowledgeAttachPageParam knowledgeAttachPageParam) {
 
         JoinLambdaWrapper<KnowledgeAttach> wrapper = new JoinLambdaWrapper<>(KnowledgeAttach.class).distinct();
-        wrapper.select(KnowledgeAttach.class,attach -> !attach.getColumn().equals("content"));
-        if(ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getAreaIds())){
-            List<String> areaIds = devDictApi.getIdsByParentIds(knowledgeAttachPageParam.getAreaIds());
-            wrapper.leftJoin(KnowledgeAttachArea.class,KnowledgeAttachArea::getAttachId,KnowledgeAttach::getId,false)
-                    .in(ObjectUtil.isNotEmpty(areaIds),KnowledgeAttachArea::getAreaId,areaIds)
+        wrapper.select(KnowledgeAttach.class, attach -> !attach.getColumn().equals("content"));
+        if (ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getAreaIds())) {
+            List<String> areaIds = devDictApi.getIdsByParentIds(Collections.singletonList(knowledgeAttachPageParam.getAreaIds()));
+            wrapper.leftJoin(KnowledgeAttachArea.class, KnowledgeAttachArea::getAttachId, KnowledgeAttach::getId, false)
+                    .in(ObjectUtil.isNotEmpty(areaIds), KnowledgeAttachArea::getAreaId, areaIds)
                     .end();
         }
 //        wrapper.selectSunQuery(KnowledgeAttachArea.class,w ->{
@@ -90,10 +88,10 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
         }
         wrapper.orderByDesc(KnowledgeAttach::getUpdateTime);
         Page<KnowledgeAttach> knowledgeAttachPage = this.baseMapper.joinSelectPage(CommonPageRequest.defaultPage(), wrapper, KnowledgeAttach.class);
-        knowledgeAttachPage.getRecords().forEach(record ->{
+        knowledgeAttachPage.getRecords().forEach(record -> {
             //区域处理
             QueryWrapper<KnowledgeAttachArea> areaQueryWrapper = new QueryWrapper<>();
-            areaQueryWrapper.lambda().eq(KnowledgeAttachArea::getAttachId,record.getId());
+            areaQueryWrapper.lambda().eq(KnowledgeAttachArea::getAttachId, record.getId());
             List<KnowledgeAttachArea> listArea = knowledgeAttachAreaService.list(areaQueryWrapper);
             List<String> collect = listArea.stream().map(KnowledgeAttachArea::getAreaId).collect(Collectors.toList());
             record.setAreaIds(collect);
@@ -115,10 +113,10 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
         BeanUtil.copyProperties(knowledgeAttachEditParam, knowledgeAttach);
         this.updateById(knowledgeAttach);
 
-        if(CollectionUtil.isNotEmpty(knowledgeAttachEditParam.getAreaIds())){
+        if (CollectionUtil.isNotEmpty(knowledgeAttachEditParam.getAreaIds())) {
             //区域处理
             QueryWrapper<KnowledgeAttachArea> queryWrapper = new QueryWrapper<>();
-            queryWrapper.lambda().eq(KnowledgeAttachArea::getAttachId,knowledgeAttach.getId());
+            queryWrapper.lambda().eq(KnowledgeAttachArea::getAttachId, knowledgeAttach.getId());
             knowledgeAttachAreaService.remove(queryWrapper);
             List<KnowledgeAttachArea> collect = knowledgeAttachEditParam.getAreaIds().stream()
                     .map(c ->
@@ -127,7 +125,7 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
                                     .areaId(c)
                                     .build())
                     .collect(Collectors.toList());
-            knowledgeAttachAreaService.saveBatch(collect,200);
+            knowledgeAttachAreaService.saveBatch(collect, 200);
         }
     }
 
@@ -147,7 +145,7 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
 
         //区域删除
         QueryWrapper<KnowledgeAttachArea> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().in(KnowledgeAttachArea::getAttachId,CollStreamUtil.toList(knowledgeAttachIdParamList, KnowledgeAttachIdParam::getId));
+        queryWrapper.lambda().in(KnowledgeAttachArea::getAttachId, CollStreamUtil.toList(knowledgeAttachIdParamList, KnowledgeAttachIdParam::getId));
         knowledgeAttachAreaService.remove(queryWrapper);
     }
 
@@ -184,5 +182,29 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
         List<KnowledgeAttachArea> areaList = knowledgeAttachAreaService.list();
         List<? extends Tree<?>> trees = TreeBuilder.buildTree(cityNodes, areaList);
         return trees;
+    }
+
+    @Override
+    public List<Map<String, Object>> areaCount(String areaId) {
+        List<String> areaIds = devDictApi.getIdsByParentIds(Collections.singletonList(areaId));
+
+        JoinLambdaWrapper<KnowledgeAttach> wrapper = new JoinLambdaWrapper<>(KnowledgeAttach.class).distinct();
+        wrapper.select(KnowledgeAttach.class, attach -> attach.getColumn().equals("kid"));
+        if (ObjectUtil.isNotEmpty(areaIds)) {
+            wrapper.leftJoin(KnowledgeAttachArea.class, KnowledgeAttachArea::getAttachId, KnowledgeAttach::getId, false)
+                    .in(ObjectUtil.isNotEmpty(areaIds), KnowledgeAttachArea::getAreaId, areaIds)
+                    .end();
+        }
+        List<KnowledgeAttach> knowledgeAttaches = this.baseMapper.joinSelectList(wrapper, KnowledgeAttach.class);
+        Map<String, List<KnowledgeAttach>> collect = knowledgeAttaches.stream().collect(Collectors.groupingBy(KnowledgeAttach::getKid));
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Map.Entry<String, List<KnowledgeAttach>> stringListEntry : collect.entrySet()) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("name", stringListEntry.getKey());
+            map.put("value", stringListEntry.getValue().size());
+            result.add(map);
+        }
+        return result;
     }
 }

@@ -62,6 +62,6 @@ public class KnowledgeAttachPageParam {
 
     /** 区域ID集合 */
     @ApiModelProperty(value = "区域ID集合")
-    private List<String> areaIds;
+    private String areaIds;
 
 }

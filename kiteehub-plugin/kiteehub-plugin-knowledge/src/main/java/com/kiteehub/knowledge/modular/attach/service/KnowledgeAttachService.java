@@ -82,8 +82,9 @@ public interface KnowledgeAttachService extends IService<KnowledgeAttach> {
      * @author Ranger
      * @date 2023/12/27 14:00
      **/
-    KnowledgeAttach queryEntity(String kid,String docId);
+    KnowledgeAttach queryEntity(String kid, String docId);
 
     List<? extends Tree<?>> areaTree();
 
+    List<Map<String, Object>> areaCount(String areaId);
 }

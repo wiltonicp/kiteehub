@@ -26,7 +26,7 @@ import java.util.List;
  * 知识库Service接口
  *
  * @author Ranger
- * @date  2023/12/27 10:20
+ * @date 2023/12/27 10:20
  **/
 public interface KnowledgeService extends IService<Knowledge> {
 
@@ -34,7 +34,7 @@ public interface KnowledgeService extends IService<Knowledge> {
      * 获取知识库分页
      *
      * @author Ranger
-     * @date  2023/12/27 10:20
+     * @date 2023/12/27 10:20
      */
     Page<Knowledge> page(KnowledgePageParam knowledgePageParam);
 
@@ -42,7 +42,7 @@ public interface KnowledgeService extends IService<Knowledge> {
      * 添加知识库
      *
      * @author Ranger
-     * @date  2023/12/27 10:20
+     * @date 2023/12/27 10:20
      */
     void add(KnowledgeAddParam knowledgeAddParam);
 
@@ -50,7 +50,7 @@ public interface KnowledgeService extends IService<Knowledge> {
      * 编辑知识库
      *
      * @author Ranger
-     * @date  2023/12/27 10:20
+     * @date 2023/12/27 10:20
      */
     void edit(KnowledgeEditParam knowledgeEditParam);
 
@@ -58,7 +58,7 @@ public interface KnowledgeService extends IService<Knowledge> {
      * 删除知识库
      *
      * @author Ranger
-     * @date  2023/12/27 10:20
+     * @date 2023/12/27 10:20
      */
     void delete(List<KnowledgeIdParam> knowledgeIdParamList);
 
@@ -66,7 +66,7 @@ public interface KnowledgeService extends IService<Knowledge> {
      * 获取知识库详情
      *
      * @author Ranger
-     * @date  2023/12/27 10:20
+     * @date 2023/12/27 10:20
      */
     Knowledge detail(KnowledgeIdParam knowledgeIdParam);
 
@@ -74,7 +74,7 @@ public interface KnowledgeService extends IService<Knowledge> {
      * 获取知识库详情
      *
      * @author Ranger
-     * @date  2023/12/27 10:20
+     * @date 2023/12/27 10:20
      **/
     Knowledge queryEntity(String id);
 
@@ -83,7 +83,7 @@ public interface KnowledgeService extends IService<Knowledge> {
 
     void upload(KnowledgeUploadParam request);
 
-    void storeContent(MultipartFile file, String kid, String kname, Boolean firstTime) throws IOException;
+    void storeContent(MultipartFile file, String kid, String kname, List<String> areaIds, Boolean firstTime) throws IOException;
 
     KnowledgeDetailResult detail(String kid);
 

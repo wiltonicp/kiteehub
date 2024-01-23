@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,4 +20,10 @@ public class KnowledgeUploadParam {
 
     @ApiModelProperty(value = "附件", required = true, position = 2)
     private MultipartFile file;
+
+    /**
+     * 区域ID集合
+     */
+    @ApiModelProperty(value = "区域ID集合", required = true, position = 3)
+    private List<String> areaIds;
 }

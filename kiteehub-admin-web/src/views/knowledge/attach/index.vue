@@ -230,7 +230,7 @@ const treeSelect = (selectedKeys) => {
 	console.log(selectedKeys, 'selectedKeys')
 	sign.value = false
 	if (selectedKeys.length > 0) {
-		searchFormState.areaIds = selectedKeys
+		searchFormState.areaIds = selectedKeys.toString()
 	} else {
 		delete searchFormState.parentId
 	}
@@ -257,7 +257,7 @@ const options = {
 const loadData = (parameter) => {
 	const searchFormParam = JSON.parse(JSON.stringify(searchFormState))
 	parameter.kid = activeKey.value
-	parameter.areaIds = searchFormState.areaIds || []
+	parameter.areaIds = searchFormState.areaIds || ''
 	console.log(parameter, 'parameter')
 	return knowledgeAttachApi.knowledgeAttachPage(Object.assign(parameter, searchFormParam)).then((data) => {
 		return data
@@ -265,7 +265,7 @@ const loadData = (parameter) => {
 }
 // 重置
 const reset = () => {
-	searchFormState.areaIds = []
+	searchFormState.areaIds = ''
 	searchFormRef.value.resetFields()
 	table.value.refresh(true)
 }

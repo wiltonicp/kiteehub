@@ -67,8 +67,8 @@ public class KnowledgeAttachController {
     @ApiOperationSupport(order = 1)
     @ApiOperation("获取知识库附件分页")
     @SaCheckPermission("/knowledge/attach/page")
-    @PostMapping("/knowledge/attach/page")
-    public CommonResult<Page<KnowledgeAttach>> page(@RequestBody KnowledgeAttachPageParam knowledgeAttachPageParam) {
+    @GetMapping("/knowledge/attach/page")
+    public CommonResult<Page<KnowledgeAttach>> page(KnowledgeAttachPageParam knowledgeAttachPageParam) {
         return CommonResult.data(knowledgeAttachService.page(knowledgeAttachPageParam));
     }
 
@@ -147,5 +147,19 @@ public class KnowledgeAttachController {
     @GetMapping("/knowledge/attach/area/tree")
     public CommonResult<?> areaTree() {
         return CommonResult.data(knowledgeAttachService.areaTree());
+    }
+
+    /**
+     * 区域下附件数量查询
+     *
+     * @author Ranger
+     * @date 2023/12/27 14:00
+     */
+    @ApiOperationSupport(order = 7)
+    @ApiOperation("获取知识库区域树")
+    @SaCheckPermission("/knowledge/attach/area/count")
+    @GetMapping("/knowledge/attach/area/count")
+    public CommonResult<?> areaCount(String areaId) {
+        return CommonResult.data(knowledgeAttachService.areaCount(areaId));
     }
 }
