@@ -156,7 +156,7 @@ public class KnowledgeAttachController {
      * @date 2023/12/27 14:00
      */
     @ApiOperationSupport(order = 7)
-    @ApiOperation("获取知识库区域树")
+    @ApiOperation("区域下附件数量查询")
     @SaCheckPermission("/knowledge/attach/area/count")
     @GetMapping("/knowledge/attach/area/count")
     public CommonResult<?> areaCount(String areaId) {
