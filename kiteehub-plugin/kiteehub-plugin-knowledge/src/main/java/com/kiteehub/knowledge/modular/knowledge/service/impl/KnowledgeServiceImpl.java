@@ -32,6 +32,7 @@ import com.kiteehub.knowledge.modular.knowledge.result.KnowledgeDetailResult;
 import com.kiteehub.knowledge.modular.knowledge.service.EmbeddingService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.kiteehub.common.enums.CommonSortOrderEnum;
@@ -42,8 +43,10 @@ import com.kiteehub.knowledge.modular.knowledge.mapper.KnowledgeMapper;
 import com.kiteehub.knowledge.modular.knowledge.service.KnowledgeService;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -57,6 +60,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge> implements KnowledgeService {
 
+    @Resource
+    private TaskExecutor taskExecutor;
     private final EmbeddingService embeddingService;
     private final KnowledgeAttachService knowledgeAttachService;
     private final ResourceLoaderFactory resourceLoaderFactory;
@@ -123,39 +128,52 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
         knowledge.setKname(request.getKname());
         knowledge.setCreateTime(new Date());
         save(knowledge);
-        storeContent(request.getFile(), knowledge.getKid(), request.getKname(), request.getAreaIds(), true);
+
+        KnowledgeAttach knowledgeAttach = new KnowledgeAttach();
+        knowledgeAttach.setKid(knowledge.getKid());
+        knowledgeAttach.setDocId(RandomUtil.randomString(10));
+        String fileName = request.getFile().getOriginalFilename();
+        knowledgeAttach.setDocName(fileName);
+        knowledgeAttach.setDocType(fileName.substring(fileName.lastIndexOf(".") + 1));
+        knowledgeAttach.setCreateTime(new Date());
+        knowledgeAttach.setUpdateTime(new Date());
+        knowledgeAttach.setGatherState(EnumUtil.toString(KnowledgeGatherEnum.PROGRESSING));
+        knowledgeAttachService.save(knowledgeAttach);
+
+        CompletableFuture.runAsync(() ->{
+            storeContent(request.getFile(), knowledgeAttach, request.getKname(), request.getAreaIds(), true);
+        },taskExecutor);
     }
 
     @Override
     public void upload(KnowledgeUploadParam request) {
-        storeContent(request.getFile(), request.getKid(), "", request.getAreaIds(), false);
+        KnowledgeAttach knowledgeAttach = new KnowledgeAttach();
+        knowledgeAttach.setKid(request.getKid());
+        knowledgeAttach.setDocId(RandomUtil.randomString(10));
+        String fileName = request.getFile().getOriginalFilename();
+        knowledgeAttach.setDocName(fileName);
+        knowledgeAttach.setDocType(fileName.substring(fileName.lastIndexOf(".") + 1));
+        knowledgeAttach.setCreateTime(new Date());
+        knowledgeAttach.setUpdateTime(new Date());
+        knowledgeAttach.setGatherState(EnumUtil.toString(KnowledgeGatherEnum.PROGRESSING));
+        knowledgeAttachService.save(knowledgeAttach);
+
+        CompletableFuture.runAsync(() ->{
+            storeContent(request.getFile(), knowledgeAttach, "", request.getAreaIds(), false);
+        },taskExecutor);
     }
 
     @Override
-    public void storeContent(MultipartFile file, String kid, String kname, List<String> areaIds, Boolean firstTime) {
-        String fileName = file.getOriginalFilename();
+    public void storeContent(MultipartFile file, KnowledgeAttach knowledgeAttach, String kname, List<String> areaIds, Boolean firstTime) {
         List<String> chunkList = new ArrayList<>();
-        KnowledgeAttach knowledgeAttach = new KnowledgeAttach();
-        knowledgeAttach.setKid(kid);
-        String docId = RandomUtil.randomString(10);
-        knowledgeAttach.setDocId(docId);
-        knowledgeAttach.setDocName(fileName);
-        knowledgeAttach.setDocType(fileName.substring(fileName.lastIndexOf(".") + 1));
         String content = "";
         ResourceLoader resourceLoader = resourceLoaderFactory.getLoaderByFileType(knowledgeAttach.getDocType());
         try {
             content = resourceLoader.getContent(file.getInputStream());
             chunkList = resourceLoader.getChunkList(content);
         } catch (IOException e) {
-            e.printStackTrace();
-            log.error("store content occur exception ", e);
+            log.error("store content occur exception ", e.getMessage());
         }
-        knowledgeAttach.setContent(content);
-        knowledgeAttach.setCreateTime(new Date());
-        knowledgeAttach.setUpdateTime(new Date());
-        knowledgeAttach.setTotalData(chunkList.size());
-        knowledgeAttach.setGatherState(EnumUtil.toString(KnowledgeGatherEnum.PROGRESSING));
-        knowledgeAttachService.save(knowledgeAttach);
 
         //区域处理
         if (CollectionUtil.isNotEmpty(areaIds)) {
@@ -172,17 +190,19 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
         //附件分片
         List<KnowledgeAttachChunk> attachChunkList = chunkList.stream().map(chunk -> {
             KnowledgeAttachChunk knowledgeAttachChunk = new KnowledgeAttachChunk();
-            knowledgeAttachChunk.setKid(kid);
-            knowledgeAttachChunk.setDocId(docId);
+            knowledgeAttachChunk.setKid(knowledgeAttach.getKid());
+            knowledgeAttachChunk.setDocId(knowledgeAttach.getDocId());
             knowledgeAttachChunk.setRowId(IdUtil.getSnowflakeNextId());
             knowledgeAttachChunk.setContent(chunk);
             return knowledgeAttachChunk;
         }).collect(Collectors.toList());
         knowledgeAttachChunkService.saveBatch(attachChunkList, 100);
 
-        embeddingService.storeEmbeddings(attachChunkList, kid, kname, docId, firstTime);
+        embeddingService.storeEmbeddings(attachChunkList, knowledgeAttach.getKid(), kname, knowledgeAttach.getDocId(), firstTime);
 
         knowledgeAttachService.lambdaUpdate()
+                .set(KnowledgeAttach::getContent, content)
+                .set(KnowledgeAttach::getTotalData, chunkList.size())
                 .set(KnowledgeAttach::getGatherState, EnumUtil.toString(KnowledgeGatherEnum.READY))
                 .eq(KnowledgeAttach::getId, knowledgeAttach.getId())
                 .update();

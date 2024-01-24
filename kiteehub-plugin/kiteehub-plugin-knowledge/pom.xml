@@ -46,6 +46,18 @@
             <artifactId>pdfbox</artifactId>
         </dependency>
 
+        <!-- webmagic-extension -->
+        <dependency>
+            <groupId>us.codecraft</groupId>
+            <artifactId>webmagic-extension</artifactId>
+        </dependency>
+
+        <!-- jsoup -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+        </dependency>
+
         <!--  chatgpt   -->
         <dependency>
             <groupId>com.unfbx</groupId>

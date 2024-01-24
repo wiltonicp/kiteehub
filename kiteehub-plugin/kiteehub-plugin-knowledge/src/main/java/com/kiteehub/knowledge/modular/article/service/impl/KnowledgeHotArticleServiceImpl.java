@@ -18,10 +18,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kiteehub.dev.api.DevDictApi;
+import com.kiteehub.knowledge.modular.article.util.StringUtil;
 import com.kiteehub.knowledge.modular.attach.entity.KnowledgeArticleArea;
 import com.kiteehub.knowledge.modular.attach.service.KnowledgeArticleAreaService;
 import icu.mhb.mybatisplus.plugln.core.JoinLambdaWrapper;
 import lombok.AllArgsConstructor;
+import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.kiteehub.common.exception.CommonException;
@@ -69,6 +71,7 @@ public class KnowledgeHotArticleServiceImpl extends ServiceImpl<KnowledgeHotArti
         wrapper.orderByDesc(KnowledgeHotArticle::getCreateTime);
         Page<KnowledgeHotArticle> page = this.baseMapper.joinSelectPage(CommonPageRequest.defaultPage(), wrapper, KnowledgeHotArticle.class);
         page.getRecords().forEach(record ->{
+            record.setSummary(StringUtil.truncateString(record.getContent(),30));
             //区域处理
             QueryWrapper<KnowledgeArticleArea> areaQueryWrapper = new QueryWrapper<>();
             areaQueryWrapper.lambda().eq(KnowledgeArticleArea::getArticleId,record.getId());

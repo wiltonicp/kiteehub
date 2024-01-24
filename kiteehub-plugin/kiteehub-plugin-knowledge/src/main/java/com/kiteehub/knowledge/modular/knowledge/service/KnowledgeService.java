@@ -13,6 +13,7 @@ package com.kiteehub.knowledge.modular.knowledge.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttach;
 import com.kiteehub.knowledge.modular.knowledge.entity.Knowledge;
 import com.kiteehub.knowledge.modular.knowledge.param.*;
 import com.kiteehub.knowledge.modular.knowledge.result.KnowledgeDetailResult;
@@ -83,7 +84,7 @@ public interface KnowledgeService extends IService<Knowledge> {
 
     void upload(KnowledgeUploadParam request);
 
-    void storeContent(MultipartFile file, String kid, String kname, List<String> areaIds, Boolean firstTime) throws IOException;
+    void storeContent(MultipartFile file, KnowledgeAttach knowledgeAttach, String kname, List<String> areaIds, Boolean firstTime) throws IOException;
 
     KnowledgeDetailResult detail(String kid);
 
