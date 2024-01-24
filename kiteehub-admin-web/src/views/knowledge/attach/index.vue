@@ -251,12 +251,12 @@ const loadTreeData = () => {
 const treeSelect = (selectedKeys) => {
 	console.log(selectedKeys, 'selectedKeys')
 	sign.value = false
-	count()
 	if (selectedKeys.length > 0) {
 		searchFormState.areaIds = selectedKeys.toString()
 	} else {
 		delete searchFormState.parentId
 	}
+	count()
 	setTimeout(() => {
 		sign.value = true
 	}, 100)
@@ -291,7 +291,14 @@ let count = async () => {
 	let parame = {
 		areaId: searchFormState.areaIds
 	}
+	console.log(parame, 'parame')
 	let res = await knowledgeAttachApi.count(parame)
+	typeList.value = typeList.value.map(item=>{
+		return {
+			...item,
+			value:0
+		}
+	})
 	// 遍历 b 数组
 	res.forEach((itemB) => {
 		// 找到 a 数组中与 b 数组对应 id 的对象

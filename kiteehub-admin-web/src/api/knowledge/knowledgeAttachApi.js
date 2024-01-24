@@ -46,7 +46,7 @@ export default {
 		return request('area/tree', null, 'get')
 	},
 	// 获取区域数量
-	count() {
-		return request('area/count', null, 'get')
+	count(data) {
+		return request('area/count', data, 'get')
 	}
 }
