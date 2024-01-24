@@ -251,6 +251,7 @@ const loadTreeData = () => {
 const treeSelect = (selectedKeys) => {
 	console.log(selectedKeys, 'selectedKeys')
 	sign.value = false
+	count()
 	if (selectedKeys.length > 0) {
 		searchFormState.areaIds = selectedKeys.toString()
 	} else {
