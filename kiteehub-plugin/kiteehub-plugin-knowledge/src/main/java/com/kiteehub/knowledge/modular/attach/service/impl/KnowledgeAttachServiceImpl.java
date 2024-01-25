@@ -65,18 +65,12 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
 
         JoinLambdaWrapper<KnowledgeAttach> wrapper = new JoinLambdaWrapper<>(KnowledgeAttach.class).distinct();
         wrapper.select(KnowledgeAttach.class, attach -> !attach.getColumn().equals("content"));
-        if (ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getAreaIds())) {
-            List<String> areaIds = devDictApi.getIdsByParentIds(Collections.singletonList(knowledgeAttachPageParam.getAreaIds()));
-            wrapper.leftJoin(KnowledgeAttachArea.class, KnowledgeAttachArea::getAttachId, KnowledgeAttach::getId, false)
-                    .in(ObjectUtil.isNotEmpty(areaIds), KnowledgeAttachArea::getAreaId, areaIds)
-                    .end();
-        }
-//        wrapper.selectSunQuery(KnowledgeAttachArea.class,w ->{
-//            w.eq(KnowledgeAttachArea::getAttachId,KnowledgeAttach::getId)
-//                    .selectAs(cb ->{
-//                        cb.add(KnowledgeAttachArea::getAreaId,"areaIds");
-//                    });
-//        });
+//        if (ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getAreaIds())) {
+//            List<String> areaIds = devDictApi.getIdsByParentIds(Collections.singletonList(knowledgeAttachPageParam.getAreaIds()));
+//            wrapper.leftJoin(KnowledgeAttachArea.class, KnowledgeAttachArea::getAttachId, KnowledgeAttach::getId, false)
+//                    .in(ObjectUtil.isNotEmpty(areaIds), KnowledgeAttachArea::getAreaId, areaIds)
+//                    .end();
+//        }
         if (ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getKid())) {
             wrapper.eq(KnowledgeAttach::getKid, knowledgeAttachPageParam.getKid());
         }
@@ -88,14 +82,14 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
         }
         wrapper.orderByDesc(KnowledgeAttach::getUpdateTime);
         Page<KnowledgeAttach> knowledgeAttachPage = this.baseMapper.joinSelectPage(CommonPageRequest.defaultPage(), wrapper, KnowledgeAttach.class);
-        knowledgeAttachPage.getRecords().forEach(record -> {
-            //区域处理
-            QueryWrapper<KnowledgeAttachArea> areaQueryWrapper = new QueryWrapper<>();
-            areaQueryWrapper.lambda().eq(KnowledgeAttachArea::getAttachId, record.getId());
-            List<KnowledgeAttachArea> listArea = knowledgeAttachAreaService.list(areaQueryWrapper);
-            List<String> collect = listArea.stream().map(KnowledgeAttachArea::getAreaId).collect(Collectors.toList());
-            record.setAreaIds(collect);
-        });
+//        knowledgeAttachPage.getRecords().forEach(record -> {
+//            //区域处理
+//            QueryWrapper<KnowledgeAttachArea> areaQueryWrapper = new QueryWrapper<>();
+//            areaQueryWrapper.lambda().eq(KnowledgeAttachArea::getAttachId, record.getId());
+//            List<KnowledgeAttachArea> listArea = knowledgeAttachAreaService.list(areaQueryWrapper);
+//            List<String> collect = listArea.stream().map(KnowledgeAttachArea::getAreaId).collect(Collectors.toList());
+//            record.setAreaIds(collect);
+//        });
         return knowledgeAttachPage;
     }
 
@@ -113,20 +107,20 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
         BeanUtil.copyProperties(knowledgeAttachEditParam, knowledgeAttach);
         this.updateById(knowledgeAttach);
 
-        if (CollectionUtil.isNotEmpty(knowledgeAttachEditParam.getAreaIds())) {
-            //区域处理
-            QueryWrapper<KnowledgeAttachArea> queryWrapper = new QueryWrapper<>();
-            queryWrapper.lambda().eq(KnowledgeAttachArea::getAttachId, knowledgeAttach.getId());
-            knowledgeAttachAreaService.remove(queryWrapper);
-            List<KnowledgeAttachArea> collect = knowledgeAttachEditParam.getAreaIds().stream()
-                    .map(c ->
-                            KnowledgeAttachArea.builder()
-                                    .attachId(knowledgeAttach.getId())
-                                    .areaId(c)
-                                    .build())
-                    .collect(Collectors.toList());
-            knowledgeAttachAreaService.saveBatch(collect, 200);
-        }
+//        if (CollectionUtil.isNotEmpty(knowledgeAttachEditParam.getAreaIds())) {
+//            //区域处理
+//            QueryWrapper<KnowledgeAttachArea> queryWrapper = new QueryWrapper<>();
+//            queryWrapper.lambda().eq(KnowledgeAttachArea::getAttachId, knowledgeAttach.getId());
+//            knowledgeAttachAreaService.remove(queryWrapper);
+//            List<KnowledgeAttachArea> collect = knowledgeAttachEditParam.getAreaIds().stream()
+//                    .map(c ->
+//                            KnowledgeAttachArea.builder()
+//                                    .attachId(knowledgeAttach.getId())
+//                                    .areaId(c)
+//                                    .build())
+//                    .collect(Collectors.toList());
+//            knowledgeAttachAreaService.saveBatch(collect, 200);
+//        }
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -144,9 +138,9 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
         });
 
         //区域删除
-        QueryWrapper<KnowledgeAttachArea> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().in(KnowledgeAttachArea::getAttachId, CollStreamUtil.toList(knowledgeAttachIdParamList, KnowledgeAttachIdParam::getId));
-        knowledgeAttachAreaService.remove(queryWrapper);
+//        QueryWrapper<KnowledgeAttachArea> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.lambda().in(KnowledgeAttachArea::getAttachId, CollStreamUtil.toList(knowledgeAttachIdParamList, KnowledgeAttachIdParam::getId));
+//        knowledgeAttachAreaService.remove(queryWrapper);
     }
 
     @Override
@@ -186,15 +180,15 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
 
     @Override
     public List<Map<String, Object>> areaCount(String areaId) {
-        List<String> areaIds = devDictApi.getIdsByParentIds(Collections.singletonList(areaId));
+//        List<String> areaIds = devDictApi.getIdsByParentIds(Collections.singletonList(areaId));
 
         JoinLambdaWrapper<KnowledgeAttach> wrapper = new JoinLambdaWrapper<>(KnowledgeAttach.class).distinct();
         wrapper.select(KnowledgeAttach.class, attach -> attach.getColumn().equals("kid"));
-        if (ObjectUtil.isNotEmpty(areaIds)) {
-            wrapper.leftJoin(KnowledgeAttachArea.class, KnowledgeAttachArea::getAttachId, KnowledgeAttach::getId, false)
-                    .in(ObjectUtil.isNotEmpty(areaIds), KnowledgeAttachArea::getAreaId, areaIds)
-                    .end();
-        }
+//        if (ObjectUtil.isNotEmpty(areaIds)) {
+//            wrapper.leftJoin(KnowledgeAttachArea.class, KnowledgeAttachArea::getAttachId, KnowledgeAttach::getId, false)
+//                    .in(ObjectUtil.isNotEmpty(areaIds), KnowledgeAttachArea::getAreaId, areaIds)
+//                    .end();
+//        }
         List<KnowledgeAttach> knowledgeAttaches = this.baseMapper.joinSelectList(wrapper, KnowledgeAttach.class);
         Map<String, List<KnowledgeAttach>> collect = knowledgeAttaches.stream().collect(Collectors.groupingBy(KnowledgeAttach::getKid));
 

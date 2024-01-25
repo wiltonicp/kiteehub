@@ -13,7 +13,6 @@ package com.kiteehub.knowledge.modular.knowledge.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollStreamUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -21,7 +20,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kiteehub.knowledge.chain.loader.ResourceLoader;
 import com.kiteehub.knowledge.chain.loader.ResourceLoaderFactory;
 import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttach;
-import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachArea;
 import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachChunk;
 import com.kiteehub.knowledge.modular.attach.enums.KnowledgeGatherEnum;
 import com.kiteehub.knowledge.modular.attach.service.KnowledgeAttachAreaService;
@@ -176,16 +174,16 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
         }
 
         //区域处理
-        if (CollectionUtil.isNotEmpty(areaIds)) {
-            List<KnowledgeAttachArea> collect = areaIds.stream()
-                    .map(c ->
-                            KnowledgeAttachArea.builder()
-                                    .attachId(knowledgeAttach.getId())
-                                    .areaId(c)
-                                    .build())
-                    .collect(Collectors.toList());
-            knowledgeAttachAreaService.saveBatch(collect, 200);
-        }
+//        if (CollectionUtil.isNotEmpty(areaIds)) {
+//            List<KnowledgeAttachArea> collect = areaIds.stream()
+//                    .map(c ->
+//                            KnowledgeAttachArea.builder()
+//                                    .attachId(knowledgeAttach.getId())
+//                                    .areaId(c)
+//                                    .build())
+//                    .collect(Collectors.toList());
+//            knowledgeAttachAreaService.saveBatch(collect, 200);
+//        }
 
         //附件分片
         List<KnowledgeAttachChunk> attachChunkList = chunkList.stream().map(chunk -> {

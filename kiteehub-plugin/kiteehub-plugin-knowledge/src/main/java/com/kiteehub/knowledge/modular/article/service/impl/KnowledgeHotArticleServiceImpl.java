@@ -14,16 +14,11 @@ package com.kiteehub.knowledge.modular.article.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollStreamUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.kiteehub.dev.api.DevDictApi;
 import com.kiteehub.knowledge.modular.article.util.StringUtil;
-import com.kiteehub.knowledge.modular.attach.entity.KnowledgeArticleArea;
-import com.kiteehub.knowledge.modular.attach.service.KnowledgeArticleAreaService;
 import icu.mhb.mybatisplus.plugln.core.JoinLambdaWrapper;
 import lombok.AllArgsConstructor;
-import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.kiteehub.common.exception.CommonException;
@@ -49,18 +44,16 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class KnowledgeHotArticleServiceImpl extends ServiceImpl<KnowledgeHotArticleMapper, KnowledgeHotArticle> implements KnowledgeHotArticleService {
 
-    private final DevDictApi devDictApi;
-    private final KnowledgeArticleAreaService knowledgeArticleAreaService;
 
     @Override
     public Page<KnowledgeHotArticle> page(KnowledgeHotArticlePageParam knowledgeHotArticlePageParam) {
         JoinLambdaWrapper<KnowledgeHotArticle> wrapper = new JoinLambdaWrapper<>(KnowledgeHotArticle.class).distinct();
-        if(ObjectUtil.isNotEmpty(knowledgeHotArticlePageParam.getAreaIds())){
-            List<String> areaIds = devDictApi.getIdsByParentIds(knowledgeHotArticlePageParam.getAreaIds());
-            wrapper.leftJoin(KnowledgeArticleArea.class,KnowledgeArticleArea::getArticleId,KnowledgeHotArticle::getId,false)
-                    .in(ObjectUtil.isNotEmpty(areaIds),KnowledgeArticleArea::getAreaId,areaIds)
-                    .end();
-        }
+//        if(ObjectUtil.isNotEmpty(knowledgeHotArticlePageParam.getAreaIds())){
+//            List<String> areaIds = devDictApi.getIdsByParentIds(knowledgeHotArticlePageParam.getAreaIds());
+//            wrapper.leftJoin(KnowledgeArticleArea.class,KnowledgeArticleArea::getArticleId,KnowledgeHotArticle::getId,false)
+//                    .in(ObjectUtil.isNotEmpty(areaIds),KnowledgeArticleArea::getAreaId,areaIds)
+//                    .end();
+//        }
 
         if(ObjectUtil.isNotEmpty(knowledgeHotArticlePageParam.getKid())) {
             wrapper.eq(KnowledgeHotArticle::getKid, knowledgeHotArticlePageParam.getKid());
@@ -72,12 +65,12 @@ public class KnowledgeHotArticleServiceImpl extends ServiceImpl<KnowledgeHotArti
         Page<KnowledgeHotArticle> page = this.baseMapper.joinSelectPage(CommonPageRequest.defaultPage(), wrapper, KnowledgeHotArticle.class);
         page.getRecords().forEach(record ->{
             record.setSummary(StringUtil.truncateString(record.getContent(),30));
-            //区域处理
-            QueryWrapper<KnowledgeArticleArea> areaQueryWrapper = new QueryWrapper<>();
-            areaQueryWrapper.lambda().eq(KnowledgeArticleArea::getArticleId,record.getId());
-            List<KnowledgeArticleArea> listArea = knowledgeArticleAreaService.list(areaQueryWrapper);
-            List<String> collect = listArea.stream().map(KnowledgeArticleArea::getAreaId).collect(Collectors.toList());
-            record.setAreaIds(collect);
+//            //区域处理
+//            QueryWrapper<KnowledgeArticleArea> areaQueryWrapper = new QueryWrapper<>();
+//            areaQueryWrapper.lambda().eq(KnowledgeArticleArea::getArticleId,record.getId());
+//            List<KnowledgeArticleArea> listArea = knowledgeArticleAreaService.list(areaQueryWrapper);
+//            List<String> collect = listArea.stream().map(KnowledgeArticleArea::getAreaId).collect(Collectors.toList());
+//            record.setAreaIds(collect);
         });
         return page;
     }
@@ -88,7 +81,7 @@ public class KnowledgeHotArticleServiceImpl extends ServiceImpl<KnowledgeHotArti
         KnowledgeHotArticle knowledgeHotArticle = BeanUtil.toBean(knowledgeHotArticleAddParam, KnowledgeHotArticle.class);
         this.save(knowledgeHotArticle);
 
-        knowledgeArticleAreaService.addOrEdit(knowledgeHotArticle.getId(),knowledgeHotArticleAddParam.getAreaIds());
+//        knowledgeArticleAreaService.addOrEdit(knowledgeHotArticle.getId(),knowledgeHotArticleAddParam.getAreaIds());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -98,7 +91,7 @@ public class KnowledgeHotArticleServiceImpl extends ServiceImpl<KnowledgeHotArti
         BeanUtil.copyProperties(knowledgeHotArticleEditParam, knowledgeHotArticle);
         this.updateById(knowledgeHotArticle);
 
-        knowledgeArticleAreaService.addOrEdit(knowledgeHotArticle.getId(),knowledgeHotArticleEditParam.getAreaIds());
+//        knowledgeArticleAreaService.addOrEdit(knowledgeHotArticle.getId(),knowledgeHotArticleEditParam.getAreaIds());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -107,9 +100,9 @@ public class KnowledgeHotArticleServiceImpl extends ServiceImpl<KnowledgeHotArti
         // 执行删除
         this.removeByIds(CollStreamUtil.toList(knowledgeHotArticleIdParamList, KnowledgeHotArticleIdParam::getId));
 
-        QueryWrapper<KnowledgeArticleArea> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().in(KnowledgeArticleArea::getArticleId,CollStreamUtil.toList(knowledgeHotArticleIdParamList, KnowledgeHotArticleIdParam::getId));
-        knowledgeArticleAreaService.remove(queryWrapper);
+//        QueryWrapper<KnowledgeArticleArea> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.lambda().in(KnowledgeArticleArea::getArticleId,CollStreamUtil.toList(knowledgeHotArticleIdParamList, KnowledgeHotArticleIdParam::getId));
+//        knowledgeArticleAreaService.remove(queryWrapper);
     }
 
     @Override
