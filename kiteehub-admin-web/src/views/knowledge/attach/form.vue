@@ -44,23 +44,23 @@
 				</a-tab-pane>
 			</a-tabs>
 
-			<div style="margin-top: 50px">
-				<a-form-item label="区域选择：" name="areaSelection" v-if="areaList.length > 0">
-					<a-tree-select
-						v-model:value="areaIds"
-						style="width: 100%"
-						tree-checkable
-						tree-default-expand-all
-						:show-checked-strategy="SHOW_PARENT"
-						:height="233"
-						:tree-data="areaList"
-						:max-tag-count="10"
-						tree-node-filter-prop="name"
-						:fieldNames="{ children: 'children', label: 'name', value: 'id' }"
-					>
-					</a-tree-select>
-				</a-form-item>
-			</div>
+<!--			<div style="margin-top: 50px">-->
+<!--				<a-form-item label="区域选择：" name="areaSelection" v-if="areaList.length > 0">-->
+<!--					<a-tree-select-->
+<!--						v-model:value="areaIds"-->
+<!--						style="width: 100%"-->
+<!--						tree-checkable-->
+<!--						tree-default-expand-all-->
+<!--						:show-checked-strategy="SHOW_PARENT"-->
+<!--						:height="233"-->
+<!--						:tree-data="areaList"-->
+<!--						:max-tag-count="10"-->
+<!--						tree-node-filter-prop="name"-->
+<!--						:fieldNames="{ children: 'children', label: 'name', value: 'id' }"-->
+<!--					>-->
+<!--					</a-tree-select>-->
+<!--				</a-form-item>-->
+<!--			</div>-->
 		</div>
 
 		<!-- 重命名 -->
@@ -93,21 +93,21 @@
 				/>
 			</a-form-item>
 
-			<a-form-item label="区域选择：" name="areaSelection" v-if="areaList.length > 0">
-				<a-tree-select
-					v-model:value="formData.areaIds"
-					style="width: 100%"
-					tree-checkable
-					tree-default-expand-all
-					:show-checked-strategy="SHOW_PARENT"
-					:height="233"
-					:tree-data="areaList"
-					:max-tag-count="10"
-					tree-node-filter-prop="name"
-					:fieldNames="{ children: 'children', label: 'name', value: 'id' }"
-				>
-				</a-tree-select>
-			</a-form-item>
+<!--			<a-form-item label="区域选择：" name="areaSelection" v-if="areaList.length > 0">-->
+<!--				<a-tree-select-->
+<!--					v-model:value="formData.areaIds"-->
+<!--					style="width: 100%"-->
+<!--					tree-checkable-->
+<!--					tree-default-expand-all-->
+<!--					:show-checked-strategy="SHOW_PARENT"-->
+<!--					:height="233"-->
+<!--					:tree-data="areaList"-->
+<!--					:max-tag-count="10"-->
+<!--					tree-node-filter-prop="name"-->
+<!--					:fieldNames="{ children: 'children', label: 'name', value: 'id' }"-->
+<!--				>-->
+<!--				</a-tree-select>-->
+<!--			</a-form-item>-->
 		</a-form>
 		<template #footer>
 			<div v-if="!formData.id">
@@ -151,7 +151,7 @@ const gatherStateOptions = ref([])
 
 onMounted(() => {
 	getToken()
-	getArea()
+	// getArea()
 })
 // 获取token
 const getToken = () => {
@@ -170,7 +170,6 @@ const onOpen = (typeUrl, record) => {
 	visible.value = true
 	fileList.value = []
 	typeUrlItem.value = typeUrl
-	console.log(typeUrlItem.value, 'typeUrlItem')
 	if (record) {
 		let recordData = cloneDeep(record)
 		formData.value = Object.assign({}, recordData)
@@ -215,14 +214,13 @@ const onSubmit = () => {
 const handleChange = (info) => {
 	submitLoading.value = true
 	const status = info.file.status
-	console.log(info, '123')
 	if (status !== 'uploading') {
 		console.log(info.file, info.fileList)
 	}
 	if (status === 'done') {
-		message.success(`${info.file.name} file uploaded successfully.`)
+		message.success(`${info.file.name} 上传成功.`)
 	} else if (status === 'error') {
-		message.error(`${info.file.name} file upload failed.`)
+		message.error(`${info.file.name} 上传失败.`)
 	}
 
 	// info参数包含了上传信息，如文件列表、错误信息等

@@ -12,23 +12,23 @@
 						<a-input v-model:value="searchFormState.title" placeholder="请输入标题" />
 					</a-form-item>
 				</a-col>
-				<a-col :span="5">
-					<a-form-item label="区域" name="areaId" v-if="areaList.length > 0">
-						<a-tree-select
-							v-model:value="searchFormState.areaIds"
-							style="width: 100%"
-							tree-checkable
-							tree-default-expand-all
-							:show-checked-strategy="SHOW_PARENT"
-							:height="233"
-							:tree-data="areaList"
-							:max-tag-count="10"
-							tree-node-filter-prop="name"
-							:fieldNames="{ children: 'children', label: 'name', value: 'id' }"
-						>
-						</a-tree-select>
-					</a-form-item>
-				</a-col>
+<!--				<a-col :span="5">-->
+<!--					<a-form-item label="区域" name="areaId" v-if="areaList.length > 0">-->
+<!--						<a-tree-select-->
+<!--							v-model:value="searchFormState.areaIds"-->
+<!--							style="width: 100%"-->
+<!--							tree-checkable-->
+<!--							tree-default-expand-all-->
+<!--							:show-checked-strategy="SHOW_PARENT"-->
+<!--							:height="233"-->
+<!--							:tree-data="areaList"-->
+<!--							:max-tag-count="10"-->
+<!--							tree-node-filter-prop="name"-->
+<!--							:fieldNames="{ children: 'children', label: 'name', value: 'id' }"-->
+<!--						>-->
+<!--						</a-tree-select>-->
+<!--					</a-form-item>-->
+<!--				</a-col>-->
 				<a-col :span="6">
 					<a-button type="primary" @click="table.refresh(true)">查询</a-button>
 					<a-button style="margin: 0 8px" @click="reset">重置</a-button>
@@ -107,8 +107,8 @@ const columns = [
 		dataIndex: 'title'
 	},
 	{
-		title: '正文',
-		dataIndex: 'content'
+		title: '摘要',
+		dataIndex: 'summary'
 	},
 	{
 		title: '创建时间',
@@ -141,7 +141,7 @@ const options = {
 	}
 }
 onMounted(() => {
-	getArea()
+	// getArea()
 })
 // 获取字典区域
 const getArea = () => {

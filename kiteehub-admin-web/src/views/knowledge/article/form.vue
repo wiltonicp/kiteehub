@@ -32,21 +32,21 @@
 					<img alt="example" style="width: 100%" :src="previewImage" />
 				</a-modal>
 			</a-form-item>
-			<a-form-item label="区域选择：" name="areaIds" v-if="areaList && areaList.length > 0">
-				<a-tree-select
-					v-model:value="formData.areaIds"
-					style="width: 100%"
-					tree-checkable
-					tree-default-expand-all
-					:show-checked-strategy="SHOW_PARENT"
-					:height="233"
-					:tree-data="areaList"
-					:max-tag-count="10"
-					tree-node-filter-prop="name"
-					:fieldNames="{ children: 'children', label: 'name', value: 'id' }"
-				>
-				</a-tree-select>
-			</a-form-item>
+<!--			<a-form-item label="区域选择：" name="areaIds" v-if="areaList && areaList.length > 0">-->
+<!--				<a-tree-select-->
+<!--					v-model:value="formData.areaIds"-->
+<!--					style="width: 100%"-->
+<!--					tree-checkable-->
+<!--					tree-default-expand-all-->
+<!--					:show-checked-strategy="SHOW_PARENT"-->
+<!--					:height="233"-->
+<!--					:tree-data="areaList"-->
+<!--					:max-tag-count="10"-->
+<!--					tree-node-filter-prop="name"-->
+<!--					:fieldNames="{ children: 'children', label: 'name', value: 'id' }"-->
+<!--				>-->
+<!--				</a-tree-select>-->
+<!--			</a-form-item>-->
 
 			<a-form-item label="发送方式：" name="sendType">
 				<a-radio-group v-model:value="sendType">
@@ -118,7 +118,6 @@ const handleCancel = () => {
 	previewTitle.value = ''
 }
 const handlePreview = async (file) => {
-	console.log(file, '执行！')
 	if (!file.url && !file.preview) {
 		file.preview = await getBase64(file.originFileObj)
 	}
@@ -128,7 +127,7 @@ const handlePreview = async (file) => {
 }
 
 onMounted(() => {
-	getArea()
+	// getArea()
 	getToken()
 })
 // 获取token
@@ -147,7 +146,6 @@ const handleChange = (info) => {
 		formData.headImgCopy = info.file.response.data
 
 		console.log(formData.headImgCopy, 'formData.headImgCopy')
-		console.log(formData.value, '222222222222')
 		loading.value = false
 	}
 	if (info.file.status === 'error') {
@@ -192,7 +190,7 @@ const onClose = () => {
 const formRules = {
 	kid: [required('请选择知识类别')],
 	title: [required('请输入标题')],
-	areaIds: [required('请选择区域')],
+	// areaIds: [required('请选择区域')],
 	headImgCopy: [required('请上传图片')]
 }
 // 验证并提交数据

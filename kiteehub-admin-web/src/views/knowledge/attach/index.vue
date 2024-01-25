@@ -1,23 +1,23 @@
 <template>
 	<a-row>
-		<a-col :span="5">
-			<a-card class="cardImp" :bordered="false" :loading="cardLoading">
-				<a-tree
-					v-if="treeData.length > 0"
-					v-model:expandedKeys="defaultExpandedKeys"
-					:tree-data="treeData"
-					:field-names="treeFieldNames"
-					@select="treeSelect"
-				>
-				</a-tree>
-				<a-empty v-else :image="Empty.PRESENTED_IMAGE_SIMPLE" />
-			</a-card>
-		</a-col>
-		<a-col :span="19">
+<!--		<a-col :span="5">-->
+<!--			<a-card class="cardImp" :bordered="false" :loading="cardLoading">-->
+<!--				<a-tree-->
+<!--					v-if="treeData.length > 0"-->
+<!--					v-model:expandedKeys="defaultExpandedKeys"-->
+<!--					:tree-data="treeData"-->
+<!--					:field-names="treeFieldNames"-->
+<!--					@select="treeSelect"-->
+<!--				>-->
+<!--				</a-tree>-->
+<!--				<a-empty v-else :image="Empty.PRESENTED_IMAGE_SIMPLE" />-->
+<!--			</a-card>-->
+<!--		</a-col>-->
+		<a-col :span="24">
 			<a-card :bordered="false">
 				<a-form ref="searchFormRef" name="advanced_search" :model="searchFormState" class="ant-advanced-search-form">
 					<a-row :gutter="24">
-						<a-col :span="10">
+						<a-col :span="6">
 							<a-form-item label="知识名称" name="docName">
 								<a-input v-model:value="searchFormState.docName" placeholder="请输入知识名称" />
 							</a-form-item>
@@ -166,7 +166,8 @@ const cardLoading = ref(true)
 
 onMounted(async () => {
 	await getType()
-	loadTreeData()
+	// loadTreeData()
+	count()
 	sign.value = true
 })
 // 类型
@@ -206,8 +207,8 @@ let formRefOpen = () => {
 }
 // 表单更新
 let successfulFormRef = () => {
-	console.log('表单更新')
-	loadTreeData()
+	// loadTreeData()
+	count()
 	sign.value = false
 	setTimeout(() => {
 		sign.value = true
