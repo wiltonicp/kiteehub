@@ -13,9 +13,13 @@ package com.kiteehub.knowledge.modular.chatai.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.kiteehub.common.pojo.CommonEntity;
+import com.kiteehub.knowledge.openai.enums.MsgUserType;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Date;
 
 /**
  * 客服记录实体
@@ -25,6 +29,7 @@ import lombok.Setter;
  **/
 @Getter
 @Setter
+@Builder
 @TableName("chat_record")
 public class ChatRecord extends CommonEntity {
 
@@ -35,7 +40,7 @@ public class ChatRecord extends CommonEntity {
 
     /** 消息类型 */
     @ApiModelProperty(value = "消息类型", position = 2)
-    private String msgType;
+    private MsgUserType msgType;
 
     /** 客服ID */
     @ApiModelProperty(value = "客服ID", position = 3)
@@ -49,4 +54,11 @@ public class ChatRecord extends CommonEntity {
     /** 消息内容 */
     @ApiModelProperty(value = "消息内容", position = 5)
     private String message;
+
+    public void created(String userId){
+        this.setCreateUser(userId);
+        this.setCreateTime(new Date());
+        this.setUpdateUser(userId);
+        this.setUpdateTime(new Date());
+    }
 }

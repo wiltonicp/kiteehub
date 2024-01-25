@@ -2,6 +2,8 @@ package com.kiteehub.knowledge.modular.article.util;
 
 import org.jsoup.Jsoup;
 
+import java.util.List;
+
 /**
  * 补充工具
  *
@@ -17,5 +19,13 @@ public class StringUtil {
         } else {
             return text.substring(0, num);
         }
+    }
+
+    public static String listToString(List<Object> objects) {
+        StringBuilder builder = new StringBuilder();
+        objects.forEach(o -> {
+            builder.append(o);
+        });
+        return builder.toString();
     }
 }

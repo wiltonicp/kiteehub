@@ -2,6 +2,12 @@ package com.kiteehub.knowledge.openai.websocket;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.kiteehub.knowledge.modular.chatai.entity.ChatRecord;
+import com.kiteehub.knowledge.modular.chatai.service.ChatRecordService;
+import com.kiteehub.knowledge.modular.chatai.service.impl.ChatRecordServiceImpl;
+import com.kiteehub.knowledge.openai.domain.PromptRetriever;
+import com.kiteehub.knowledge.openai.enums.MsgUserType;
+import com.kiteehub.knowledge.openai.handler.ChatMessageContext;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -62,11 +68,11 @@ public class ChatWebSocketServer {
         this.robotId = robotId;
         webSocketSet.add(this);
         SESSIONS.add(session);
-        if (webSocketMap.containsKey(uid)) {
-            webSocketMap.remove(uid);
-            webSocketMap.put(uid, this);
+        if (webSocketMap.containsKey(uid + "_" + robotId)) {
+            webSocketMap.remove(uid + "_" + robotId);
+            webSocketMap.put(uid + "_" + robotId, this);
         } else {
-            webSocketMap.put(uid, this);
+            webSocketMap.put(uid + "_" + robotId, this);
             addOnlineCount();
         }
         log.info("[连接用户ID:{}] 建立连接, 当前连接数:{}", this.uid, getOnlineCount());
@@ -78,8 +84,8 @@ public class ChatWebSocketServer {
     @OnClose
     public void onClose() {
         webSocketSet.remove(this);
-        if (webSocketMap.containsKey(uid)) {
-            webSocketMap.remove(uid);
+        if (webSocketMap.containsKey(uid + "_" + robotId)) {
+            webSocketMap.remove(uid + "_" + robotId);
             subOnlineCount();
         }
         log.info("[连接用户ID:{}] 断开连接, 当前连接数:{}", uid, getOnlineCount());
@@ -110,18 +116,16 @@ public class ChatWebSocketServer {
         String msg = msgJson.getString("msg");
         this.robotId = msgJson.getString("robotId");
 
-//        SpringUtil.getBean(ChatRoomServiceImpl.)
-//        chatRoomService = SpringBeanUtil.getBean(ChatRoomServiceImpl.class);
-//        chatRecordService = SpringBeanUtil.getBean(ChatRecordServiceImpl.class);
-//        chatRoomService.saveRoom(this.rid, this.uid, msg);
-//
-//        //保存用户聊天记录
-//        ChatRecord build = ChatRecord.builder().message(msg).msgType(MsgUserType.USER).roomId(Long.valueOf(rid)).build();
-//        build.created(Long.valueOf(uid));
-//        chatRecordService.save(build);
-//
-//        ChatMessageContext context = new ChatMessageContext(session, this.uid, this.rid, msg);
-//        context.sendSocketText();
+        ChatRecordService chatRecordService = SpringUtil.getBean(ChatRecordServiceImpl.class);
+
+        //保存用户聊天记录
+        ChatRecord build = ChatRecord.builder().message(msg).msgType(MsgUserType.USER).robotId(robotId).build();
+        build.created(uid);
+        chatRecordService.save(build);
+
+        PromptRetriever promptRetriever = new PromptRetriever();
+        ChatMessageContext context = new ChatMessageContext(session, this.uid, this.robotId, msg,true,promptRetriever);
+        context.sendSocketText();
     }
 
 

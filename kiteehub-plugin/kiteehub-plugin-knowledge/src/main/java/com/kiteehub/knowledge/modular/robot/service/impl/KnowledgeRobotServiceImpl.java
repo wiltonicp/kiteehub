@@ -118,6 +118,10 @@ public class KnowledgeRobotServiceImpl extends ServiceImpl<KnowledgeRobotMapper,
         if(ObjectUtil.isEmpty(knowledgeRobot)) {
             throw new CommonException("智能客服不存在，id值为：{}", id);
         }
+        List<KnowledgeRobotIndex> listIndex = knowledgeRobotIndexService.lambdaQuery()
+                .eq(KnowledgeRobotIndex::getRid, id)
+                .list();
+        knowledgeRobot.setKids(listIndex.stream().map(KnowledgeRobotIndex::getKid).collect(Collectors.toList()));
         return knowledgeRobot;
     }
 }

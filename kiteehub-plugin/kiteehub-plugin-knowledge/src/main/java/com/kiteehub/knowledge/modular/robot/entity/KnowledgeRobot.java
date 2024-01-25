@@ -68,7 +68,7 @@ public class KnowledgeRobot extends CommonEntity {
     @ApiModelProperty(value = "搜索参数", position = 9)
     private String searchParam;
 
-    /** 搜索参数_字典值 */
+    /** 空搜索回复 */
     @ApiModelProperty(value = "空搜索回复", position = 10)
     private String emptySearchReply;
 
