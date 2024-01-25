@@ -70,6 +70,7 @@ import com.kiteehub.common.pojo.CommonWrapperInterface;
 import com.kiteehub.common.util.CommonTimeFormatUtil;
 import com.kiteehub.core.handler.GlobalExceptionUtil;
 import com.kiteehub.sys.core.enums.SysBuildInEnum;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -150,7 +151,7 @@ public class GlobalConfigure implements WebMvcConfigurer {
 
             /* 知识库相关*/
             "/knowledge/client/**",
-            "/kl/socket/**"
+            "/kb/socket/**"
     };
 
     /**
@@ -645,5 +646,13 @@ public class GlobalConfigure implements WebMvcConfigurer {
     @Resource
     public void registerListenerList(List<CommonDataChangeListener> dataChangeListenerList) {
         CommonDataChangeEventCenter.registerListenerList(dataChangeListenerList);
+    }
+
+    /**
+     * 这个bean的注册,用于扫描带有@ServerEndpoint的注解成为websocket,如果你使用外置的tomcat就不需要该配置文件
+     */
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter() {
+        return new ServerEndpointExporter();
     }
 }

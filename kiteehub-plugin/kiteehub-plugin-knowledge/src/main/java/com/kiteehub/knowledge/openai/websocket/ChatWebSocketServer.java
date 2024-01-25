@@ -28,7 +28,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 @Slf4j
 @Component
-@ServerEndpoint("/kl/socket/{uid}/{robotId}")
+@ServerEndpoint("/kb/socket/{uid}/{robotId}")
 public class ChatWebSocketServer {
 
 
