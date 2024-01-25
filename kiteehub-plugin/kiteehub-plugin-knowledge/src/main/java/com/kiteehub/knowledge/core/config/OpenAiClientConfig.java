@@ -2,6 +2,7 @@ package com.kiteehub.knowledge.core.config;
 
 import com.kiteehub.knowledge.core.strategy.PollingStrategy;
 import com.unfbx.chatgpt.OpenAiClient;
+import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.interceptor.OpenAILogger;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -34,6 +35,25 @@ public class OpenAiClientConfig {
                 .readTimeout(30, TimeUnit.MINUTES)//自定义超时时间
                 .build();
         return OpenAiClient.builder()
+                .apiHost(openAIConfig.getOpenaiApiHost())
+                .apiKey(openAIConfig.getOpenaiApiKeys())
+                .keyStrategy(new PollingStrategy())
+                .okHttpClient(okHttpClient).build();
+    }
+
+    @Bean
+    public OpenAiStreamClient openAiStreamClient() {
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new OpenAILogger());
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        OkHttpClient okHttpClient = new OkHttpClient
+                .Builder()
+                //.proxy(proxy)//自定义代理
+                .addInterceptor(httpLoggingInterceptor)//自定义日志
+                .connectTimeout(30, TimeUnit.MINUTES)//自定义超时时间
+                .writeTimeout(30, TimeUnit.MINUTES)//自定义超时时间
+                .readTimeout(30, TimeUnit.MINUTES)//自定义超时时间
+                .build();
+        return OpenAiStreamClient.builder()
                 .apiHost(openAIConfig.getOpenaiApiHost())
                 .apiKey(openAIConfig.getOpenaiApiKeys())
                 .keyStrategy(new PollingStrategy())
