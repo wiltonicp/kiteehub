@@ -327,7 +327,9 @@ const deleteKnowledgeAttach = (record) => {
 	]
 	knowledgeAttachApi.knowledgeAttachDelete(params).then(() => {
 		table.value.refresh(true)
+		count()
 	})
+
 }
 // 查看
 const examine = (record) => {
@@ -337,6 +339,7 @@ const examine = (record) => {
 const deleteBatchKnowledgeAttach = (params) => {
 	knowledgeAttachApi.knowledgeAttachDelete(params).then(() => {
 		table.value.clearRefreshSelected()
+		count()
 	})
 }
 watch(searchFormState.areaId, () => {
