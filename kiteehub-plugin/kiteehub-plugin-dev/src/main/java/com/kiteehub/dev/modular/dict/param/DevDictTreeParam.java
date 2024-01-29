@@ -28,4 +28,8 @@ public class DevDictTreeParam {
     /** 字典分类 */
     @ApiModelProperty(value = "字典分类")
     private String category;
+
+    /** 父节点ID */
+    @ApiModelProperty(value = "父节点ID")
+    private String parentId;
 }

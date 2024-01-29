@@ -1,6 +1,6 @@
 package com.kiteehub.knowledge.modular.attach.pojo;
 
-import com.kiteehub.dev.core.pojo.CityNode;
+import com.kiteehub.dev.core.pojo.DictNode;
 import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachArea;
 
 import java.util.ArrayList;
@@ -18,10 +18,10 @@ public class TreeBuilder {
 
     private final static String TOP_NODE_ID = "0";
 
-    public static List<? extends Tree<?>> buildTree(List<CityNode> devDictList, List<KnowledgeAttachArea> attachAreaList) {
+    public static List<? extends Tree<?>> buildTree(List<DictNode> devDictList, List<KnowledgeAttachArea> attachAreaList) {
         // 创建字典项的Map，方便根据ID查找
-        Map<String, CityNode> dictMap = new HashMap<>();
-        for (CityNode dict : devDictList) {
+        Map<String, DictNode> dictMap = new HashMap<>();
+        for (DictNode dict : devDictList) {
             dictMap.put(dict.getId(), dict);
         }
 
@@ -29,7 +29,7 @@ public class TreeBuilder {
         List<CityTreeNode> nodeList = new ArrayList<>();
 
         // 遍历省市字典数据列表，创建树节点并统计文件数量
-        for (CityNode dict : devDictList) {
+        for (DictNode dict : devDictList) {
             CityTreeNode node = new CityTreeNode();
             node.setId(dict.getId());
             node.setLabel(dict.getDictLabel().equals("系统区域分类") ? "全部" : dict.getDictLabel());

@@ -105,7 +105,7 @@ public class DevDictServiceImpl extends ServiceImpl<DevDictMapper, DevDict> impl
                         new TreeNode<>(devDict.getId(), devDict.getParentId(),
                                 devDict.getDictLabel(), devDict.getSortCode()).setExtra(JSONUtil.parseObj(devDict)))
                 .collect(Collectors.toList());
-        return TreeUtil.build(treeNodeList, "0");
+        return TreeUtil.build(treeNodeList, ObjectUtil.isNotEmpty(devDictTreeParam.getParentId()) ? devDictTreeParam.getParentId() : "0");
     }
 
     @Override
@@ -203,12 +203,12 @@ public class DevDictServiceImpl extends ServiceImpl<DevDictMapper, DevDict> impl
             dictionaryTransService.makeUseRedis();
             List<DevDict> devDictList = super.list(new LambdaQueryWrapper<>());
             // 非root级别的字典根据ParentId分组
-            Map<String,List<DevDict>> devDictGroupByPIDMap = devDictList.stream().filter(dict -> !ROOT_PARENT_ID
+            Map<String, List<DevDict>> devDictGroupByPIDMap = devDictList.stream().filter(dict -> !ROOT_PARENT_ID
                     .equals(dict.getParentId())).collect(Collectors.groupingBy(DevDict::getParentId));
-            Map<String,String> parentDictIdValMap = devDictList.stream().filter(dict -> ROOT_PARENT_ID
+            Map<String, String> parentDictIdValMap = devDictList.stream().filter(dict -> ROOT_PARENT_ID
                     .equals(dict.getParentId())).collect(Collectors.toMap(DevDict::getId, DevDict::getDictValue));
             for (String parentId : parentDictIdValMap.keySet()) {
-                if(devDictGroupByPIDMap.containsKey(parentId)){
+                if (devDictGroupByPIDMap.containsKey(parentId)) {
                     dictionaryTransService.refreshCache(parentDictIdValMap.get(parentId), devDictGroupByPIDMap.get(parentId).stream()
                             .collect(Collectors.toMap(DevDict::getDictValue, DevDict::getDictLabel)));
                 }

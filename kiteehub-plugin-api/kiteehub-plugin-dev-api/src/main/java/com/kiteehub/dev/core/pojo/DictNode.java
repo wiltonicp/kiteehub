@@ -10,7 +10,7 @@ import lombok.Data;
  * @date 2022/9/2 15:58
  */
 @Data
-public class CityNode {
+public class DictNode {
 
     /** id */
     @ApiModelProperty(value = "id", position = 1)

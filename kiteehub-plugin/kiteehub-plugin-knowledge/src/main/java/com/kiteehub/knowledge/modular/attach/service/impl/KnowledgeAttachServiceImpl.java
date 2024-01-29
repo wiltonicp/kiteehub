@@ -13,14 +13,11 @@ package com.kiteehub.knowledge.modular.attach.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollStreamUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kiteehub.dev.api.DevDictApi;
-import com.kiteehub.dev.core.pojo.CityNode;
+import com.kiteehub.dev.core.pojo.DictNode;
 import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttachArea;
 import com.kiteehub.knowledge.modular.attach.mapper.KnowledgeAttachChunkMapper;
 import com.kiteehub.knowledge.modular.attach.pojo.Tree;
@@ -31,7 +28,6 @@ import icu.mhb.mybatisplus.plugln.core.JoinLambdaWrapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.kiteehub.common.enums.CommonSortOrderEnum;
 import com.kiteehub.common.exception.CommonException;
 import com.kiteehub.common.page.CommonPageRequest;
 import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttach;
@@ -171,7 +167,7 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
 
     @Override
     public List<? extends Tree<?>> areaTree() {
-        List<CityNode> cityNodes = devDictApi.cityTree();
+        List<DictNode> cityNodes = devDictApi.dictTree("1739903596352495618");
 
         List<KnowledgeAttachArea> areaList = knowledgeAttachAreaService.list();
         List<? extends Tree<?>> trees = TreeBuilder.buildTree(cityNodes, areaList);

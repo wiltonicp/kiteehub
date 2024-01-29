@@ -14,9 +14,9 @@
         )
         SELECT * FROM subordinates
     </select>
-    <select id="cityTree" resultType="com.kiteehub.dev.core.pojo.CityNode">
+    <select id="dictTree" resultType="com.kiteehub.dev.core.pojo.DictNode">
         WITH RECURSIVE city(ID,parent_id,DICT_LABEL,DICT_VALUE,SORT_CODE) AS (
-            SELECT ID,parent_id,DICT_LABEL,DICT_VALUE,SORT_CODE FROM dev_dict WHERE id = '1739903596352495618'
+            SELECT ID,parent_id,DICT_LABEL,DICT_VALUE,SORT_CODE FROM dev_dict WHERE id = #{parentId}
             UNION ALL
             SELECT e.ID,e.parent_id,e.DICT_LABEL,e.DICT_VALUE,e.SORT_CODE FROM dev_dict e INNER JOIN city s ON e.parent_id = s.id WHERE e.DELETE_FLAG = 'NOT_DELETE'
         )
