@@ -38,7 +38,17 @@
 			</template>
 			<template #bodyCell="{ column, record }">
 				<template v-if="column.dataIndex === 'category'">
-					{{ $TOOL.dictTypeData('OPERATION_FLOW', record.category) }}
+					<a-cascader
+						:value="record.categoryArr&&record.categoryArr.split(',')"
+						:options="categoryOptions"
+						placeholder="请选择业务分类"
+						disabled
+						change-on-select
+						:fieldNames="{ children: 'children', label: 'name', value: 'id' }"
+					/>
+				</template>
+				<template v-if="column.dataIndex === 'flowChart'">
+					<a-image :width="60" :src="record.flowChart" />
 				</template>
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>
@@ -56,96 +66,108 @@
 </template>
 
 <script setup name="guide">
-	import tool from '@/utils/tool'
-	import Form from './form.vue'
-	import kbWorkGuideApi from '@/api/knowledge/kbWorkGuideApi'
-	let searchFormState = reactive({})
-	const searchFormRef = ref()
-	const table = ref()
-	const formRef = ref()
-	const toolConfig = { refresh: true, height: true, columnSetting: true, striped: false }
-	const columns = [
-		{
-			title: '分类',
-			dataIndex: 'category'
-		},
-		{
-			title: '事项代码',
-			dataIndex: 'eventCode'
-		},
-		{
-			title: '办理对象',
-			dataIndex: 'handleObj'
-		},
-		{
-			title: '办理依据',
-			dataIndex: 'handleBasis'
-		},
-		{
-			title: '办理部门',
-			dataIndex: 'handleDept'
-		},
-		{
-			title: '办理时限',
-			dataIndex: 'handleTime'
-		},
-		{
-			title: '流程图',
-			dataIndex: 'flowChart'
-		},
-	]
-	// 操作栏通过权限判断是否显示
-	if (hasPerm(['kbWorkGuideEdit', 'kbWorkGuideDelete'])) {
-		columns.push({
-			title: '操作',
-			dataIndex: 'action',
-			align: 'center',
-			width: '150px'
-		})
+import tool from '@/utils/tool'
+import Form from './form.vue'
+import kbWorkGuideApi from '@/api/knowledge/kbWorkGuideApi'
+import { message, TreeSelect } from 'ant-design-vue'
+let searchFormState = reactive({})
+const searchFormRef = ref()
+const table = ref()
+const formRef = ref()
+const toolConfig = { refresh: true, height: true, columnSetting: true, striped: false }
+const SHOW_PARENT = TreeSelect.SHOW_PARENT
+const categoryOptions = ref([])
+const columns = [
+	{
+		title: '分类',
+		dataIndex: 'category'
+	},
+	{
+		title: '事项代码',
+		dataIndex: 'eventCode'
+	},
+	{
+		title: '办理对象',
+		dataIndex: 'handleObj'
+	},
+	{
+		title: '办理依据',
+		dataIndex: 'handleBasis'
+	},
+	{
+		title: '办理部门',
+		dataIndex: 'handleDept'
+	},
+	{
+		title: '办理时限',
+		dataIndex: 'handleTime'
+	},
+	{
+		title: '流程图',
+		dataIndex: 'flowChart'
 	}
-	const selectedRowKeys = ref([])
-	// 列表选择配置
-	const options = {
-		// columns数字类型字段加入 needTotal: true 可以勾选自动算账
-		alert: {
-			show: true,
-			clear: () => {
-				selectedRowKeys.value = ref([])
-			}
-		},
-		rowSelection: {
-			onChange: (selectedRowKey, selectedRows) => {
-				selectedRowKeys.value = selectedRowKey
-			}
+]
+
+onMounted(() => {
+	getCategoryOptions()
+})
+let getCategoryOptions = () => {
+	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
+	if (DICT_TYPE_TREE_DATA) {
+		categoryOptions.value = [DICT_TYPE_TREE_DATA.find((item) => item.dictValue === 'OPERATION_FLOW')]
+	}
+}
+// 操作栏通过权限判断是否显示
+if (hasPerm(['kbWorkGuideEdit', 'kbWorkGuideDelete'])) {
+	columns.push({
+		title: '操作',
+		dataIndex: 'action',
+		align: 'center',
+		width: '150px'
+	})
+}
+const selectedRowKeys = ref([])
+// 列表选择配置
+const options = {
+	// columns数字类型字段加入 needTotal: true 可以勾选自动算账
+	alert: {
+		show: true,
+		clear: () => {
+			selectedRowKeys.value = ref([])
+		}
+	},
+	rowSelection: {
+		onChange: (selectedRowKey, selectedRows) => {
+			selectedRowKeys.value = selectedRowKey
 		}
 	}
-	const loadData = (parameter) => {
-		const searchFormParam = JSON.parse(JSON.stringify(searchFormState))
-		return kbWorkGuideApi.kbWorkGuidePage(Object.assign(parameter, searchFormParam)).then((data) => {
-			return data
-		})
-	}
-	// 重置
-	const reset = () => {
-		searchFormRef.value.resetFields()
+}
+const loadData = (parameter) => {
+	const searchFormParam = JSON.parse(JSON.stringify(searchFormState))
+	return kbWorkGuideApi.kbWorkGuidePage(Object.assign(parameter, searchFormParam)).then((data) => {
+		return data
+	})
+}
+// 重置
+const reset = () => {
+	searchFormRef.value.resetFields()
+	table.value.refresh(true)
+}
+// 删除
+const deleteKbWorkGuide = (record) => {
+	let params = [
+		{
+			id: record.id
+		}
+	]
+	kbWorkGuideApi.kbWorkGuideDelete(params).then(() => {
 		table.value.refresh(true)
-	}
-	// 删除
-	const deleteKbWorkGuide = (record) => {
-		let params = [
-			{
-				id: record.id
-			}
-		]
-		kbWorkGuideApi.kbWorkGuideDelete(params).then(() => {
-			table.value.refresh(true)
-		})
-	}
-	// 批量删除
-	const deleteBatchKbWorkGuide = (params) => {
-		kbWorkGuideApi.kbWorkGuideDelete(params).then(() => {
-			table.value.clearRefreshSelected()
-		})
-	}
-	const categoryOptions = tool.dictList('OPERATION_FLOW')
+	})
+}
+// 批量删除
+const deleteBatchKbWorkGuide = (params) => {
+	kbWorkGuideApi.kbWorkGuideDelete(params).then(() => {
+		table.value.clearRefreshSelected()
+	})
+}
 </script>
