@@ -11,11 +11,19 @@ import java.util.Map;
  */
 public interface VectorStore {
 
+    void createSchema(String kid, String kname);
+
     void storeEmbeddings(List<KnowledgeAttachChunk> attachChunkList, List<List<Double>> vectorList, String kid, String kname, String docId, Boolean firstTime);
-    List<Map<String,Object>> listByKId(String kid, String docId);
-    void removeByRowId(String kid,String docId,Long rowId);
-    void removeByDocId(String kid,String docId);
+
+    List<Map<String, Object>> listByKId(String kid, String docId);
+
+    void removeByRowId(String kid, String docId, Long rowId);
+
+    void removeByDocId(String kid, String docId);
+
     void removeByKid(String kid);
-    List<String> nearest(List<Double> queryVector,String kid);
-    List<String> nearest(String query,String kid);
+
+    List<String> nearest(List<Double> queryVector, String kid);
+
+    List<String> nearest(String query, String kid);
 }

@@ -68,7 +68,8 @@ public class MilvusVectorStore implements VectorStore {
 
     }
 
-    private void createSchema(String kid, String kname) {
+    @Override
+    public void createSchema(String kid, String kname) {
         FieldType primaryField = FieldType.newBuilder()
                 .withName("row_id")
                 .withDataType(DataType.Int64)
@@ -125,7 +126,7 @@ public class MilvusVectorStore implements VectorStore {
     @Override
     public void storeEmbeddings(List<KnowledgeAttachChunk> attachChunkList, List<List<Double>> vectorList, String kid, String kname, String docId, Boolean firstTime) {
         if (firstTime) {
-            createSchema(kid,kname);
+            createSchema(kid, kname);
         }
         milvusServiceClient.createPartition(
                 CreatePartitionParam.newBuilder()
@@ -200,9 +201,9 @@ public class MilvusVectorStore implements VectorStore {
     public void removeByRowId(String kid, String docId, Long rowId) {
         R<DeleteResponse> response = milvusServiceClient.delete(
                 DeleteIdsParam.newBuilder()
-                .withCollectionName(collectionName + kid)
-                .withPrimaryIds(Collections.singletonList(rowId))
-                .build());
+                        .withCollectionName(collectionName + kid)
+                        .withPrimaryIds(Collections.singletonList(rowId))
+                        .build());
         log.info("removeByDocId------------->{}", response);
     }
 
@@ -259,9 +260,9 @@ public class MilvusVectorStore implements VectorStore {
         List<QueryResultsWrapper.RowRecord> rowRecords = wrapperSearch.getRowRecords();
 
         List<String> resultList = new ArrayList<>();
-        if (resultList != null && resultList.size() > 0) {
-            for (int i = 0; i < rowRecords.size(); i++) {
-                String content = rowRecords.get(i).get("content").toString();
+        if (rowRecords != null && !rowRecords.isEmpty()) {
+            for (QueryResultsWrapper.RowRecord rowRecord : rowRecords) {
+                String content = rowRecord.get("content").toString();
                 resultList.add(content);
             }
         }

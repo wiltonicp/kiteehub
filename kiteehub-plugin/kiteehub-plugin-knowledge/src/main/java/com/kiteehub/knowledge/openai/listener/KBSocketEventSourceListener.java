@@ -22,6 +22,7 @@ import okhttp3.sse.EventSourceListener;
 
 import javax.websocket.Session;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -87,7 +88,7 @@ public class KBSocketEventSourceListener extends EventSourceListener {
         ChatCompletionResponse completionResponse = mapper.readValue(data, ChatCompletionResponse.class); // 读取Json
         String content = completionResponse.getChoices().get(0).getDelta().getContent();
         if(content != null){
-            MsgResult build = MsgResult.builder().msgType(MsgType.TEXT).content(content).isEnd(false).robotId(robotId).uid(userId).build();
+            MsgResult build = MsgResult.builder().msgType(MsgType.TEXT).content(content).isEnd(false).createdTime(LocalDateTime.now()).robotId(robotId).uid(userId).build();
             cacheOperator.lSet(userId,content);
             String delta = mapper.writeValueAsString(build);
             session.getBasicRemote().sendText(delta);
@@ -109,7 +110,7 @@ public class KBSocketEventSourceListener extends EventSourceListener {
 
         String delta = null;
         try {
-            delta = mapper.writeValueAsString(MsgResult.builder().msgType(MsgType.TEXT).content("").isEnd(true).robotId(robotId).uid(userId).build());
+            delta = mapper.writeValueAsString(MsgResult.builder().msgType(MsgType.TEXT).content("").createdTime(LocalDateTime.now()).isEnd(true).robotId(robotId).uid(userId).build());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -131,7 +132,7 @@ public class KBSocketEventSourceListener extends EventSourceListener {
         }
         ResponseBody body = response.body();
         if (Objects.nonNull(body)) {
-            String delta = mapper.writeValueAsString(MsgResult.builder().msgType(MsgType.TEXT).content(ChatConstant.GOAL_KEEPER_WORDS).isEnd(true).robotId(robotId).uid(userId).build());
+            String delta = mapper.writeValueAsString(MsgResult.builder().msgType(MsgType.TEXT).content(ChatConstant.GOAL_KEEPER_WORDS).isEnd(true).createdTime(LocalDateTime.now()).robotId(robotId).uid(userId).build());
             session.getBasicRemote().sendText(delta);
             log.error("OpenAI  sse连接异常data：{}，异常：{}", body.string(), t);
         } else {

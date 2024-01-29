@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.Session;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +67,7 @@ public class ChatMsgStrategy implements MessageStrategy{
                     .content(StrUtil.isBlankIfStr(kbRobot.getEmptySearchReply()) ? ChatConstant.GOAL_KEEPER_WORDS : kbRobot.getEmptySearchReply())
                     .isEnd(true)
                     .robotId(kbRobot.getId())
+                    .createdTime(LocalDateTime.now())
                     .uid(userId).build());
             session.getBasicRemote().sendText(msgResult);
         } else {

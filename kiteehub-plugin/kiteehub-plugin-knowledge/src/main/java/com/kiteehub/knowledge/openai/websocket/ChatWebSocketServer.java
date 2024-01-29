@@ -1,20 +1,31 @@
 package com.kiteehub.knowledge.openai.websocket;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kiteehub.knowledge.constant.ChatConstant;
 import com.kiteehub.knowledge.modular.chatai.entity.ChatRecord;
 import com.kiteehub.knowledge.modular.chatai.service.ChatRecordService;
 import com.kiteehub.knowledge.modular.chatai.service.impl.ChatRecordServiceImpl;
+import com.kiteehub.knowledge.modular.robot.entity.KnowledgeRobot;
+import com.kiteehub.knowledge.modular.robot.service.KnowledgeRobotService;
+import com.kiteehub.knowledge.modular.robot.service.impl.KnowledgeRobotServiceImpl;
+import com.kiteehub.knowledge.openai.domain.MsgResult;
 import com.kiteehub.knowledge.openai.domain.PromptRetriever;
+import com.kiteehub.knowledge.openai.enums.MsgType;
 import com.kiteehub.knowledge.openai.enums.MsgUserType;
 import com.kiteehub.knowledge.openai.handler.ChatMessageContext;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -75,7 +86,25 @@ public class ChatWebSocketServer {
             webSocketMap.put(uid + "_" + robotId, this);
             addOnlineCount();
         }
+        sendPrologue(session,robotId);
         log.info("[连接用户ID:{}] 建立连接, 当前连接数:{}", this.uid, getOnlineCount());
+    }
+
+    @SneakyThrows
+    private void sendPrologue(Session session,String robotId) {
+        KnowledgeRobotService robotService = SpringUtil.getBean(KnowledgeRobotServiceImpl.class);
+        KnowledgeRobot knowledgeRobot = robotService.queryEntity(robotId);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String msgResult = mapper.writeValueAsString(MsgResult.builder()
+                .msgType(MsgType.TEXT)
+                .content(StringUtils.isNotBlank(knowledgeRobot.getPrologue()) ? knowledgeRobot.getPrologue() : ChatConstant.DEFAULT_PROLOGUE)
+                .isEnd(true)
+                .createdTime(LocalDateTime.now())
+                .robotId(robotId)
+                .uid(this.uid).build());
+
+        session.getBasicRemote().sendText(msgResult);
     }
 
     /**

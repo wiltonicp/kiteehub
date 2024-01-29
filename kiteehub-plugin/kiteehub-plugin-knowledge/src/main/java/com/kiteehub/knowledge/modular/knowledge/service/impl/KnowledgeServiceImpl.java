@@ -126,21 +126,15 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
         knowledge.setKname(request.getKname());
         knowledge.setCreateTime(new Date());
         save(knowledge);
+        embeddingService.createSchema(knowledge.getKid(),knowledge.getKname());
 
-        KnowledgeAttach knowledgeAttach = new KnowledgeAttach();
-        knowledgeAttach.setKid(knowledge.getKid());
-        knowledgeAttach.setDocId(RandomUtil.randomString(10));
-        String fileName = request.getFile().getOriginalFilename();
-        knowledgeAttach.setDocName(fileName);
-        knowledgeAttach.setDocType(fileName.substring(fileName.lastIndexOf(".") + 1));
-        knowledgeAttach.setCreateTime(new Date());
-        knowledgeAttach.setUpdateTime(new Date());
-        knowledgeAttach.setGatherState(EnumUtil.toString(KnowledgeGatherEnum.PROGRESSING));
-        knowledgeAttachService.save(knowledgeAttach);
-
-        CompletableFuture.runAsync(() ->{
-            storeContent(request.getFile(), knowledgeAttach, request.getKname(), request.getAreaIds(), true);
-        },taskExecutor);
+        if(request.getFile() != null){
+            KnowledgeUploadParam param = new KnowledgeUploadParam();
+            param.setKid(knowledge.getKid());
+            param.setFile(request.getFile());
+            param.setAreaIds(request.getAreaIds());
+            upload(param);
+        }
     }
 
     @Override

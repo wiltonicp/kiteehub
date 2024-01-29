@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * 向量数据库库接口
  *
  * @author Ranger
- * @date  2023/12/27
+ * @date 2023/12/27
  **/
 @Service
 @AllArgsConstructor
@@ -26,22 +26,28 @@ public class EmbeddingServiceImpl implements EmbeddingService {
     private final VectorStore vectorStore;
     private final VectorizationFactory vectorizationFactory;
 
+    @Override
+    public void createSchema(String kid, String kname) {
+        vectorStore.createSchema(kid, kname);
+    }
+
     /**
      * 保存向量数据库
-     * @param attachChunkList   文档按行切分的片段
-     * @param kid               知识库ID
-     * @param docId             文档ID
+     *
+     * @param attachChunkList 文档按行切分的片段
+     * @param kid             知识库ID
+     * @param docId           文档ID
      */
     @Override
     public void storeEmbeddings(List<KnowledgeAttachChunk> attachChunkList, String kid, String kname, String docId, Boolean firstTime) {
         Vectorization vectorization = vectorizationFactory.getEmbedding();
         List<List<Double>> vectorList = vectorization.batchVectorization(attachChunkList.stream().map(KnowledgeAttachChunk::getContent).collect(Collectors.toList()));
-        vectorStore.storeEmbeddings(attachChunkList,vectorList,kid,kname,docId,firstTime);
+        vectorStore.storeEmbeddings(attachChunkList, vectorList, kid, kname, docId, firstTime);
     }
 
     @Override
-    public void removeByDocId(String kid,String docId) {
-        vectorStore.removeByDocId(kid,docId);
+    public void removeByDocId(String kid, String docId) {
+        vectorStore.removeByDocId(kid, docId);
     }
 
     @Override
