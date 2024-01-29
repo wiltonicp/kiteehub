@@ -39,28 +39,32 @@ public class KbWorkGuide extends CommonEntity {
     @ApiModelProperty(value = "分类", position = 2)
     private String category;
 
+    /** 分类备用 */
+    @ApiModelProperty(value = "分类备用", position = 3)
+    private String categoryArr;
+
     /** 事项代码 */
-    @ApiModelProperty(value = "事项代码", position = 3)
+    @ApiModelProperty(value = "事项代码", position = 4)
     private String eventCode;
 
     /** 办理对象 */
-    @ApiModelProperty(value = "办理对象", position = 4)
+    @ApiModelProperty(value = "办理对象", position = 5)
     private String handleObj;
 
     /** 办理依据 */
-    @ApiModelProperty(value = "办理依据", position = 5)
+    @ApiModelProperty(value = "办理依据", position = 6)
     private String handleBasis;
 
     /** 办理部门 */
-    @ApiModelProperty(value = "办理部门", position = 6)
+    @ApiModelProperty(value = "办理部门", position = 7)
     private String handleDept;
 
     /** 办理材料 */
-    @ApiModelProperty(value = "办理材料", position = 7)
+    @ApiModelProperty(value = "办理材料", position = 8)
     private String handleMaterial;
 
     /** 办理时限 */
-    @ApiModelProperty(value = "办理时限", position = 8)
+    @ApiModelProperty(value = "办理时限", position = 9)
     private String handleTime;
 
     /** 流程图 */

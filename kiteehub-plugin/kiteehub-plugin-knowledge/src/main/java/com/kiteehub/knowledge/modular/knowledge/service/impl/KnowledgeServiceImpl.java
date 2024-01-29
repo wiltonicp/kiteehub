@@ -102,6 +102,9 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
     public void delete(List<KnowledgeIdParam> knowledgeIdParamList) {
         // 执行删除
         this.removeByIds(CollStreamUtil.toList(knowledgeIdParamList, KnowledgeIdParam::getId));
+//        knowledgeIdParamList.forEach(x ->{
+//            embeddingService.removeByKid(x.getId());
+//        });
     }
 
     @Override

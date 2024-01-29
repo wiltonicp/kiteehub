@@ -27,7 +27,7 @@
 				<a-space>
 					<a-button type="primary" @click="formRef.onOpen()" v-if="hasPerm('knowledgeAdd')">
 						<template #icon><plus-outlined /></template>
-						新建/导入
+						新建
 					</a-button>
 					<xn-batch-delete
 						v-if="hasPerm('knowledgeBatchDelete')"
@@ -62,21 +62,21 @@
 	const toolConfig = { refresh: true, height: true, columnSetting: true, striped: false }
 	const columns = [
 		{
-			title: 'ID',
+			title: 'KID',
 			dataIndex: 'kid'
 		},
 		{
 			title: '名称',
 			dataIndex: 'kname'
 		},
-		{
-			title: '区域',
-			dataIndex: 'area'
-		},
-		{
-			title: '险别ID',
-			dataIndex: 'insureTypeId'
-		},
+		// {
+		// 	title: '区域',
+		// 	dataIndex: 'area'
+		// },
+		// {
+		// 	title: '险别ID',
+		// 	dataIndex: 'insureTypeId'
+		// },
 	]
 	// 操作栏通过权限判断是否显示
 	if (hasPerm(['knowledgeEdit', 'knowledgeDelete'])) {

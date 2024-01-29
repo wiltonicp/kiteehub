@@ -39,10 +39,6 @@ public class KnowledgeEditParam {
     @ApiModelProperty(value = "ID", position = 2)
     private String kid;
 
-    /** 用户ID */
-    @ApiModelProperty(value = "用户ID", position = 3)
-    private String uid;
-
     /** 名称 */
     @ApiModelProperty(value = "名称", position = 4)
     private String kname;
