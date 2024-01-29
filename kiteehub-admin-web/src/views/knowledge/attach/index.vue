@@ -1,18 +1,18 @@
 <template>
 	<a-row>
-<!--		<a-col :span="5">-->
-<!--			<a-card class="cardImp" :bordered="false" :loading="cardLoading">-->
-<!--				<a-tree-->
-<!--					v-if="treeData.length > 0"-->
-<!--					v-model:expandedKeys="defaultExpandedKeys"-->
-<!--					:tree-data="treeData"-->
-<!--					:field-names="treeFieldNames"-->
-<!--					@select="treeSelect"-->
-<!--				>-->
-<!--				</a-tree>-->
-<!--				<a-empty v-else :image="Empty.PRESENTED_IMAGE_SIMPLE" />-->
-<!--			</a-card>-->
-<!--		</a-col>-->
+		<!--		<a-col :span="5">-->
+		<!--			<a-card class="cardImp" :bordered="false" :loading="cardLoading">-->
+		<!--				<a-tree-->
+		<!--					v-if="treeData.length > 0"-->
+		<!--					v-model:expandedKeys="defaultExpandedKeys"-->
+		<!--					:tree-data="treeData"-->
+		<!--					:field-names="treeFieldNames"-->
+		<!--					@select="treeSelect"-->
+		<!--				>-->
+		<!--				</a-tree>-->
+		<!--				<a-empty v-else :image="Empty.PRESENTED_IMAGE_SIMPLE" />-->
+		<!--			</a-card>-->
+		<!--		</a-col>-->
 		<a-col :span="24">
 			<a-card :bordered="false">
 				<a-form ref="searchFormRef" name="advanced_search" :model="searchFormState" class="ant-advanced-search-form">
@@ -185,8 +185,14 @@ let getType = () => {
 				} catch (error) {
 					reject(error)
 				}
-			}, 500)
+			}, 1000)
 		})
+		// const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
+		// if (DICT_TYPE_TREE_DATA) {
+		// 	typeList.value =
+		// 		DICT_TYPE_TREE_DATA && DICT_TYPE_TREE_DATA.find((item) => item.id === '1742384659893030914').children
+		// 	activeKey.value = typeList.value[0].dictValue
+		// }
 	} catch (error) {
 		console.log(error)
 	}
@@ -294,10 +300,10 @@ let count = async () => {
 	}
 	console.log(parame, 'parame')
 	let res = await knowledgeAttachApi.count(parame)
-	typeList.value = typeList.value.map(item=>{
+	typeList.value = typeList.value.map((item) => {
 		return {
 			...item,
-			value:0
+			value: 0
 		}
 	})
 	// 遍历 b 数组
@@ -329,7 +335,6 @@ const deleteKnowledgeAttach = (record) => {
 		table.value.refresh(true)
 		count()
 	})
-
 }
 // 查看
 const examine = (record) => {

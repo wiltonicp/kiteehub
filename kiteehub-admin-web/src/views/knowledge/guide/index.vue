@@ -45,10 +45,11 @@
 						disabled
 						change-on-select
 						:fieldNames="{ children: 'children', label: 'name', value: 'id' }"
+						style="width: 80%"
 					/>
 				</template>
 				<template v-if="column.dataIndex === 'flowChart'">
-					<a-image :width="60" :src="record.flowChart" />
+					<a-image :width="60" :src="record.flowChart.replace('http://10.10.15.36:8299', 'https://kb.vihacker.top/api')" />
 				</template>
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>

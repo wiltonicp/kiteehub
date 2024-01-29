@@ -40,7 +40,7 @@
 			</a-form-item>
 			<a-form-item label="流程图：" name="flowChart">
 				<a-upload
-					v-model:file-list="formData.flowChartCopy"
+					v-model:file-list="fileList"
 					name="file"
 					:action="action"
 					:headers="headers"
@@ -86,6 +86,7 @@ const loading = ref(false)
 const previewVisible = ref(false)
 const previewImage = ref('')
 const previewTitle = ref('')
+const fileList = ref([])
 
 const handleCancel = () => {
 	previewVisible.value = false
@@ -116,7 +117,7 @@ const handleChange = (info) => {
 	if (info.file.status === 'done') {
 		console.log(info.file, 'info.file.originFileObj')
 
-		formData.flowChartCopy = info.file.response.data
+		formData.value.flowChart = info.file.response.data
 
 		console.log(formData.flowChartCopy, 'formData.flowChartCopy')
 		loading.value = false
@@ -132,7 +133,8 @@ const onOpen = (record) => {
 	visible.value = true
 	if (record) {
 		let recordData = cloneDeep(record)
-		recordData.flowChartCopy =
+		console.log(recordData.flowChart, 'recordData.flowChart')
+		fileList.value =
 			[
 				{
 					uid: '-1',
@@ -165,13 +167,15 @@ const formRules = {
 	handleMaterial: [required('请输入办理材料')],
 	handleTime: [required('请输入办理时限')]
 }
-// 验证并提交数据
+// 验证并提交数据  
 const onSubmit = () => {
 	formRef.value.validate().then(() => {
 		submitLoading.value = true
 		let categoryArr = cloneDeep(formData.value.categoryArr)
 		formData.value.category = categoryArr.pop()
-		formData.value.flowChart = formData.value.flowChart || formData.value.flowChartCopy[0].response.data
+		// formData.value.flowChart = formData.value.flowChart || formData.value.flowChartCopy[0].response.data
+		console.log(formData.value ,'formData.value.flowChart formData.value.flowChart ')
+		// return
 		formData.value.categoryArr = cloneDeep(formData.value.categoryArr).join(',')
 		const formDataParam = cloneDeep(formData.value)
 		kbWorkGuideApi
