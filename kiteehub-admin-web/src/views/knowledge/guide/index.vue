@@ -4,7 +4,15 @@
 			<a-row :gutter="24">
 				<a-col :span="6">
 					<a-form-item label="分类" name="category">
-						<a-select v-model:value="searchFormState.category" placeholder="请选择分类" :options="categoryOptions" />
+						<!-- <a-select v-model:value="searchFormState.category" placeholder="请选择分类" :options="categoryOptions" :fieldNames="{ children: 'children', label: 'name', value: 'id' }"/> -->
+
+						<a-cascader
+							v-model:value="searchFormState.category"
+							:options="categoryOptions"
+							placeholder="请选择业务分类"
+							change-on-select
+							:fieldNames="{ children: 'children', label: 'name', value: 'id' }"
+						/>
 					</a-form-item>
 				</a-col>
 				<a-col :span="6">
@@ -39,7 +47,7 @@
 			<template #bodyCell="{ column, record }">
 				<template v-if="column.dataIndex === 'category'">
 					<a-cascader
-						:value="record.categoryArr&&record.categoryArr.split(',')"
+						:value="record.categoryArr && record.categoryArr.split(',')"
 						:options="categoryOptions"
 						placeholder="请选择业务分类"
 						disabled
@@ -49,7 +57,10 @@
 					/>
 				</template>
 				<template v-if="column.dataIndex === 'flowChart'">
-					<a-image :width="60" :src="record.flowChart.replace('http://10.10.15.36:8299', 'https://kb.vihacker.top/api')" />
+					<a-image
+						:width="60"
+						:src="record.flowChart.replace('http://10.10.15.36:8299', 'https://kb.vihacker.top/api')"
+					/>
 				</template>
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>

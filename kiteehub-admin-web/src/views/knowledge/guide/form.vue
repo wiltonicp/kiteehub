@@ -144,6 +144,8 @@ const onOpen = (record) => {
 				}
 			] || []
 		formData.value = Object.assign({}, recordData)
+	}else{
+		fileList.value = []
 	}
 	formData.value.categoryArr = formData.value.categoryArr && formData.value.categoryArr.split(',') // 转换为数组
 	const DICT_TYPE_TREE_DATA = tool.data.get('DICT_TYPE_TREE_DATA')
