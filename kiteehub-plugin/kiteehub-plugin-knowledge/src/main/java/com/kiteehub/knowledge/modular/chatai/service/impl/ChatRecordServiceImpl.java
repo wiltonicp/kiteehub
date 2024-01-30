@@ -68,7 +68,7 @@ public class ChatRecordServiceImpl extends ServiceImpl<ChatRecordMapper, ChatRec
             queryWrapper.orderBy(true, chatRecordPageParam.getSortOrder().equals(CommonSortOrderEnum.ASC.getValue()),
                     StrUtil.toUnderlineCase(chatRecordPageParam.getSortField()));
         } else {
-            queryWrapper.lambda().orderByAsc(ChatRecord::getId);
+            queryWrapper.lambda().orderByDesc(ChatRecord::getId);
         }
         Page<ChatRecord> page = this.page(CommonPageRequest.defaultPage(), queryWrapper);
         page.getRecords().forEach(x ->{

@@ -3,6 +3,7 @@ package com.kiteehub.knowledge.openai.handler;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kiteehub.knowledge.chain.vectorstore.MilvusVectorStore;
 import com.kiteehub.knowledge.constant.ChatConstant;
@@ -31,7 +32,7 @@ import java.util.List;
  */
 @Log4j2
 @Component
-public class ChatMsgStrategy implements MessageStrategy{
+public class ChatMsgStrategy implements MessageStrategy {
 
     private static OpenAiStreamClient openAiStreamClient;
 
@@ -54,7 +55,7 @@ public class ChatMsgStrategy implements MessageStrategy{
             List<Double> queryVector = embeddingService.getQueryVector(msg);
 
             MilvusVectorStore vectorStore = SpringUtil.getBean(MilvusVectorStore.class);
-            kbRobot.getKids().forEach(kid ->{
+            kbRobot.getKids().forEach(kid -> {
                 List<String> nearest = vectorStore.nearest(queryVector, kid);
                 nearestList.addAll(nearest);
             });
@@ -71,11 +72,11 @@ public class ChatMsgStrategy implements MessageStrategy{
                     .uid(userId).build());
             session.getBasicRemote().sendText(msgResult);
         } else {
-            List<Message> messages = assemblyMessage(nearestList);
-            KBSocketEventSourceListener eventSourceListener = new KBSocketEventSourceListener(session,userId,kbRobot.getId());
+            List<Message> messages = assemblyMessage(kbRobot.getName(), nearestList, msg);
+            KBSocketEventSourceListener eventSourceListener = new KBSocketEventSourceListener(session, userId, kbRobot.getId());
             ChatCompletion completion = ChatCompletion
                     .builder()
-                    .temperature(0.2)
+                    .temperature(0.7)
                     .maxTokens(2000)
                     .presencePenalty(0.0)
                     .messages(messages)
@@ -90,16 +91,23 @@ public class ChatMsgStrategy implements MessageStrategy{
      *
      * @return
      */
-    private List<Message> assemblyMessage(List<String> nearestList) {
+    @SneakyThrows
+    private List<Message> assemblyMessage(String robotName, List<String> nearestList, String msg) {
         List<Message> messages = new ArrayList<>();
         if (CollectionUtil.isNotEmpty(nearestList)) {
             String information = String.join("\n\n", nearestList);
-            String promptTemplate = String.format(ChatConstant.PROMPT_TEMPLATE, information);
+            String promptTemplate = String.format(ChatConstant.PROMPT_TEMPLATE, robotName, information);
             messages.add(Message.builder()
                     .content(promptTemplate)
                     .role(BaseMessage.Role.SYSTEM.getName())
                     .build());
+            messages.add(Message.builder()
+                    .content(msg)
+                    .role(BaseMessage.Role.USER.getName())
+                    .build());
         }
+        ObjectMapper objectMapper = new ObjectMapper();
+        log.info("PROMPT消息内容：{}", objectMapper.writeValueAsString(messages));
         return messages;
     }
 }

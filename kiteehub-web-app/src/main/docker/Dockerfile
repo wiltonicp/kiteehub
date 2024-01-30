@@ -14,7 +14,7 @@ ENV TZ=Asia/Shanghai
 # 设置语言支持中文
 ENV LANG C.UTF-8
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
+RUN mkdir /defaultUploadFolder
 
 #ENTRYPOINT ["java","-Dspring.profiles.active=prod", "-jar", "/app/app.jar"]
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

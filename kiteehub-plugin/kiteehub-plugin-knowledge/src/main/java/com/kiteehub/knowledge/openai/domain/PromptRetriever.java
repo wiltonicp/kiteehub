@@ -13,7 +13,7 @@ public class PromptRetriever {
      * true：只能从知识库中回答，如果知识库中没有找到符合条件的，回答未找到对应答案
      * false：允许模型自由回答问题
      */
-    private boolean strict = true;
+    private boolean strict = false;
     /**
      * 检索策略：
      * best_only：仅最优
