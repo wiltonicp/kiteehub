@@ -113,6 +113,12 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
+        <!-- jackson-jsr310 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
         <!-- hutool -->
         <dependency>
             <groupId>cn.hutool</groupId>
