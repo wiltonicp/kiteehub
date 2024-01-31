@@ -39,7 +39,7 @@
 			:tool-config="toolConfig"
 			:row-selection="options.rowSelection"
 		>
-			<template #operator >
+			<template #operator>
 				<a-space>
 					<a-button type="primary" @click="formRef.onOpen()" v-if="hasPerm('kbWorkGuideAdd')">
 						<template #icon><plus-outlined /></template>
@@ -54,7 +54,7 @@
 			</template>
 			<template #bodyCell="{ column, record }">
 				<template v-if="column.dataIndex === 'category'">
-					<div>{{ findNamePathById(record.category).slice(1).join('--->>') }}</div>
+					<div>{{ findNamePathById(record.category)&&findNamePathById(record.category).slice(1).join('--->>') }}</div>
 				</template>
 				<template v-if="column.dataIndex === 'flowChart'">
 					<a-image
