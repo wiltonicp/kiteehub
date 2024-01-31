@@ -3,17 +3,23 @@
 		<a-form ref="searchFormRef" name="advanced_search" :model="searchFormState" class="ant-advanced-search-form">
 			<a-row :gutter="24">
 				<a-col :span="6">
-					<a-form-item label="分类" name="category">
-						<!-- <a-select v-model:value="searchFormState.category" placeholder="请选择分类" :options="categoryOptions" :fieldNames="{ children: 'children', label: 'name', value: 'id' }"/> -->
-
-						<a-cascader
-							v-model:value="searchFormState.category"
-							:options="categoryOptions"
-							placeholder="请选择业务分类"
-							change-on-select
-							:fieldNames="{ children: 'children', label: 'name', value: 'id' }"
-						/>
-					</a-form-item>
+					<a-tree-select
+						v-model:value="searchFormState.category"
+						show-search
+						style="width: 100%"
+						:dropdown-style="{ maxHeight: '600px', overflow: 'auto' }"
+						placeholder="请选择业务分类"
+						allow-clear
+						tree-default-expand-all
+						:tree-data="categoryOptions"
+						tree-node-filter-prop="name"
+						:fieldNames="{ children: 'children', label: 'name', value: 'id' }"
+					>
+						<template #title="{ value: id, name }">
+							<b v-if="id === 'parent 1-1'" style="color: #08c">sss</b>
+							<template v-else>{{ name }}</template>
+						</template>
+					</a-tree-select>
 				</a-col>
 				<a-col :span="6">
 					<a-button type="primary" @click="table.refresh(true)">查询</a-button>
@@ -31,7 +37,7 @@
 			:tool-config="toolConfig"
 			:row-selection="options.rowSelection"
 		>
-			<template #operator class="table-operator">
+			<template #operator>
 				<a-space>
 					<a-button type="primary" @click="formRef.onOpen()" v-if="hasPerm('kbWorkGuideAdd')">
 						<template #icon><plus-outlined /></template>
@@ -46,15 +52,7 @@
 			</template>
 			<template #bodyCell="{ column, record }">
 				<template v-if="column.dataIndex === 'category'">
-					<a-cascader
-						:value="record.categoryArr && record.categoryArr.split(',')"
-						:options="categoryOptions"
-						placeholder="请选择业务分类"
-						disabled
-						change-on-select
-						:fieldNames="{ children: 'children', label: 'name', value: 'id' }"
-						style="width: 80%"
-					/>
+					<div>{{ findNamePathById(record.category).slice(1).join('--->>') }}</div>
 				</template>
 				<template v-if="column.dataIndex === 'flowChart'">
 					<a-image
@@ -89,6 +87,7 @@ const formRef = ref()
 const toolConfig = { refresh: true, height: true, columnSetting: true, striped: false }
 const SHOW_PARENT = TreeSelect.SHOW_PARENT
 const categoryOptions = ref([])
+const searchValue = ref('')
 const columns = [
 	{
 		title: '分类',
@@ -160,6 +159,21 @@ const loadData = (parameter) => {
 		return data
 	})
 }
+
+const findNamePathById = (id, data = categoryOptions.value) => {
+	for (const node of data) {
+		if (node.id === id) {
+			return [node.name]
+		} else if (node.children && node.children.length > 0) {
+			const childResult = findNamePathById(id, node.children)
+			if (childResult) {
+				return [node.name, ...childResult]
+			}
+		}
+	}
+	return null
+}
+
 // 重置
 const reset = () => {
 	searchFormRef.value.resetFields()
