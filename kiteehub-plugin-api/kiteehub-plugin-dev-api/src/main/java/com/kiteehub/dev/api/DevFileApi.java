@@ -41,6 +41,13 @@ public interface DevFileApi {
      **/
     String storageFileWithReturnIdLocal(MultipartFile file);
 
+    /**
+     * 根据文件ID获取文件真实路径
+     * @param localId
+     * @return
+     */
+    String getStoragePathWithReturnIdLocal(String localId);
+
     /* =========阿里云文件========= */
 
     /**

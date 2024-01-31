@@ -2,24 +2,26 @@
 	<a-card :bordered="false">
 		<a-form ref="searchFormRef" name="advanced_search" :model="searchFormState" class="ant-advanced-search-form">
 			<a-row :gutter="24">
-				<a-col :span="6">
-					<a-tree-select
-						v-model:value="searchFormState.category"
-						show-search
-						style="width: 100%"
-						:dropdown-style="{ maxHeight: '600px', overflow: 'auto' }"
-						placeholder="请选择业务分类"
-						allow-clear
-						tree-default-expand-all
-						:tree-data="categoryOptions"
-						tree-node-filter-prop="name"
-						:fieldNames="{ children: 'children', label: 'name', value: 'id' }"
-					>
-						<template #title="{ value: id, name }">
-							<b v-if="id === 'parent 1-1'" style="color: #08c">sss</b>
-							<template v-else>{{ name }}</template>
-						</template>
-					</a-tree-select>
+				<a-col :span="10">
+					<a-form-item label="业务分类" name="category">
+						<a-tree-select
+							v-model:value="searchFormState.category"
+							show-search
+							style="width: 100%"
+							:dropdown-style="{ maxHeight: '600px', overflow: 'auto' }"
+							placeholder="请选择业务分类"
+							allow-clear
+							tree-default-expand-all
+							:tree-data="categoryOptions"
+							tree-node-filter-prop="name"
+							:fieldNames="{ children: 'children', label: 'name', value: 'id' }"
+						>
+							<template #title="{ value: id, name }">
+								<b v-if="id === 'parent 1-1'" style="color: #08c">sss</b>
+								<template v-else>{{ name }}</template>
+							</template>
+						</a-tree-select>
+					</a-form-item>
 				</a-col>
 				<a-col :span="6">
 					<a-button type="primary" @click="table.refresh(true)">查询</a-button>
@@ -37,7 +39,7 @@
 			:tool-config="toolConfig"
 			:row-selection="options.rowSelection"
 		>
-			<template #operator>
+			<template #operator class="table-operator">
 				<a-space>
 					<a-button type="primary" @click="formRef.onOpen()" v-if="hasPerm('kbWorkGuideAdd')">
 						<template #icon><plus-outlined /></template>
