@@ -59,8 +59,8 @@ public class KbSubsidyBatchDataController {
      */
     @ApiOperationSupport(order = 1)
     @ApiOperation("获取待遇补贴批次详情分页")
-    @SaCheckPermission("/knowledge/subsidy/page")
-    @GetMapping("/knowledge/subsidy/page")
+    @SaCheckPermission("/knowledge/subsidy/data/page")
+    @GetMapping("/knowledge/subsidy/data/page")
     public CommonResult<Page<KbSubsidyBatchData>> page(KbSubsidyBatchDataPageParam kbSubsidyBatchDataPageParam) {
         return CommonResult.data(kbSubsidyBatchDataService.page(kbSubsidyBatchDataPageParam));
     }
@@ -74,8 +74,8 @@ public class KbSubsidyBatchDataController {
     @ApiOperationSupport(order = 2)
     @ApiOperation("添加待遇补贴批次详情")
     @CommonLog("添加待遇补贴批次详情")
-    @SaCheckPermission("/knowledge/subsidy/add")
-    @PostMapping("/knowledge/subsidy/add")
+    @SaCheckPermission("/knowledge/subsidy/data/add")
+    @PostMapping("/knowledge/subsidy/data/add")
     public CommonResult<String> add(@RequestBody @Valid KbSubsidyBatchDataAddParam kbSubsidyBatchDataAddParam) {
         kbSubsidyBatchDataService.add(kbSubsidyBatchDataAddParam);
         return CommonResult.ok();
@@ -90,8 +90,8 @@ public class KbSubsidyBatchDataController {
     @ApiOperationSupport(order = 3)
     @ApiOperation("编辑待遇补贴批次详情")
     @CommonLog("编辑待遇补贴批次详情")
-    @SaCheckPermission("/knowledge/subsidy/edit")
-    @PostMapping("/knowledge/subsidy/edit")
+    @SaCheckPermission("/knowledge/subsidy/data/edit")
+    @PostMapping("/knowledge/subsidy/data/edit")
     public CommonResult<String> edit(@RequestBody @Valid KbSubsidyBatchDataEditParam kbSubsidyBatchDataEditParam) {
         kbSubsidyBatchDataService.edit(kbSubsidyBatchDataEditParam);
         return CommonResult.ok();
@@ -106,8 +106,8 @@ public class KbSubsidyBatchDataController {
     @ApiOperationSupport(order = 4)
     @ApiOperation("删除待遇补贴批次详情")
     @CommonLog("删除待遇补贴批次详情")
-    @SaCheckPermission("/knowledge/subsidy/delete")
-    @PostMapping("/knowledge/subsidy/delete")
+    @SaCheckPermission("/knowledge/subsidy/data/delete")
+    @PostMapping("/knowledge/subsidy/data/delete")
     public CommonResult<String> delete(@RequestBody @Valid @NotEmpty(message = "集合不能为空")
                                                    CommonValidList<KbSubsidyBatchDataIdParam> kbSubsidyBatchDataIdParamList) {
         kbSubsidyBatchDataService.delete(kbSubsidyBatchDataIdParamList);
@@ -122,8 +122,8 @@ public class KbSubsidyBatchDataController {
      */
     @ApiOperationSupport(order = 5)
     @ApiOperation("获取待遇补贴批次详情详情")
-    @SaCheckPermission("/knowledge/subsidy/detail")
-    @GetMapping("/knowledge/subsidy/detail")
+    @SaCheckPermission("/knowledge/subsidy/data/detail")
+    @GetMapping("/knowledge/subsidy/data/detail")
     public CommonResult<KbSubsidyBatchData> detail(@Valid KbSubsidyBatchDataIdParam kbSubsidyBatchDataIdParam) {
         return CommonResult.data(kbSubsidyBatchDataService.detail(kbSubsidyBatchDataIdParam));
     }

@@ -1,6 +1,6 @@
 import { baseRequest } from '@/utils/request'
 
-const request = (url, ...arg) => baseRequest(`/knowledge/subsidy/` + url, ...arg)
+const request = (url, ...arg) => baseRequest(`/knowledge/subsidy/data` + url, ...arg)
 
 /**
  * 待遇补贴批次详情Api接口管理器
