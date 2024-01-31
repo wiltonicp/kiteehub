@@ -28,13 +28,25 @@
 			<a-form-item label="办理部门：" name="handleDept">
 				<a-input v-model:value="formData.handleDept" placeholder="请输入办理部门" allow-clear />
 			</a-form-item>
-			<a-form-item label="办理材料：" name="handleMaterial">
+			<a-form-item label="文本方式：" name="sendType">
+				<a-radio-group v-model:value="sendType">
+					<a-radio value="TXT">纯文本</a-radio>
+					<a-radio value="HTML">HTML</a-radio>
+				</a-radio-group>
+			</a-form-item>
+			<a-form-item label="正文" name="handleMaterial" v-if="sendType === 'TXT'">
+				<a-textarea v-model:value="formData.handleMaterial" placeholder="请输入正文" :auto-size="{ minRows: 6, maxRows: 6 }" />
+			</a-form-item>
+			<a-form-item label="正文" name="handleMaterial" v-if="sendType === 'HTML'">
+				<xn-editor v-model="formData.handleMaterial" placeholder="请输入正文" :height="200"></xn-editor>
+			</a-form-item>
+			<!-- <a-form-item label="办理材料：" name="handleMaterial">
 				<a-textarea
 					v-model:value="formData.handleMaterial"
 					placeholder="请输入办理材料"
 					:auto-size="{ minRows: 3, maxRows: 5 }"
 				/>
-			</a-form-item>
+			</a-form-item> -->
 			<a-form-item label="办理时限：" name="handleTime">
 				<a-input v-model:value="formData.handleTime" placeholder="请输入办理时限" allow-clear />
 			</a-form-item>
@@ -71,6 +83,7 @@ import { cloneDeep } from 'lodash-es'
 import { required } from '@/utils/formRules'
 import kbWorkGuideApi from '@/api/knowledge/kbWorkGuideApi'
 import sysConfig from '@/config/index'
+import XnEditor from "@/components/Editor/index.vue";
 // 抽屉状态
 const visible = ref(false)
 const emit = defineEmits({ successful: null })
@@ -87,7 +100,8 @@ const previewVisible = ref(false)
 const previewImage = ref('')
 const previewTitle = ref('')
 const fileList = ref([])
-
+// 文本方式
+const sendType = ref('TXT')
 const handleCancel = () => {
 	previewVisible.value = false
 	previewTitle.value = ''

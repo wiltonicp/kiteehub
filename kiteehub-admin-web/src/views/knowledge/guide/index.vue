@@ -39,7 +39,7 @@
 			:tool-config="toolConfig"
 			:row-selection="options.rowSelection"
 		>
-			<template #operator class="table-operator">
+			<template #operator >
 				<a-space>
 					<a-button type="primary" @click="formRef.onOpen()" v-if="hasPerm('kbWorkGuideAdd')">
 						<template #icon><plus-outlined /></template>
