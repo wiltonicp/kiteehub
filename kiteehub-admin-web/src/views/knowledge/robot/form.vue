@@ -7,6 +7,9 @@
 		@close="onClose"
 	>
 		<a-form ref="formRef" :model="formData" :rules="formRules" layout="vertical">
+			<a-form-item label="客服ID：" name="ID">
+				<a-input v-model:value="formData.id" placeholder="请输入客服名称" allow-clear disabled/>
+			</a-form-item>
 			<a-form-item label="客服名称：" name="name">
 				<a-input v-model:value="formData.name" placeholder="请输入客服名称" allow-clear />
 			</a-form-item>
