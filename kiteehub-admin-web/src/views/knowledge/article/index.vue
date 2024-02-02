@@ -63,7 +63,7 @@
 					<a-tag color="blue">{{ $TOOL.dictTypeData('KNOWLEDGE_GATHER', record.kid) }}</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'headImg'">
-					<a-image :width="60" :src="record.headImg" />
+					<a-image :width="60" :src="record.headImg.replace('http://10.10.15.36:8299', 'https://kb.vihacker.top/api')" />
 				</template>
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>

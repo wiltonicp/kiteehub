@@ -154,7 +154,7 @@ const onOpen = (record) => {
 					uid: '-1',
 					name: 'image.png',
 					status: 'done',
-					url: recordData.flowChart
+					url: recordData.flowChart.replace('http://10.10.15.36:8299', 'https://kb.vihacker.top/api')
 				}
 			] || []
 		formData.value = Object.assign({}, recordData)

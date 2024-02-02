@@ -6,21 +6,31 @@
 		:destroy-on-close="true"
 		@close="onClose"
 	>
-		<a-space>
-			<a-select
-				ref="select"
-				v-model:value="value1"
-				style="width: 300px"
-				:placeholder="`${record.docName} 选择批次`"
-				@focus="focus"
-				@change="handleChange"
-			>
-				<a-select-option :value="item.batchNum" v-for="(item, index) in batchIdList" :key="index"
-					>{{ item.name }} 第{{ item.batchNum }}批次</a-select-option
-				>
-			</a-select>
-		</a-space>
-
+		<a-form ref="searchFormRef" name="advanced_search" :model="searchFormState" class="ant-advanced-search-form">
+	
+			<a-row :gutter="24">
+				<a-col :span="11">
+					<a-form-item label="选择批次" name="batchNum">
+						<a-select
+							ref="select"
+							v-model:value="searchFormState.batchNum"
+							style="width: 300px"
+							:placeholder="`${record.docName} 选择批次`"
+							@focus="focus"
+							@change="handleChange"
+						>
+							<a-select-option :value="item.batchNum" v-for="(item, index) in batchIdList" :key="index"
+								>{{ item.name }} 第{{ item.batchNum }}批次</a-select-option
+							>
+						</a-select>
+					</a-form-item>
+				</a-col>
+				<a-col :span="6">
+					<a-button type="primary" @click="table.refresh(true)">查询</a-button>
+					<a-button style="margin: 0 8px" @click="reset">重置</a-button>
+				</a-col>
+			</a-row>
+		</a-form>
 		<s-table
 			ref="table"
 			:columns="columns"
@@ -30,7 +40,6 @@
 			:row-key="(record) => record.id"
 			:tool-config="toolConfig"
 			:row-selection="options.rowSelection"
-			v-if="sign"
 		>
 			<template #bodyCell="{ column, record }">
 				<template v-if="column.dataIndex === 'action'">
@@ -47,18 +56,6 @@
 				</template>
 			</template>
 		</s-table>
-
-		<template #footer>
-			<div class="pagination">
-				<a-pagination
-					v-model:current="current"
-					v-model:pageSize="size"
-					show-size-changer
-					:total="totalVal"
-					@showSizeChange="onShowSizeChange"
-				/>
-			</div>
-		</template>
 	</xn-form-container>
 </template>
 
@@ -74,8 +71,10 @@ const size = ref(10)
 const current = ref(1)
 const totalVal = ref(0)
 const recordsList = ref([])
+const table = ref()
 const open = ref(false)
 let searchFormState = reactive({})
+const searchFormRef = ref()
 const toolConfig = { refresh: true, height: true, columnSetting: true, striped: false }
 const subsidyTypeOptions = ref([])
 const columns = [
@@ -132,7 +131,12 @@ const loadData = (parameter) => {
 		return data
 	})
 }
-
+// 重置
+const reset = () => {
+	searchFormRef.value.resetFields()
+	searchFormState.batchNum = ''
+	table.value.refresh(true)
+}
 //分组
 const kbSubsidyBatchDataGroupBatch = async (params) => {
 	let res = await kbSubsidyBatchApi.kbSubsidyBatchDataGroupBatch({
@@ -209,10 +213,8 @@ const focus = () => {
 }
 const handleChange = (value) => {
 	console.log(`selected ${value}`)
-	dataObj.sign = false
-	searchFormState.batchId = dataObj.record.id
+	// searchFormState.batchId = dataObj.record.id
 	searchFormState.batchNum = value
-	// dataObj.sign = true
 }
 
 const { record, batchIdList, sign } = toRefs(dataObj)

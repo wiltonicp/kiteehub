@@ -13,9 +13,9 @@
 			<a-form-item label="标题：" name="title">
 				<a-input v-model:value="formData.title" placeholder="请输入标题" allow-clear />
 			</a-form-item>
-			<a-form-item label="封面：" name="headImgCopy">
+			<a-form-item label="封面：" name="fileList">
 				<a-upload
-					v-model:file-list="formData.headImgCopy"
+					v-model:file-list="fileList"
 					name="file"
 					:action="action"
 					:headers="headers"
@@ -23,7 +23,7 @@
 					@change="handleChange"
 					@preview="handlePreview"
 				>
-					<div v-if="formData.headImgCopy && formData.headImgCopy.length < 1">
+					<div>
 						<plus-outlined />
 						<div style="margin-top: 8px">上传</div>
 					</div>
@@ -32,21 +32,21 @@
 					<img alt="example" style="width: 100%" :src="previewImage" />
 				</a-modal>
 			</a-form-item>
-<!--			<a-form-item label="区域选择：" name="areaIds" v-if="areaList && areaList.length > 0">-->
-<!--				<a-tree-select-->
-<!--					v-model:value="formData.areaIds"-->
-<!--					style="width: 100%"-->
-<!--					tree-checkable-->
-<!--					tree-default-expand-all-->
-<!--					:show-checked-strategy="SHOW_PARENT"-->
-<!--					:height="233"-->
-<!--					:tree-data="areaList"-->
-<!--					:max-tag-count="10"-->
-<!--					tree-node-filter-prop="name"-->
-<!--					:fieldNames="{ children: 'children', label: 'name', value: 'id' }"-->
-<!--				>-->
-<!--				</a-tree-select>-->
-<!--			</a-form-item>-->
+			<!--			<a-form-item label="区域选择：" name="areaIds" v-if="areaList && areaList.length > 0">-->
+			<!--				<a-tree-select-->
+			<!--					v-model:value="formData.areaIds"-->
+			<!--					style="width: 100%"-->
+			<!--					tree-checkable-->
+			<!--					tree-default-expand-all-->
+			<!--					:show-checked-strategy="SHOW_PARENT"-->
+			<!--					:height="233"-->
+			<!--					:tree-data="areaList"-->
+			<!--					:max-tag-count="10"-->
+			<!--					tree-node-filter-prop="name"-->
+			<!--					:fieldNames="{ children: 'children', label: 'name', value: 'id' }"-->
+			<!--				>-->
+			<!--				</a-tree-select>-->
+			<!--			</a-form-item>-->
 
 			<a-form-item label="发送方式：" name="sendType">
 				<a-radio-group v-model:value="sendType">
@@ -105,14 +105,7 @@ const previewVisible = ref(false)
 const previewImage = ref('')
 const previewTitle = ref('')
 
-const fileList = ref([
-	// {
-	// 	uid: '-1',
-	// 	name: 'image.png',
-	// 	status: 'done',
-	// 	url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-	// }
-])
+const fileList = ref([])
 const handleCancel = () => {
 	previewVisible.value = false
 	previewTitle.value = ''
@@ -143,9 +136,8 @@ const handleChange = (info) => {
 	if (info.file.status === 'done') {
 		console.log(info.file, 'info.file.originFileObj')
 
-		formData.headImgCopy = info.file.response.data
+		formData.value.headImg = info.file.response.data
 
-		console.log(formData.headImgCopy, 'formData.headImgCopy')
 		loading.value = false
 	}
 	if (info.file.status === 'error') {
@@ -167,16 +159,19 @@ const onOpen = (record) => {
 	visible.value = true
 	if (record) {
 		let recordData = cloneDeep(record)
-		recordData.headImgCopy =
+		console.log(recordData.headImg, 'recordData.headImg')
+		fileList.value =
 			[
 				{
 					uid: '-1',
 					name: 'image.png',
 					status: 'done',
-					url: recordData.headImg
+					url: recordData.headImg.replace('http://10.10.15.36:8299', 'https://kb.vihacker.top/api')
 				}
 			] || []
 		formData.value = Object.assign({}, recordData)
+	} else {
+		fileList.value = []
 	}
 	kidOptions.value = tool.dictList('KNOWLEDGE_GATHER')
 }
@@ -191,15 +186,15 @@ const formRules = {
 	kid: [required('请选择知识类别')],
 	title: [required('请输入标题')],
 	// areaIds: [required('请选择区域')],
-	headImgCopy: [required('请上传图片')]
+	// fileList: [required('请上传图片')]
 }
 // 验证并提交数据
 const onSubmit = () => {
 	formRef.value.validate().then(() => {
 		submitLoading.value = true
-		formData.value.headImg = formData.value.headImgCopy[0].response.data
+		// formData.value.headImg = formData.value.headImgCopy[0].response.data
 		const formDataParam = cloneDeep(formData.value)
-		console.log(formDataParam, 'formDataParam')
+
 		knowledgeHotArticleApi
 			.knowledgeHotArticleSubmitForm(formDataParam, formDataParam.id)
 			.then(() => {
