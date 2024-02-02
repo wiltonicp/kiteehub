@@ -47,4 +47,11 @@ public class KbSubsidyBatchDataPageParam {
     @ApiModelProperty(value = "关键词")
     private String searchKey;
 
+    /** 批次ID */
+    @ApiModelProperty(value = "批次ID")
+    private String batchId;
+
+    @ApiModelProperty(value = "批次顺序")
+    private String batchNum;
+
 }

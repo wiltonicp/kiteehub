@@ -39,6 +39,10 @@ public class KbSubsidyBatchData extends CommonEntity {
     @ApiModelProperty(value = "批次ID", position = 2)
     private String batchId;
 
+    /** 批次顺序 */
+    @ApiModelProperty(value = "批次顺序", position = 2)
+    private Integer batchNum;
+
     /** 姓名 */
     @ApiModelProperty(value = "姓名", position = 3)
     private String fullName;

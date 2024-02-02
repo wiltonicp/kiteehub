@@ -11,13 +11,12 @@
  */
 package com.kiteehub.knowledge.modular.subsidy.service;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kiteehub.knowledge.modular.subsidy.entity.KbSubsidyBatchData;
-import com.kiteehub.knowledge.modular.subsidy.param.KbSubsidyBatchDataAddParam;
-import com.kiteehub.knowledge.modular.subsidy.param.KbSubsidyBatchDataEditParam;
-import com.kiteehub.knowledge.modular.subsidy.param.KbSubsidyBatchDataIdParam;
-import com.kiteehub.knowledge.modular.subsidy.param.KbSubsidyBatchDataPageParam;
+import com.kiteehub.knowledge.modular.subsidy.param.*;
 
 import java.util.List;
 
@@ -76,4 +75,11 @@ public interface KbSubsidyBatchDataService extends IService<KbSubsidyBatchData> 
      * @date  2024/01/31 15:06
      **/
     KbSubsidyBatchData queryEntity(String id);
+
+    /**
+     * 获取待遇补贴批次分组
+     * @param kbSubsidyBatchIdParam
+     * @return
+     */
+    JSONArray groupBatch(KbSubsidyBatchIdParam kbSubsidyBatchIdParam);
 }

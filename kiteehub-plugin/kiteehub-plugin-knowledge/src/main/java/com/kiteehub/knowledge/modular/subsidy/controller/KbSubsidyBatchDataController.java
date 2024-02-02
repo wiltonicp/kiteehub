@@ -12,9 +12,12 @@
 package com.kiteehub.knowledge.modular.subsidy.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
+import com.kiteehub.knowledge.modular.subsidy.param.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
@@ -26,10 +29,6 @@ import com.kiteehub.common.annotation.CommonLog;
 import com.kiteehub.common.pojo.CommonResult;
 import com.kiteehub.common.pojo.CommonValidList;
 import com.kiteehub.knowledge.modular.subsidy.entity.KbSubsidyBatchData;
-import com.kiteehub.knowledge.modular.subsidy.param.KbSubsidyBatchDataAddParam;
-import com.kiteehub.knowledge.modular.subsidy.param.KbSubsidyBatchDataEditParam;
-import com.kiteehub.knowledge.modular.subsidy.param.KbSubsidyBatchDataIdParam;
-import com.kiteehub.knowledge.modular.subsidy.param.KbSubsidyBatchDataPageParam;
 import com.kiteehub.knowledge.modular.subsidy.service.KbSubsidyBatchDataService;
 
 import javax.annotation.Resource;
@@ -126,5 +125,19 @@ public class KbSubsidyBatchDataController {
     @GetMapping("/knowledge/subsidy/data/detail")
     public CommonResult<KbSubsidyBatchData> detail(@Valid KbSubsidyBatchDataIdParam kbSubsidyBatchDataIdParam) {
         return CommonResult.data(kbSubsidyBatchDataService.detail(kbSubsidyBatchDataIdParam));
+    }
+
+    /**
+     * 获取待遇补贴批次分组
+     *
+     * @author Ranger
+     * @date  2024/01/31 15:06
+     */
+    @ApiOperationSupport(order = 6)
+    @ApiOperation("获取待遇补贴批次分组")
+    @SaCheckPermission("/knowledge/subsidy/data/groupBatch")
+    @GetMapping("/knowledge/subsidy/data/groupBatch")
+    public CommonResult<JSONArray> groupBatch(@Valid KbSubsidyBatchIdParam kbSubsidyBatchIdParam) {
+        return CommonResult.data(kbSubsidyBatchDataService.groupBatch(kbSubsidyBatchIdParam));
     }
 }

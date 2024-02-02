@@ -13,11 +13,19 @@ package com.kiteehub.knowledge.modular.subsidy.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollStreamUtil;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttach;
+import com.kiteehub.knowledge.modular.subsidy.param.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.kiteehub.common.enums.CommonSortOrderEnum;
@@ -25,13 +33,12 @@ import com.kiteehub.common.exception.CommonException;
 import com.kiteehub.common.page.CommonPageRequest;
 import com.kiteehub.knowledge.modular.subsidy.entity.KbSubsidyBatchData;
 import com.kiteehub.knowledge.modular.subsidy.mapper.KbSubsidyBatchDataMapper;
-import com.kiteehub.knowledge.modular.subsidy.param.KbSubsidyBatchDataAddParam;
-import com.kiteehub.knowledge.modular.subsidy.param.KbSubsidyBatchDataEditParam;
-import com.kiteehub.knowledge.modular.subsidy.param.KbSubsidyBatchDataIdParam;
-import com.kiteehub.knowledge.modular.subsidy.param.KbSubsidyBatchDataPageParam;
 import com.kiteehub.knowledge.modular.subsidy.service.KbSubsidyBatchDataService;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 待遇补贴批次详情Service接口实现类
@@ -52,6 +59,8 @@ public class KbSubsidyBatchDataServiceImpl extends ServiceImpl<KbSubsidyBatchDat
         } else {
             queryWrapper.lambda().orderByAsc(KbSubsidyBatchData::getId);
         }
+        queryWrapper.lambda().eq(ObjectUtil.isNotEmpty(kbSubsidyBatchDataPageParam.getBatchId()),KbSubsidyBatchData::getBatchId,kbSubsidyBatchDataPageParam.getBatchId());
+        queryWrapper.lambda().eq(ObjectUtil.isNotEmpty(kbSubsidyBatchDataPageParam.getBatchNum()),KbSubsidyBatchData::getBatchNum,kbSubsidyBatchDataPageParam.getBatchNum());
         return this.page(CommonPageRequest.defaultPage(), queryWrapper);
     }
 
@@ -89,5 +98,24 @@ public class KbSubsidyBatchDataServiceImpl extends ServiceImpl<KbSubsidyBatchDat
             throw new CommonException("待遇补贴批次详情不存在，id值为：{}", id);
         }
         return kbSubsidyBatchData;
+    }
+
+    @Override
+    public JSONArray groupBatch(KbSubsidyBatchIdParam kbSubsidyBatchIdParam) {
+        QueryWrapper<KbSubsidyBatchData> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(KbSubsidyBatchData::getBatchId,kbSubsidyBatchIdParam.getId());
+        List<KbSubsidyBatchData> list = this.list(queryWrapper);
+        Map<Integer, List<KbSubsidyBatchData>> collect = list.stream().collect(Collectors.groupingBy(KbSubsidyBatchData::getBatchNum));
+
+        JSONArray array = JSONUtil.createArray();
+        for (Map.Entry<Integer, List<KbSubsidyBatchData>> stringListEntry : collect.entrySet()) {
+            Date createTime = stringListEntry.getValue().stream().findFirst().get().getCreateTime();
+            String format = DateUtil.format(createTime, DatePattern.NORM_DATETIME_MINUTE_PATTERN);
+            JSONObject obj = JSONUtil.createObj();
+            obj.set("name",format);
+            obj.set("batchNum",stringListEntry.getKey());
+            array.put(obj);
+        }
+        return array;
     }
 }
