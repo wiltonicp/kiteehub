@@ -36,5 +36,10 @@ export default {
 	// 下载导入模板
 	downloadImportSubsidyTemplate() {
 
-    }
+    },
+	// 详情
+	kbSubsidyBatchDataPage(data) {
+		return request('data/page', data, 'get')
+	},
+	
 }
