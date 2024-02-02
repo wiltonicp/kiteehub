@@ -56,16 +56,20 @@ public class ChatMsgStrategy implements MessageStrategy {
         if(ObjectUtil.isNotEmpty(presets)){
             List<KnowledgeRobotPreset> collect = presets.stream().filter(preset -> preset.getQuestion().contains(msg)).collect(Collectors.toList());
             if(ObjectUtil.isNotEmpty(collect)){
-                //直接返回
-                ObjectMapper mapper = new ObjectMapper();
-                String msgResult = mapper.writeValueAsString(MsgResult.builder()
-                        .msgType(MsgType.TEXT)
-                        .content(collect.stream().findFirst().get().getAnswer())
-                        .isEnd(true)
-                        .robotId(kbRobot.getId())
-                        .createdTime(LocalDateTime.now())
-                        .uid(userId).build());
-                session.getBasicRemote().sendText(msgResult);
+                String answer = collect.stream().findFirst().get().getAnswer();
+                char[] charArray = answer.toCharArray();
+                for (int i = 0; i < charArray.length; i++) {
+                    //直接返回
+                    ObjectMapper mapper = new ObjectMapper();
+                    String msgResult = mapper.writeValueAsString(MsgResult.builder()
+                            .msgType(MsgType.TEXT)
+                            .content(String.valueOf(charArray[i]))
+                            .isEnd(i == charArray.length - 1)
+                            .robotId(kbRobot.getId())
+                            .createdTime(LocalDateTime.now())
+                            .uid(userId).build());
+                    session.getBasicRemote().sendText(msgResult);
+                }
                 return;
             }
         }
