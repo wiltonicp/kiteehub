@@ -13,6 +13,7 @@ package com.kiteehub.knowledge.modular.robot.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.kiteehub.common.pojo.CommonEntity;
+import com.kiteehub.knowledge.modular.robotpreset.entity.KnowledgeRobotPreset;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -76,4 +77,9 @@ public class KnowledgeRobot extends CommonEntity {
     @TableField(exist = false)
     @ApiModelProperty(value = "知识库ID集合", position = 11)
     private List<String> kids;
+
+    /** 客服预设 */
+    @TableField(exist = false)
+    @ApiModelProperty(value = "客服预设集合", position = 11)
+    private List<KnowledgeRobotPreset> presets;
 }

@@ -50,4 +50,8 @@ public class KnowledgeAddParam {
     @ApiModelProperty(value = "险别ID", position = 6)
     private Long insureTypeId;
 
+    /** 官网 */
+    @ApiModelProperty(value = "官网", position = 7)
+    private String website;
+
 }

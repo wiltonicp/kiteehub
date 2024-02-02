@@ -1,24 +1,21 @@
 <template>
 	<xn-form-container
-		:title="formData.id ? '编辑知识库' : '增加知识库'"
+		:title="formData.id ? '编辑预设问答' : '增加预设问答'"
 		:width="700"
 		:visible="visible"
 		:destroy-on-close="true"
 		@close="onClose"
 	>
 		<a-form ref="formRef" :model="formData" :rules="formRules" layout="vertical">
-			<a-form-item label="KID：" name="kid">
-				<a-input v-model:value="formData.kid" placeholder="系统自动生成" allow-clear disabled />
+			<a-form-item label="客服：" name="robotId">
+				<a-select v-model:value="formData.robotId" placeholder="请选择客服" :options="robotIdOptions" />
 			</a-form-item>
-			<a-form-item label="名称：" name="kname">
-				<a-input v-model:value="formData.kname" placeholder="请输入名称" allow-clear />
+			<a-form-item label="问题：" name="question">
+				<a-textarea v-model:value="formData.question" placeholder="请输入问题" :auto-size="{ minRows: 3, maxRows: 5 }" />
 			</a-form-item>
-      <a-form-item label="官网：" name="kname">
-        <a-input v-model:value="formData.website" placeholder="请输入官网地址" allow-clear />
-      </a-form-item>
-<!--			<a-form-item label="区域：" name="area">-->
-<!--				<a-input v-model:value="formData.area" placeholder="请输入区域" allow-clear />-->
-<!--			</a-form-item>-->
+			<a-form-item label="答案：" name="answer">
+				<a-textarea v-model:value="formData.answer" placeholder="请输入答案" :auto-size="{ minRows: 3, maxRows: 5 }" />
+			</a-form-item>
 		</a-form>
 		<template #footer>
 			<a-button style="margin-right: 8px" @click="onClose">关闭</a-button>
@@ -27,10 +24,12 @@
 	</xn-form-container>
 </template>
 
-<script setup name="knowledgeForm">
+<script setup name="knowledgeRobotPresetForm">
+
+	import tool from '@/utils/tool'
 	import { cloneDeep } from 'lodash-es'
 	import { required } from '@/utils/formRules'
-	import knowledgeApi from '@/api/knowledge/knowledgeApi'
+	import knowledgeRobotPresetApi from '@/api/knowledge/knowledgeRobotPresetApi'
 	// 抽屉状态
 	const visible = ref(false)
 	const emit = defineEmits({ successful: null })
@@ -38,10 +37,12 @@
 	// 表单数据
 	const formData = ref({})
 	const submitLoading = ref(false)
+  const robotIdOptions = ref([])
 
 	// 打开抽屉
-	const onOpen = (record) => {
+	const onOpen = (record,arr) => {
 		visible.value = true
+    robotIdOptions.value = arr
 		if (record) {
 			let recordData = cloneDeep(record)
 			formData.value = Object.assign({}, recordData)
@@ -61,8 +62,8 @@
 		formRef.value.validate().then(() => {
 			submitLoading.value = true
 			const formDataParam = cloneDeep(formData.value)
-			knowledgeApi
-				.knowledgeSubmitForm(formDataParam, formDataParam.id)
+			knowledgeRobotPresetApi
+				.knowledgeRobotPresetSubmitForm(formDataParam, formDataParam.id)
 				.then(() => {
 					onClose()
 					emit('successful')
@@ -72,6 +73,7 @@
 				})
 		})
 	}
+
 	// 抛出函数
 	defineExpose({
 		onOpen

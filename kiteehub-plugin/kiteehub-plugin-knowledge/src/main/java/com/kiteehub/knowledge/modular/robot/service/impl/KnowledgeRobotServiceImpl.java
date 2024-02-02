@@ -20,6 +20,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kiteehub.knowledge.modular.robot.entity.KnowledgeRobotIndex;
 import com.kiteehub.knowledge.modular.robot.service.KnowledgeRobotIndexService;
+import com.kiteehub.knowledge.modular.robotpreset.entity.KnowledgeRobotPreset;
+import com.kiteehub.knowledge.modular.robotpreset.service.KnowledgeRobotPresetService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +50,7 @@ import java.util.stream.Collectors;
 public class KnowledgeRobotServiceImpl extends ServiceImpl<KnowledgeRobotMapper, KnowledgeRobot> implements KnowledgeRobotService {
 
     private final KnowledgeRobotIndexService knowledgeRobotIndexService;
+    private final KnowledgeRobotPresetService knowledgeRobotPresetService;
 
     @Override
     public Page<KnowledgeRobot> page(KnowledgeRobotPageParam knowledgeRobotPageParam) {
@@ -122,6 +125,11 @@ public class KnowledgeRobotServiceImpl extends ServiceImpl<KnowledgeRobotMapper,
                 .eq(KnowledgeRobotIndex::getRid, id)
                 .list();
         knowledgeRobot.setKids(listIndex.stream().map(KnowledgeRobotIndex::getKid).collect(Collectors.toList()));
+
+        List<KnowledgeRobotPreset> presets = knowledgeRobotPresetService.lambdaQuery()
+                .eq(KnowledgeRobotPreset::getRobotId, id)
+                .list();
+        knowledgeRobot.setPresets(presets);
         return knowledgeRobot;
     }
 }

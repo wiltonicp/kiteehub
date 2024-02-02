@@ -69,6 +69,10 @@
 			title: '名称',
 			dataIndex: 'kname'
 		},
+    {
+      title: '官网',
+      dataIndex: 'website'
+    },
 		// {
 		// 	title: '区域',
 		// 	dataIndex: 'area'

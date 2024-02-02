@@ -12,6 +12,8 @@
 package com.kiteehub.knowledge.modular.robot.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
@@ -35,6 +37,8 @@ import com.kiteehub.knowledge.modular.robot.service.KnowledgeRobotService;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 智能客服控制器
@@ -126,5 +130,21 @@ public class KnowledgeRobotController {
     @GetMapping("/knowledge/robot/detail")
     public CommonResult<KnowledgeRobot> detail(@Valid KnowledgeRobotIdParam knowledgeRobotIdParam) {
         return CommonResult.data(knowledgeRobotService.detail(knowledgeRobotIdParam));
+    }
+
+    /**
+     * 获取智能客服集合
+     *
+     * @author Ranger
+     * @date  2024/01/03 11:44
+     */
+    @ApiOperationSupport(order = 6)
+    @ApiOperation("获取智能客服集合")
+    @SaCheckPermission("/knowledge/robot/list")
+    @GetMapping("/knowledge/robot/list")
+    public CommonResult<List<JSONObject>> listAll() {
+        List<JSONObject> collect = knowledgeRobotService.list().stream().map(x -> JSONUtil.createObj().set("value", x.getId()).set("label", x.getName()))
+                .collect(Collectors.toList());
+        return CommonResult.data(collect);
     }
 }

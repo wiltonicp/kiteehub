@@ -1,6 +1,7 @@
 package com.kiteehub.knowledge.openai.handler;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -9,6 +10,7 @@ import com.kiteehub.knowledge.chain.vectorstore.MilvusVectorStore;
 import com.kiteehub.knowledge.constant.ChatConstant;
 import com.kiteehub.knowledge.modular.knowledge.service.EmbeddingService;
 import com.kiteehub.knowledge.modular.robot.entity.KnowledgeRobot;
+import com.kiteehub.knowledge.modular.robotpreset.entity.KnowledgeRobotPreset;
 import com.kiteehub.knowledge.openai.domain.MsgResult;
 import com.kiteehub.knowledge.openai.domain.PromptRetriever;
 import com.kiteehub.knowledge.openai.enums.MsgType;
@@ -26,6 +28,7 @@ import javax.websocket.Session;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 消息策略
@@ -47,8 +50,26 @@ public class ChatMsgStrategy implements MessageStrategy {
     @SneakyThrows
     @Override
     public void sendOpenaiSocketText(Session session, String userId, KnowledgeRobot kbRobot, ChatCompletion.Model model, String msg, boolean useKT, PromptRetriever retriever) {
-
         List<String> nearestList = new ArrayList<>();
+
+        List<KnowledgeRobotPreset> presets = kbRobot.getPresets();
+        if(ObjectUtil.isNotEmpty(presets)){
+            List<KnowledgeRobotPreset> collect = presets.stream().filter(preset -> preset.getQuestion().contains(msg)).collect(Collectors.toList());
+            if(ObjectUtil.isNotEmpty(collect)){
+                //直接返回
+                ObjectMapper mapper = new ObjectMapper();
+                String msgResult = mapper.writeValueAsString(MsgResult.builder()
+                        .msgType(MsgType.TEXT)
+                        .content(collect.stream().findFirst().get().getAnswer())
+                        .isEnd(true)
+                        .robotId(kbRobot.getId())
+                        .createdTime(LocalDateTime.now())
+                        .uid(userId).build());
+                session.getBasicRemote().sendText(msgResult);
+                return;
+            }
+        }
+
         if (useKT) {
             //将文本转化为向量
             EmbeddingService embeddingService = SpringUtil.getBean(EmbeddingService.class);
