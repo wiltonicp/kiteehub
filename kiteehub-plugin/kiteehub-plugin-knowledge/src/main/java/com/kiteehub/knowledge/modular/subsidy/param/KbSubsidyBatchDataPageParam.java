@@ -54,4 +54,8 @@ public class KbSubsidyBatchDataPageParam {
     @ApiModelProperty(value = "批次顺序")
     private String batchNum;
 
+    /** 身份证号 */
+    @ApiModelProperty(value = "身份证号")
+    private String cardId;
+
 }

@@ -31,4 +31,8 @@ public class KbSubsidyBatchIdParam {
     @ApiModelProperty(value = "主键ID", required = true)
     @NotBlank(message = "id不能为空")
     private String id;
+
+    /** 身份证号 */
+    @ApiModelProperty(value = "身份证号")
+    private String cardId;
 }

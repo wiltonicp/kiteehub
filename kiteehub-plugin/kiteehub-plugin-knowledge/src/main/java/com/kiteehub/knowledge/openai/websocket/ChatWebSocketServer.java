@@ -148,9 +148,12 @@ public class ChatWebSocketServer {
         ChatRecordService chatRecordService = SpringUtil.getBean(ChatRecordServiceImpl.class);
 
         //保存用户聊天记录
-        ChatRecord build = ChatRecord.builder().message(msg).msgType(MsgUserType.USER).robotId(robotId).build();
-        build.created(uid);
-        chatRecordService.save(build);
+        ChatRecord chatRecord = new ChatRecord();
+        chatRecord.setMessage(msg);
+        chatRecord.setMsgType(MsgUserType.USER);
+        chatRecord.setRobotId(robotId);
+        chatRecord.created(uid);
+        chatRecordService.save(chatRecord);
 
         PromptRetriever promptRetriever = new PromptRetriever();
         ChatMessageContext context = new ChatMessageContext(session, this.uid, this.robotId, msg,true,promptRetriever);

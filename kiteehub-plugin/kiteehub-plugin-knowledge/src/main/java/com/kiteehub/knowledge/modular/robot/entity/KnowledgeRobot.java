@@ -12,6 +12,7 @@
 package com.kiteehub.knowledge.modular.robot.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fhs.core.trans.vo.TransPojo;
 import com.kiteehub.common.pojo.CommonEntity;
 import com.kiteehub.knowledge.modular.robotpreset.entity.KnowledgeRobotPreset;
 import io.swagger.annotations.ApiModelProperty;
@@ -30,7 +31,7 @@ import java.util.List;
 @Getter
 @Setter
 @TableName("knowledge_robot")
-public class KnowledgeRobot extends CommonEntity {
+public class KnowledgeRobot extends CommonEntity implements TransPojo {
 
     /** 主键 */
     @TableId

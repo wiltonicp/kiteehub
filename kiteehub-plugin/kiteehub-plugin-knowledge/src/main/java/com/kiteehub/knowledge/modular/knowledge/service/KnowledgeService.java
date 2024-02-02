@@ -79,6 +79,14 @@ public interface KnowledgeService extends IService<Knowledge> {
      **/
     Knowledge queryEntity(String id);
 
+    /**
+     * 获取知识库详情
+     *
+     * @author Ranger
+     * @date 2023/12/27 10:20
+     **/
+    Knowledge queryEntityWithKid(String kid);
+
 
     void saveOne(KnowledgeSaveParam request, String userId);
 

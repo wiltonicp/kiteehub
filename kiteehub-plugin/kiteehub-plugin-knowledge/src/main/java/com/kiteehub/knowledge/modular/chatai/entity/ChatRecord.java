@@ -12,10 +12,13 @@
 package com.kiteehub.knowledge.modular.chatai.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fhs.core.trans.anno.Trans;
+import com.fhs.core.trans.constant.TransType;
+import com.fhs.core.trans.vo.TransPojo;
 import com.kiteehub.common.pojo.CommonEntity;
+import com.kiteehub.knowledge.modular.robot.entity.KnowledgeRobot;
 import com.kiteehub.knowledge.openai.enums.MsgUserType;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,9 +32,8 @@ import java.util.Date;
  **/
 @Getter
 @Setter
-@Builder
 @TableName("chat_record")
-public class ChatRecord extends CommonEntity {
+public class ChatRecord extends CommonEntity implements TransPojo {
 
     /** 主键 */
     @TableId
@@ -44,9 +46,10 @@ public class ChatRecord extends CommonEntity {
 
     /** 客服ID */
     @ApiModelProperty(value = "客服ID", position = 3)
+    @TableField(insertStrategy = FieldStrategy.IGNORED, updateStrategy = FieldStrategy.IGNORED)
+    @Trans(type = TransType.SIMPLE, target = KnowledgeRobot.class, fields = "name",alias = "robot", ref = "robotName")
     private String robotId;
 
-    /** 客服名称 */
     @TableField(exist = false)
     @ApiModelProperty(value = "客服名称", position = 4)
     private String robotName;

@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
  * 待遇补贴批次详情Service接口实现类
  *
  * @author Ranger
- * @date  2024/01/31 15:06
+ * @date 2024/01/31 15:06
  **/
 @Service
 public class KbSubsidyBatchDataServiceImpl extends ServiceImpl<KbSubsidyBatchDataMapper, KbSubsidyBatchData> implements KbSubsidyBatchDataService {
@@ -52,15 +52,16 @@ public class KbSubsidyBatchDataServiceImpl extends ServiceImpl<KbSubsidyBatchDat
     @Override
     public Page<KbSubsidyBatchData> page(KbSubsidyBatchDataPageParam kbSubsidyBatchDataPageParam) {
         QueryWrapper<KbSubsidyBatchData> queryWrapper = new QueryWrapper<>();
-        if(ObjectUtil.isAllNotEmpty(kbSubsidyBatchDataPageParam.getSortField(), kbSubsidyBatchDataPageParam.getSortOrder())) {
+        if (ObjectUtil.isAllNotEmpty(kbSubsidyBatchDataPageParam.getSortField(), kbSubsidyBatchDataPageParam.getSortOrder())) {
             CommonSortOrderEnum.validate(kbSubsidyBatchDataPageParam.getSortOrder());
             queryWrapper.orderBy(true, kbSubsidyBatchDataPageParam.getSortOrder().equals(CommonSortOrderEnum.ASC.getValue()),
                     StrUtil.toUnderlineCase(kbSubsidyBatchDataPageParam.getSortField()));
         } else {
             queryWrapper.lambda().orderByAsc(KbSubsidyBatchData::getId);
         }
-        queryWrapper.lambda().eq(ObjectUtil.isNotEmpty(kbSubsidyBatchDataPageParam.getBatchId()),KbSubsidyBatchData::getBatchId,kbSubsidyBatchDataPageParam.getBatchId());
-        queryWrapper.lambda().eq(ObjectUtil.isNotEmpty(kbSubsidyBatchDataPageParam.getBatchNum()),KbSubsidyBatchData::getBatchNum,kbSubsidyBatchDataPageParam.getBatchNum());
+        queryWrapper.lambda().eq(ObjectUtil.isNotEmpty(kbSubsidyBatchDataPageParam.getCardId()), KbSubsidyBatchData::getCardId, kbSubsidyBatchDataPageParam.getCardId());
+        queryWrapper.lambda().eq(ObjectUtil.isNotEmpty(kbSubsidyBatchDataPageParam.getBatchId()), KbSubsidyBatchData::getBatchId, kbSubsidyBatchDataPageParam.getBatchId());
+        queryWrapper.lambda().eq(ObjectUtil.isNotEmpty(kbSubsidyBatchDataPageParam.getBatchNum()), KbSubsidyBatchData::getBatchNum, kbSubsidyBatchDataPageParam.getBatchNum());
         return this.page(CommonPageRequest.defaultPage(), queryWrapper);
     }
 
@@ -94,7 +95,7 @@ public class KbSubsidyBatchDataServiceImpl extends ServiceImpl<KbSubsidyBatchDat
     @Override
     public KbSubsidyBatchData queryEntity(String id) {
         KbSubsidyBatchData kbSubsidyBatchData = this.getById(id);
-        if(ObjectUtil.isEmpty(kbSubsidyBatchData)) {
+        if (ObjectUtil.isEmpty(kbSubsidyBatchData)) {
             throw new CommonException("待遇补贴批次详情不存在，id值为：{}", id);
         }
         return kbSubsidyBatchData;
@@ -103,7 +104,8 @@ public class KbSubsidyBatchDataServiceImpl extends ServiceImpl<KbSubsidyBatchDat
     @Override
     public JSONArray groupBatch(KbSubsidyBatchIdParam kbSubsidyBatchIdParam) {
         QueryWrapper<KbSubsidyBatchData> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(KbSubsidyBatchData::getBatchId,kbSubsidyBatchIdParam.getId());
+        queryWrapper.lambda().eq(KbSubsidyBatchData::getBatchId, kbSubsidyBatchIdParam.getId());
+        queryWrapper.lambda().eq(ObjectUtil.isNotEmpty(kbSubsidyBatchIdParam.getCardId()), KbSubsidyBatchData::getCardId, kbSubsidyBatchIdParam.getCardId());
         List<KbSubsidyBatchData> list = this.list(queryWrapper);
         Map<Integer, List<KbSubsidyBatchData>> collect = list.stream().collect(Collectors.groupingBy(KbSubsidyBatchData::getBatchNum));
 
@@ -112,8 +114,8 @@ public class KbSubsidyBatchDataServiceImpl extends ServiceImpl<KbSubsidyBatchDat
             Date createTime = stringListEntry.getValue().stream().findFirst().get().getCreateTime();
             String format = DateUtil.format(createTime, DatePattern.NORM_DATETIME_MINUTE_PATTERN);
             JSONObject obj = JSONUtil.createObj();
-            obj.set("name",format);
-            obj.set("batchNum",stringListEntry.getKey());
+            obj.set("name", format);
+            obj.set("batchNum", stringListEntry.getKey());
             array.put(obj);
         }
         return array;

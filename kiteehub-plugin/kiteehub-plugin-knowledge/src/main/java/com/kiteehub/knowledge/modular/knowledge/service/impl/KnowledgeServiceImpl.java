@@ -122,6 +122,17 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
     }
 
     @Override
+    public Knowledge queryEntityWithKid(String kid) {
+        Knowledge knowledge = this.lambdaQuery()
+                .eq(Knowledge::getKid, kid)
+                .one();
+        if (ObjectUtil.isEmpty(knowledge)) {
+            throw new CommonException("知识库kid不存在，kid值为：{}", kid);
+        }
+        return knowledge;
+    }
+
+    @Override
     public void saveOne(KnowledgeSaveParam request, String userId) {
         Knowledge knowledge = new Knowledge();
         knowledge.setKid(RandomUtil.randomString(10));

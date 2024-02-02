@@ -104,9 +104,12 @@ public class KBSocketEventSourceListener extends EventSourceListener {
         //保存AI聊天记录
         List<Object> objects = cacheOperator.lGet(userId, 0L, -1L);
         chatRecordService = SpringUtil.getBean(ChatRecordServiceImpl.class);
-        ChatRecord build = ChatRecord.builder().message(StringUtil.listToString(objects)).msgType(MsgUserType.AI).robotId(robotId).build();
-        build.created(userId);
-        chatRecordService.save(build);
+        ChatRecord chatRecord = new ChatRecord();
+        chatRecord.setMessage(StringUtil.listToString(objects));
+        chatRecord.setMsgType(MsgUserType.AI);
+        chatRecord.setRobotId(robotId);
+        chatRecord.created(userId);
+        chatRecordService.save(chatRecord);
 
         String delta = null;
         try {
