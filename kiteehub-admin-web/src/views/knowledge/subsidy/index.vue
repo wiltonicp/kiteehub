@@ -27,7 +27,7 @@
 			:tool-config="toolConfig"
 			:row-selection="options.rowSelection"
 		>
-			<template #operator class="table-operator">
+			<template #operator>
 				<a-space>
 					<a-button type="primary" @click="formRef.onOpen()" v-if="hasPerm('kbSubsidyBatchAdd')">
 						<template #icon><plus-outlined /></template>
@@ -47,11 +47,11 @@
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>
 						<a @click="examine(record)">查看</a>
-						<a @click="formRef.onOpen(record)" v-if="hasPerm('kbSubsidyBatchEdit')">编辑</a>
-						<a-divider type="vertical" v-if="hasPerm(['kbSubsidyBatchEdit', 'kbSubsidyBatchDelete'], 'and')" />
-						<a-popconfirm title="确定要删除吗？" @confirm="deleteKbSubsidyBatch(record)">
+						<!-- <a @click="formRef.onOpen(record)" v-if="hasPerm('kbSubsidyBatchEdit')">编辑</a> -->
+						<!-- <a-divider type="vertical" v-if="hasPerm(['kbSubsidyBatchEdit', 'kbSubsidyBatchDelete'], 'and')" /> -->
+						<!-- <a-popconfirm title="确定要删除吗？" @confirm="deleteKbSubsidyBatch(record)">
 							<a-button type="link" danger size="small" v-if="hasPerm('kbSubsidyBatchDelete')">删除</a-button>
-						</a-popconfirm>
+						</a-popconfirm> -->
 					</a-space>
 				</template>
 			</template>
@@ -80,11 +80,13 @@ const columns = [
 	},
 	{
 		title: '批次',
-		dataIndex: 'batch'
+		dataIndex: 'batch',
+		width:100
 	},
 	{
 		title: '最新时间',
-		dataIndex: 'updateTime'
+		dataIndex: 'updateTime',
+		width:200
 	}
 ]
 // 操作栏通过权限判断是否显示
@@ -121,7 +123,6 @@ const loadData = (parameter) => {
 
 // 查看
 const examine = (record) => {
-  console.log(record,'record')
 	detailsRef.value.onOpen(record)
 }
 

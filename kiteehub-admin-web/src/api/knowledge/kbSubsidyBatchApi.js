@@ -41,5 +41,8 @@ export default {
 	kbSubsidyBatchDataPage(data) {
 		return request('data/page', data, 'get')
 	},
-	
+	// 批次分组
+	kbSubsidyBatchDataGroupBatch(data) {
+		return request('data/groupBatch', data, 'get')
+	},
 }

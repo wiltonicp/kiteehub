@@ -1,5 +1,26 @@
 <template>
-	<xn-form-container :title="record.docName" :width="900" :visible="visible" :destroy-on-close="true" @close="onClose">
+	<xn-form-container
+		:title="`${record.docName} 补贴人员`"
+		:width="900"
+		:visible="visible"
+		:destroy-on-close="true"
+		@close="onClose"
+	>
+		<a-space>
+			<a-select
+				ref="select"
+				v-model:value="value1"
+				style="width: 300px"
+				:placeholder="`${record.docName} 选择批次`"
+				@focus="focus"
+				@change="handleChange"
+			>
+				<a-select-option :value="item.batchNum" v-for="(item, index) in batchIdList" :key="index"
+					>{{ item.name }} 第{{ item.batchNum }}批次</a-select-option
+				>
+			</a-select>
+		</a-space>
+
 		<s-table
 			ref="table"
 			:columns="columns"
@@ -9,16 +30,19 @@
 			:row-key="(record) => record.id"
 			:tool-config="toolConfig"
 			:row-selection="options.rowSelection"
+			v-if="sign"
 		>
 			<template #bodyCell="{ column, record }">
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>
-						<a @click="examine(record)">查看</a>
-						<a @click="formRef.onOpen(record)" v-if="hasPerm('kbSubsidyBatchEdit')">编辑</a>
-						<a-divider type="vertical" v-if="hasPerm(['kbSubsidyBatchEdit', 'kbSubsidyBatchDelete'], 'and')" />
-						<a-popconfirm title="确定要删除吗？" @confirm="deleteKbSubsidyBatch(record)">
-							<a-button type="link" danger size="small" v-if="hasPerm('kbSubsidyBatchDelete')">删除</a-button>
-						</a-popconfirm>
+						<div style="width: 300px">
+							<a @click="examine(record)">查看</a>
+							<a @click="formRef.onOpen(record)" v-if="hasPerm('kbSubsidyBatchEdit')">编辑</a>
+							<a-divider type="vertical" v-if="hasPerm(['kbSubsidyBatchEdit', 'kbSubsidyBatchDelete'], 'and')" />
+							<a-popconfirm title="确定要删除吗？" @confirm="deleteKbSubsidyBatch(record)">
+								<a-button type="link" danger size="small" v-if="hasPerm('kbSubsidyBatchDelete')">删除</a-button>
+							</a-popconfirm>
+						</div>
 					</a-space>
 				</template>
 			</template>
@@ -43,7 +67,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import { Modal } from 'ant-design-vue'
 import { createVNode } from 'vue'
 import tool from '@/utils/tool'
-import { cloneDeep } from 'lodash-es'
+import { cloneDeep, find } from 'lodash-es'
 import { required } from '@/utils/formRules'
 import kbSubsidyBatchApi from '@/api/knowledge/kbSubsidyBatchApi'
 const size = ref(10)
@@ -53,23 +77,34 @@ const recordsList = ref([])
 const open = ref(false)
 let searchFormState = reactive({})
 const toolConfig = { refresh: true, height: true, columnSetting: true, striped: false }
+const subsidyTypeOptions = ref([])
 const columns = [
 	{
-		title: 'a',
-		dataIndex: 'subsidyType'
+		title: '姓名',
+		dataIndex: 'fullName'
 	},
 	{
-		title: 'b',
-		dataIndex: 'batch'
+		title: '身份证',
+		dataIndex: 'cardId'
 	},
 	{
-		title: 'c',
-		dataIndex: 'updateTime'
+		title: '部门',
+		dataIndex: 'unitName'
+	},
+	{
+		title: '金额（元）',
+		dataIndex: 'amount'
+	},
+	{
+		title: '创建时间',
+		dataIndex: 'createTime'
 	}
 ]
 
 let dataObj = reactive({
-	record: {}
+	record: {},
+	batchIdList: [],
+	sign: true
 })
 
 const selectedRowKeys = ref([])
@@ -90,10 +125,22 @@ const options = {
 }
 
 const loadData = (parameter) => {
+	searchFormState.batchId = dataObj.record.id
+	// searchFormState.batchNum = ''
 	const searchFormParam = JSON.parse(JSON.stringify(searchFormState))
 	return kbSubsidyBatchApi.kbSubsidyBatchDataPage(Object.assign(parameter, searchFormParam)).then((data) => {
 		return data
 	})
+}
+
+//分组
+const kbSubsidyBatchDataGroupBatch = async (params) => {
+	let res = await kbSubsidyBatchApi.kbSubsidyBatchDataGroupBatch({
+		id: dataObj.record.id
+	})
+	console.log('res', res)
+	dataObj.batchIdList = res
+	console.log(dataObj.batchIdList, 'dataObj.batchIdList')
 }
 
 const onShowSizeChange = (currentVal, pageSize) => {
@@ -118,7 +165,9 @@ const onOpen = (record) => {
 	console.log('打开抽屉', record)
 	dataObj.record = record
 	visible.value = true
-	// knowledAttachChunk()
+	subsidyTypeOptions.value = tool.dictList('SUBSIDY_TYPE')
+	dataObj.record.docName = subsidyTypeOptions.value.find((item) => item.value == record.subsidyType).label
+	kbSubsidyBatchDataGroupBatch()
 }
 // 关闭抽屉
 const onClose = () => {
@@ -155,7 +204,18 @@ const del = (item) => {
 	})
 }
 
-const { record } = toRefs(dataObj)
+const focus = () => {
+	console.log('focus')
+}
+const handleChange = (value) => {
+	console.log(`selected ${value}`)
+	dataObj.sign = false
+	searchFormState.batchId = dataObj.record.id
+	searchFormState.batchNum = value
+	// dataObj.sign = true
+}
+
+const { record, batchIdList, sign } = toRefs(dataObj)
 
 // 抛出函数
 defineExpose({
