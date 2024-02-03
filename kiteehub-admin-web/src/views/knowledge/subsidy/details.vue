@@ -124,7 +124,7 @@ const options = {
 }
 
 const loadData = (parameter) => {
-	searchFormState.batchId = dataObj.record.id
+	searchFormState.batchId = dataObj.record.subsidyType
 	// searchFormState.batchNum = ''
 	const searchFormParam = JSON.parse(JSON.stringify(searchFormState))
 	return kbSubsidyBatchApi.kbSubsidyBatchDataPage(Object.assign(parameter, searchFormParam)).then((data) => {
@@ -140,7 +140,7 @@ const reset = () => {
 //分组
 const kbSubsidyBatchDataGroupBatch = async (params) => {
 	let res = await kbSubsidyBatchApi.kbSubsidyBatchDataGroupBatch({
-		id: dataObj.record.id
+		id: dataObj.record.subsidyType
 	})
 	console.log('res', res)
 	dataObj.batchIdList = res
