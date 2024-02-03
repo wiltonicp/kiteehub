@@ -20,6 +20,8 @@ import com.kiteehub.knowledge.modular.subsidy.param.KbSubsidyBatchEditParam;
 import com.kiteehub.knowledge.modular.subsidy.param.KbSubsidyBatchIdParam;
 import com.kiteehub.knowledge.modular.subsidy.param.KbSubsidyBatchPageParam;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -77,4 +79,6 @@ public interface KbSubsidyBatchService extends IService<KbSubsidyBatch> {
      * @date  2024/01/31 14:12
      **/
     KbSubsidyBatch queryEntity(String id);
+
+    void downloadImportSubsidyTemplate(HttpServletResponse response) throws IOException;
 }

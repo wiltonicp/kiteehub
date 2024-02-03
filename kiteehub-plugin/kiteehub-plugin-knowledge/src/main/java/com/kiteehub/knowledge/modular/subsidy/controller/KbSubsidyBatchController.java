@@ -18,6 +18,7 @@ import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,8 +35,10 @@ import com.kiteehub.knowledge.modular.subsidy.param.KbSubsidyBatchPageParam;
 import com.kiteehub.knowledge.modular.subsidy.service.KbSubsidyBatchService;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import java.io.IOException;
 
 /**
  * 补贴公示控制器
@@ -67,17 +70,31 @@ public class KbSubsidyBatchController {
     }
 
     /**
+     * 下载补贴公示导入模板
+     *
+     * @author xuyuxiang
+     * @date 2022/4/24 20:00
+     */
+    @ApiOperationSupport(order = 2)
+    @ApiOperation("下载补贴公示导入模板")
+    @CommonLog("下载补贴公示导入模板")
+    @GetMapping(value = "/knowledge/subsidy/downloadImportSubsidyTemplate", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public void downloadImportSubsidyTemplate(HttpServletResponse response) throws IOException {
+        kbSubsidyBatchService.downloadImportSubsidyTemplate(response);
+    }
+
+    /**
      * 导入补贴公示
      *
      * @author Ranger
      * @date  2024/01/31 14:12
      */
-    @ApiOperationSupport(order = 2)
+    @ApiOperationSupport(order = 3)
     @ApiOperation("导入补贴公示")
     @CommonLog("导入补贴公示")
     @SaCheckPermission("/knowledge/subsidy/import")
     @PostMapping("/knowledge/subsidy/import")
-    public CommonResult<JSONObject> importSubsidyBatch(@RequestBody @Valid KbSubsidyBatchAddParam kbSubsidyBatchAddParam) {
+    public CommonResult<JSONObject> importSubsidyBatch(@Valid KbSubsidyBatchAddParam kbSubsidyBatchAddParam) {
         return CommonResult.data(kbSubsidyBatchService.importSubsidyBatch(kbSubsidyBatchAddParam));
     }
 

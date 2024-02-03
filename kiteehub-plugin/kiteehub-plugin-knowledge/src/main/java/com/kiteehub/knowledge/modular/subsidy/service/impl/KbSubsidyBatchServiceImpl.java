@@ -11,9 +11,11 @@
  */
 package com.kiteehub.knowledge.modular.subsidy.service.impl;
 
+import cn.afterturn.easypoi.cache.manager.POICacheManager;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollStreamUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
@@ -23,6 +25,8 @@ import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kiteehub.common.util.CommonDownloadUtil;
+import com.kiteehub.common.util.CommonResponseUtil;
 import com.kiteehub.knowledge.modular.subsidy.entity.KbSubsidyBatchData;
 import com.kiteehub.knowledge.modular.subsidy.param.*;
 import com.kiteehub.knowledge.modular.subsidy.service.KbSubsidyBatchDataService;
@@ -36,7 +40,10 @@ import com.kiteehub.knowledge.modular.subsidy.entity.KbSubsidyBatch;
 import com.kiteehub.knowledge.modular.subsidy.mapper.KbSubsidyBatchMapper;
 import com.kiteehub.knowledge.modular.subsidy.service.KbSubsidyBatchService;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -74,14 +81,16 @@ public class KbSubsidyBatchServiceImpl extends ServiceImpl<KbSubsidyBatchMapper,
         KbSubsidyBatch kbSubsidyBatch = this.lambdaQuery()
                 .eq(KbSubsidyBatch::getSubsidyType, kbSubsidyBatchAddParam.getSubsidyType())
                 .one();
+        int batchNum = 1;
         if(ObjectUtil.isEmpty(kbSubsidyBatch)){
             kbSubsidyBatch = new KbSubsidyBatch();
             kbSubsidyBatch.setSubsidyType(kbSubsidyBatchAddParam.getSubsidyType());
-            kbSubsidyBatch.setBatch(1);
+            kbSubsidyBatch.setBatch(batchNum);
             kbSubsidyBatch.setUpdateTime(new Date());
             this.save(kbSubsidyBatch);
         }else {
-            kbSubsidyBatch.setBatch(kbSubsidyBatch.getBatch() + 1);
+            batchNum = kbSubsidyBatch.getBatch() + 1;
+            kbSubsidyBatch.setBatch(batchNum);
             this.updateById(kbSubsidyBatch);
         }
         try {
@@ -95,7 +104,7 @@ public class KbSubsidyBatchServiceImpl extends ServiceImpl<KbSubsidyBatchMapper,
             List<KbSubsidyBatchDataImportParam> kbSubsidyBatchImportParamList =  EasyExcel.read(tempFile).head(KbSubsidyBatchDataImportParam.class).sheet()
                     .headRowNumber(2).doReadSync();
             for (int i = 0; i < kbSubsidyBatchImportParamList.size(); i++) {
-                JSONObject jsonObject = this.doImport(kbSubsidyBatch.getId(), kbSubsidyBatchImportParamList.get(i), i);
+                JSONObject jsonObject = this.doImport(kbSubsidyBatchAddParam.getSubsidyType(), batchNum, kbSubsidyBatchImportParamList.get(i), i);
                 if(jsonObject.getBool("success")) {
                     successCount += 1;
                 } else {
@@ -121,7 +130,7 @@ public class KbSubsidyBatchServiceImpl extends ServiceImpl<KbSubsidyBatchMapper,
      * @param i
      * @return
      */
-    private JSONObject doImport(String batchId, KbSubsidyBatchDataImportParam kbSubsidyBatchDataImportParam, int i) {
+    private JSONObject doImport(String batchId, Integer batchNum, KbSubsidyBatchDataImportParam kbSubsidyBatchDataImportParam, int i) {
         try {
             KbSubsidyBatchData kbSubsidyBatchData = new KbSubsidyBatchData();
 
@@ -129,6 +138,7 @@ public class KbSubsidyBatchServiceImpl extends ServiceImpl<KbSubsidyBatchMapper,
             BeanUtil.copyProperties(kbSubsidyBatchDataImportParam, kbSubsidyBatchData);
 
             kbSubsidyBatchData.setBatchId(batchId);
+            kbSubsidyBatchData.setBatchNum(batchNum);
 
             kbSubsidyBatchDataService.save(kbSubsidyBatchData);
             // 返回成功
@@ -166,5 +176,17 @@ public class KbSubsidyBatchServiceImpl extends ServiceImpl<KbSubsidyBatchMapper,
             throw new CommonException("补贴公示不存在，id值为：{}", id);
         }
         return kbSubsidyBatch;
+    }
+
+    @Override
+    public void downloadImportSubsidyTemplate(HttpServletResponse response) throws IOException {
+        try {
+            InputStream inputStream = POICacheManager.getFile("subsidyImportTemplate.xlsx");
+            byte[] bytes = IoUtil.readBytes(inputStream);
+            CommonDownloadUtil.download("补贴公示导入模板.xlsx", bytes, response);
+        } catch (Exception e) {
+            log.error(">>> 下载补贴公示导入模板失败：", e);
+            CommonResponseUtil.renderError(response, "下载补贴公示导入模板失败");
+        }
     }
 }

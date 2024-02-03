@@ -34,8 +34,10 @@ export default {
 		return request('detail', data, 'get')
 	},
 	// 下载导入模板
-	downloadImportSubsidyTemplate() {
-
+	downloadImportSubsidyTemplate(data) {
+		return request('downloadImportSubsidyTemplate', data, 'get', {
+			responseType: 'blob'
+		})
     },
 	// 详情
 	kbSubsidyBatchDataPage(data) {

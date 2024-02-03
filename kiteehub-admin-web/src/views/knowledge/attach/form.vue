@@ -32,16 +32,16 @@
 						<p class="ant-upload-hint">支持.txt.docx.pdf.md,.html文件。</p>
 					</a-upload-dragger>
 				</a-tab-pane>
-				<a-tab-pane key="2" tab="网址链接提取">
-					<a-input v-model:value="value2">
-						<template #addonBefore>
-							<a-select v-model:value="url" style="width: 90px">
-								<a-select-option value="Http://">http://</a-select-option>
-								<a-select-option value="Https://">https://</a-select-option>
-							</a-select>
-						</template>
-					</a-input>
-				</a-tab-pane>
+<!--				<a-tab-pane key="2" tab="网址链接提取">-->
+<!--					<a-input v-model:value="value2">-->
+<!--						<template #addonBefore>-->
+<!--							<a-select v-model:value="url" style="width: 90px">-->
+<!--								<a-select-option value="Http://">http://</a-select-option>-->
+<!--								<a-select-option value="Https://">https://</a-select-option>-->
+<!--							</a-select>-->
+<!--						</template>-->
+<!--					</a-input>-->
+<!--				</a-tab-pane>-->
 			</a-tabs>
 
 <!--			<div style="margin-top: 50px">-->

@@ -108,24 +108,27 @@ const customRequestLocal = (data) => {
       impUploadLoading.value = false
       return false
     }
-    formData.file = data.file
-    return onSubmit()
+	  formData.file = data.file
+    return onSubmit(data)
   })
 }
 
 // 验证并提交数据
-const onSubmit = () => {
+const onSubmit = (data) => {
   formRef.value.validate().then(() => {
     submitLoading.value = true
-    const formDataParam = cloneDeep(formData.value)
+	  const fileData = new FormData()
+	  fileData.append('file', data.file)
+	  fileData.append('subsidyType',formData.value.subsidyType)
     kbSubsidyBatchApi
-        .kbSubsidyBatchImport(formDataParam, formDataParam.id)
-        .then(() => {
+        .kbSubsidyBatchImport(fileData)
+        .then((res) => {
           impAlertStatus.value = true
           impResultData.value = res
           impResultErrorDataSource.value = res.errorDetail
-          onClose()
+			message.success('导入成功！')
           emit('successful')
+			onClose()
         })
         .finally(() => {
           submitLoading.value = false
