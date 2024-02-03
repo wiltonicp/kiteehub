@@ -1,5 +1,5 @@
 #FROM kiteehub-jre17
-FROM openjdk:8-jre
+FROM openjdk:8-jre-alpine
 MAINTAINER Ranger wilton.icp@gmail.com
 
 WORKDIR /app
