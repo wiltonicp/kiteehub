@@ -60,7 +60,6 @@ public class KbSubsidyBatchData extends CommonEntity {
     private String unitName;
 
     /** 待遇名称 */
-    @TableField(exist = false)
     @ApiModelProperty(value = "待遇名称", position = 7)
     private String subsidyName;
 
