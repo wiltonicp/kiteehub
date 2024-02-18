@@ -169,6 +169,19 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
     }
 
     @Override
+    public List<KnowledgeAttach> queryByPersonnelType(String kid, String personnelType) {
+        List<KnowledgeAttach> knowledgeAttachs = this.lambdaQuery()
+                .select(KnowledgeAttach.class, attach -> !attach.getColumn().equals("content"))
+                .eq(KnowledgeAttach::getKid, kid)
+                .eq(KnowledgeAttach::getPersonnelType, personnelType)
+                .list();
+        if (ObjectUtil.isEmpty(knowledgeAttachs)) {
+            throw new CommonException("知识库附件不存在，kid值为：{}, personnelType值为：{}", kid, personnelType);
+        }
+        return knowledgeAttachs;
+    }
+
+    @Override
     public List<? extends Tree<?>> areaTree() {
         List<DictNode> cityNodes = devDictApi.dictTree("1739903596352495618");
 

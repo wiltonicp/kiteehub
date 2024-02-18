@@ -237,7 +237,7 @@ public class MilvusVectorStore implements VectorStore {
     }
 
     @Override
-    public List<String> nearest(List<Double> queryVector, String kid) {
+    public List<String> nearest(List<Double> queryVector, String kid, List<String> partitionNames) {
         List<String> search_output_fields = Arrays.asList("content", "fv");
         List<Float> fv = new ArrayList<>();
         for (int i = 0; i < queryVector.size(); i++) {
@@ -248,6 +248,7 @@ public class MilvusVectorStore implements VectorStore {
         String search_param = "{\"nprobe\":10, \"offset\":0}";
         SearchParam searchParam = SearchParam.newBuilder()
                 .withCollectionName(collectionName + kid)
+                .withPartitionNames(partitionNames)
                 .withMetricType(MetricType.IP)
                 .withOutFields(search_output_fields)
                 .withTopK(10)

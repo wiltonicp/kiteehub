@@ -8,6 +8,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kiteehub.knowledge.chain.vectorstore.MilvusVectorStore;
 import com.kiteehub.knowledge.constant.ChatConstant;
+import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttach;
+import com.kiteehub.knowledge.modular.attach.service.KnowledgeAttachService;
 import com.kiteehub.knowledge.modular.knowledge.service.EmbeddingService;
 import com.kiteehub.knowledge.modular.robot.entity.KnowledgeRobot;
 import com.kiteehub.knowledge.modular.robotpreset.entity.KnowledgeRobotPreset;
@@ -53,9 +55,9 @@ public class ChatMsgStrategy implements MessageStrategy {
         List<String> nearestList = new ArrayList<>();
 
         List<KnowledgeRobotPreset> presets = kbRobot.getPresets();
-        if(ObjectUtil.isNotEmpty(presets)){
+        if (ObjectUtil.isNotEmpty(presets)) {
             List<KnowledgeRobotPreset> collect = presets.stream().filter(preset -> preset.getQuestion().contains(msg)).collect(Collectors.toList());
-            if(ObjectUtil.isNotEmpty(collect)){
+            if (ObjectUtil.isNotEmpty(collect)) {
                 String answer = collect.stream().findFirst().get().getAnswer();
                 char[] charArray = answer.toCharArray();
                 for (int i = 0; i < charArray.length; i++) {
@@ -80,8 +82,11 @@ public class ChatMsgStrategy implements MessageStrategy {
             List<Double> queryVector = embeddingService.getQueryVector(msg);
 
             MilvusVectorStore vectorStore = SpringUtil.getBean(MilvusVectorStore.class);
+            KnowledgeAttachService knowledgeAttachService = SpringUtil.getBean(KnowledgeAttachService.class);
             kbRobot.getKids().forEach(kid -> {
-                List<String> nearest = vectorStore.nearest(queryVector, kid);
+                List<KnowledgeAttach> knowledgeAttaches = knowledgeAttachService.queryByPersonnelType(kid, kbRobot.getPersonnelType());
+                List<String> partitionNames = knowledgeAttaches.stream().map(KnowledgeAttach::getDocId).collect(Collectors.toList());
+                List<String> nearest = vectorStore.nearest(queryVector, kid, partitionNames);
                 nearestList.addAll(nearest);
             });
         }

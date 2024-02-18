@@ -44,4 +44,8 @@ public class KnowledgeAttachEditParam {
     @ApiModelProperty(value = "区域ids", position = 3)
     private List<String> areaIds;
 
+    /** 社保人员类型 */
+    @ApiModelProperty(value = "社保人员类型", position = 4)
+    private String personnelType;
+
 }

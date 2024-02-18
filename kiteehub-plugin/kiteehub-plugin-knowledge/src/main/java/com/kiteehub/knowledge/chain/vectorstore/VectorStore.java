@@ -23,7 +23,7 @@ public interface VectorStore {
 
     void removeByKid(String kid);
 
-    List<String> nearest(List<Double> queryVector, String kid);
+    List<String> nearest(List<Double> queryVector, String kid, List<String> partitionNames);
 
     List<String> nearest(String query, String kid);
 }

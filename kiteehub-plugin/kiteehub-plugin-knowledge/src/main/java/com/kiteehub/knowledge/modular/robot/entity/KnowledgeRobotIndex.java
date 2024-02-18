@@ -20,7 +20,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 
 /**
  * 智能客服关联知识库实体

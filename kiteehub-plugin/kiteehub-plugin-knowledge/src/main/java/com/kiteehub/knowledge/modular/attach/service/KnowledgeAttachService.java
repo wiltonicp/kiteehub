@@ -84,6 +84,14 @@ public interface KnowledgeAttachService extends IService<KnowledgeAttach> {
      **/
     KnowledgeAttach queryEntity(String kid, String docId);
 
+    /**
+     * 获取知识库附件详情
+     *
+     * @author Ranger
+     * @date 2023/12/27 14:00
+     **/
+    List<KnowledgeAttach> queryByPersonnelType(String kid, String personnelType);
+
     List<? extends Tree<?>> areaTree();
 
     List<Map<String, Object>> areaCount(String areaId);
