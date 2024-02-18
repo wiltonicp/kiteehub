@@ -51,4 +51,8 @@ public class KbWorkGuidePageParam {
     @ApiModelProperty(value = "分类")
     private String category;
 
+    /** 社保人员类型 */
+    @ApiModelProperty(value = "社保人员类型")
+    private String personnelType;
+
 }

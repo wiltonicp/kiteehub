@@ -55,4 +55,8 @@ public class KnowledgeRobotPageParam {
     @ApiModelProperty(value = "知识库ID")
     private String kid;
 
+    /** 社保人员类型 */
+    @ApiModelProperty(value = "社保人员类型")
+    private String personnelType;
+
 }

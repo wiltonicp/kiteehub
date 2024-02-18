@@ -23,6 +23,11 @@
 						</a-tree-select>
 					</a-form-item>
 				</a-col>
+				<a-col :span="5">
+					<a-form-item label="人员类型" name="personnelType">
+						<a-select v-model:value="searchFormState.personnelType" placeholder="请选择人员类型" :options="personnelTypeOptions" />
+					</a-form-item>
+				</a-col>
 				<a-col :span="6">
 					<a-button type="primary" @click="table.refresh(true)">查询</a-button>
 					<a-button style="margin: 0 8px" @click="reset">重置</a-button>
@@ -55,6 +60,9 @@
 			<template #bodyCell="{ column, record }">
 				<template v-if="column.dataIndex === 'category'">
 					<div>{{ findNamePathById(record.category)&&findNamePathById(record.category).slice(1).join('--->>') }}</div>
+				</template>
+				<template v-if="column.dataIndex === 'personnelType'">
+					<a-tag color="blue">{{ $TOOL.dictTypeData('PERSONNEL_TYPE', record.personnelType) }}</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'flowChart'">
 					<a-image
@@ -91,6 +99,10 @@ const SHOW_PARENT = TreeSelect.SHOW_PARENT
 const categoryOptions = ref([])
 const searchValue = ref('')
 const columns = [
+	{
+		title: '人员类型',
+		dataIndex: 'personnelType'
+	},
 	{
 		title: '分类',
 		dataIndex: 'category'
@@ -198,4 +210,5 @@ const deleteBatchKbWorkGuide = (params) => {
 		table.value.clearRefreshSelected()
 	})
 }
+const personnelTypeOptions = tool.dictList('PERSONNEL_TYPE')
 </script>

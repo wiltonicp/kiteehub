@@ -78,4 +78,8 @@ public class KnowledgeRobotEditParam {
     @ApiModelProperty(value = "知识库ID集合", position = 11)
     private List<String> kids;
 
+    /** 社保人员类型 */
+    @ApiModelProperty(value = "社保人员类型", position = 12)
+    private String personnelType;
+
 }

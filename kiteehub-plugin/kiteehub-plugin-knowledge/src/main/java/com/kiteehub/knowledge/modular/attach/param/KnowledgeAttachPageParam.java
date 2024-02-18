@@ -64,4 +64,8 @@ public class KnowledgeAttachPageParam {
     @ApiModelProperty(value = "区域ID集合")
     private String areaIds;
 
+    /** 社保人员类型 */
+    @ApiModelProperty(value = "社保人员类型")
+    private String personnelType;
+
 }

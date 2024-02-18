@@ -49,4 +49,8 @@ public class KnowledgeNoticeEditParam {
     @ApiModelProperty(value = "扩展信息", position = 4)
     private String extJson;
 
+    /** 社保人员类型 */
+    @ApiModelProperty(value = "社保人员类型", position = 5)
+    private String personnelType;
+
 }

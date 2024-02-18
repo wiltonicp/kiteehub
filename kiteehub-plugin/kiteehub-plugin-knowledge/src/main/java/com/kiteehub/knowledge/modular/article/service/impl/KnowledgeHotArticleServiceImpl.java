@@ -61,6 +61,9 @@ public class KnowledgeHotArticleServiceImpl extends ServiceImpl<KnowledgeHotArti
         if(ObjectUtil.isNotEmpty(knowledgeHotArticlePageParam.getTitle())) {
             wrapper.like(KnowledgeHotArticle::getTitle, knowledgeHotArticlePageParam.getTitle());
         }
+        if(ObjectUtil.isNotEmpty(knowledgeHotArticlePageParam.getPersonnelType())) {
+            wrapper.like(KnowledgeHotArticle::getPersonnelType, knowledgeHotArticlePageParam.getPersonnelType());
+        }
         wrapper.orderByDesc(KnowledgeHotArticle::getCreateTime);
         Page<KnowledgeHotArticle> page = this.baseMapper.joinSelectPage(CommonPageRequest.defaultPage(), wrapper, KnowledgeHotArticle.class);
         page.getRecords().forEach(record ->{

@@ -10,6 +10,9 @@
 			<a-form-item label="知识类别：" name="kid">
 				<a-select v-model:value="formData.kid" placeholder="请选择知识类别" :options="kidOptions" />
 			</a-form-item>
+			<a-form-item label="人员类型" name="personnelType">
+				<a-radio-group v-model:value="formData.personnelType" placeholder="请选择人员类型" :options="personnelTypeOptions" />
+			</a-form-item>
 			<a-form-item label="标题：" name="title">
 				<a-input v-model:value="formData.title" placeholder="请输入标题" allow-clear />
 			</a-form-item>
@@ -85,6 +88,7 @@ const formRef = ref()
 const formData = ref()
 const submitLoading = ref(false)
 const kidOptions = ref([])
+const personnelTypeOptions = ref([])
 // 发送文本方式
 const sendType = ref('TXT')
 const areaList = ref([])
@@ -159,7 +163,6 @@ const onOpen = (record) => {
 	visible.value = true
 	if (record) {
 		let recordData = cloneDeep(record)
-		console.log(recordData.headImg, 'recordData.headImg')
 		fileList.value =
 			[
 				{
@@ -174,6 +177,7 @@ const onOpen = (record) => {
 		fileList.value = []
 	}
 	kidOptions.value = tool.dictList('KNOWLEDGE_GATHER')
+	personnelTypeOptions.value = tool.dictList('PERSONNEL_TYPE')
 }
 // 关闭抽屉
 const onClose = () => {
@@ -185,6 +189,7 @@ const onClose = () => {
 const formRules = {
 	kid: [required('请选择知识类别')],
 	title: [required('请输入标题')],
+	personnelType: [required('请选择人员类型')],
 	// areaIds: [required('请选择区域')],
 	// fileList: [required('请上传图片')]
 }

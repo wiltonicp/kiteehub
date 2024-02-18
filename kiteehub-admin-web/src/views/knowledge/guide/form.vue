@@ -7,6 +7,9 @@
 		@close="onClose"
 	>
 		<a-form ref="formRef" :model="formData" :rules="formRules" layout="vertical">
+			<a-form-item label="人员类型" name="personnelType">
+				<a-radio-group v-model:value="formData.personnelType" placeholder="请选择人员类型" :options="personnelTypeOptions" />
+			</a-form-item>
 			<a-form-item label="分类：" name="categoryArr">
 				<a-cascader
 					v-model:value="formData.categoryArr"
@@ -92,6 +95,7 @@ const formRef = ref()
 const formData = ref({})
 const submitLoading = ref(false)
 const categoryOptions = ref([])
+const personnelTypeOptions = ref([])
 
 const action = ref(`${import.meta.env.VITE_API_BASEURL}/dev/file/uploadLocalReturnUrl`)
 const headers = ref({})
@@ -147,7 +151,6 @@ const onOpen = (record) => {
 	visible.value = true
 	if (record) {
 		let recordData = cloneDeep(record)
-		console.log(recordData.flowChart, 'recordData.flowChart')
 		fileList.value =
 			[
 				{
@@ -166,6 +169,7 @@ const onOpen = (record) => {
 	if (DICT_TYPE_TREE_DATA) {
 		categoryOptions.value = [DICT_TYPE_TREE_DATA.find((item) => item.dictValue === 'OPERATION_FLOW')]
 	}
+	personnelTypeOptions.value = tool.dictList('PERSONNEL_TYPE')
 }
 // 关闭抽屉
 const onClose = () => {
@@ -175,6 +179,7 @@ const onClose = () => {
 }
 // 默认要校验的
 const formRules = {
+	personnelType: [required('请选择人员类型')],
 	categoryArr: [required('请选择分类')],
 	eventCode: [required('请输入事项代码')],
 	handleObj: [required('请输入办理对象')],
@@ -183,7 +188,7 @@ const formRules = {
 	handleMaterial: [required('请输入办理材料')],
 	handleTime: [required('请输入办理时限')]
 }
-// 验证并提交数据  
+// 验证并提交数据
 const onSubmit = () => {
 	formRef.value.validate().then(() => {
 		submitLoading.value = true

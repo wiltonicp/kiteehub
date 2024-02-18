@@ -2,6 +2,11 @@
 	<a-card :bordered="false">
 		<a-form ref="searchFormRef" name="advanced_search" :model="searchFormState" class="ant-advanced-search-form">
 			<a-row :gutter="24">
+				<a-col :span="5">
+					<a-form-item label="人员类型" name="personnelType">
+						<a-select v-model:value="searchFormState.personnelType" placeholder="请选择人员类型" :options="personnelTypeOptions" />
+					</a-form-item>
+				</a-col>
 				<a-col :span="6">
 					<a-form-item label="主题" name="subject">
 						<a-input v-model:value="searchFormState.subject" placeholder="请输入主题" />
@@ -37,6 +42,9 @@
 				</a-space>
 			</template>
 			<template #bodyCell="{ column, record }">
+				<template v-if="column.dataIndex === 'personnelType'">
+					<a-tag color="blue">{{ $TOOL.dictTypeData('PERSONNEL_TYPE', record.personnelType) }}</a-tag>
+				</template>
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>
 						<a @click="formRef.onOpen(record)" v-if="hasPerm('knowledgeNoticeEdit')">编辑</a>
@@ -55,6 +63,7 @@
 <script setup name="notice">
 	import Form from './form.vue'
 	import knowledgeNoticeApi from '@/api/knowledge/knowledgeNoticeApi'
+	import tool from "@/utils/tool";
 	let searchFormState = reactive({})
 	const searchFormRef = ref()
 	const table = ref()
@@ -62,12 +71,16 @@
 	const toolConfig = { refresh: true, height: true, columnSetting: true, striped: false }
 	const columns = [
 		{
+			title: '人员类型',
+			dataIndex: 'personnelType'
+		},
+		{
 			title: '主题',
 			dataIndex: 'subject'
 		},
 		{
 			title: '正文',
-			dataIndex: 'content'
+			dataIndex: 'summary'
 		},
 		{
 			title: '扩展信息',
@@ -131,4 +144,5 @@
 			table.value.clearRefreshSelected()
 		})
 	}
+	const personnelTypeOptions = tool.dictList('PERSONNEL_TYPE')
 </script>

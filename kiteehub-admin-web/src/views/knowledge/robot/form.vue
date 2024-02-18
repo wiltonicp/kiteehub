@@ -13,6 +13,9 @@
 			<a-form-item label="客服名称：" name="name">
 				<a-input v-model:value="formData.name" placeholder="请输入客服名称" allow-clear />
 			</a-form-item>
+      <a-form-item label="人员类型" name="personnelType">
+        <a-radio-group v-model:value="formData.personnelType" placeholder="请选择人员类型" :options="personnelTypeOptions" />
+      </a-form-item>
 			<a-form-item label="描述：" name="description">
 				<a-textarea v-model:value="formData.description" placeholder="请输入描述" :auto-size="{ minRows: 3, maxRows: 5 }" />
 			</a-form-item>
@@ -110,6 +113,7 @@
 	const language = ref(`{{language}}`)
 	const knowledgeGatherOptions = ref([])
 	const knowledgeSearchParametersOptions = ref([])
+  const personnelTypeOptions = ref([])
 
 	// 打开抽屉
 	const onOpen = (record) => {
@@ -121,6 +125,7 @@
 		modelOptions.value = tool.dictList('AI_MODEL')
 		knowledgeGatherOptions.value = tool.dictList('KNOWLEDGE_GATHER')
 		knowledgeSearchParametersOptions.value = tool.dictList('knowledge_search_parameters')
+    personnelTypeOptions.value = tool.dictList('PERSONNEL_TYPE')
 	}
 	// 关闭抽屉
 	const onClose = () => {
@@ -131,6 +136,7 @@
 	// 默认要校验的
 	const formRules = {
 		name: [required('请输入客服名称')],
+    personnelType: [required('请选择人员类型')],
 		model: [required('请选择AI 模型')],
 	}
 	// 验证并提交数据

@@ -58,6 +58,9 @@ public class KnowledgeRobotServiceImpl extends ServiceImpl<KnowledgeRobotMapper,
         if(ObjectUtil.isNotEmpty(knowledgeRobotPageParam.getName())) {
             queryWrapper.lambda().like(KnowledgeRobot::getName, knowledgeRobotPageParam.getName());
         }
+        if(ObjectUtil.isNotEmpty(knowledgeRobotPageParam.getPersonnelType())) {
+            queryWrapper.lambda().like(KnowledgeRobot::getPersonnelType, knowledgeRobotPageParam.getPersonnelType());
+        }
         if(ObjectUtil.isAllNotEmpty(knowledgeRobotPageParam.getSortField(), knowledgeRobotPageParam.getSortOrder())) {
             CommonSortOrderEnum.validate(knowledgeRobotPageParam.getSortOrder());
             queryWrapper.orderBy(true, knowledgeRobotPageParam.getSortOrder().equals(CommonSortOrderEnum.ASC.getValue()),

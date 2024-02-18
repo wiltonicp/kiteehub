@@ -16,6 +16,11 @@
 						/>
 					</a-form-item>
 				</a-col>
+        <a-col :span="5">
+          <a-form-item label="人员类型" name="personnelType">
+            <a-select v-model:value="searchFormState.personnelType" placeholder="请选择人员类型" :options="personnelTypeOptions" />
+          </a-form-item>
+        </a-col>
 				<a-col :span="6">
 					<a-button type="primary" @click="table.refresh(true)">查询</a-button>
 					<a-button style="margin: 0 8px" @click="reset">重置</a-button>
@@ -49,6 +54,9 @@
 				<template v-if="column.dataIndex === 'kids'">
 					<a-tag v-for="textValue in record.kids" :key="textValue" color="green">{{ $TOOL.dictTypeData('KNOWLEDGE_GATHER', textValue) }}</a-tag>
 				</template>
+        <template v-if="column.dataIndex === 'personnelType'">
+          <a-tag color="blue">{{ $TOOL.dictTypeData('PERSONNEL_TYPE', record.personnelType) }}</a-tag>
+        </template>
 				<template v-if="column.dataIndex === 'model'">
 					{{ $TOOL.dictTypeData('AI_MODEL', record.model) }}
 				</template>
@@ -81,6 +89,10 @@
 			title: '客服名称',
 			dataIndex: 'name'
 		},
+    {
+      title: '人员类型',
+      dataIndex: 'personnelType'
+    },
 		{
 			title: '描述',
 			dataIndex: 'description',
@@ -174,4 +186,5 @@
 		})
 	}
 	const knowledgeGatherOptions = tool.dictList('KNOWLEDGE_GATHER')
+  const personnelTypeOptions = tool.dictList('PERSONNEL_TYPE')
 </script>

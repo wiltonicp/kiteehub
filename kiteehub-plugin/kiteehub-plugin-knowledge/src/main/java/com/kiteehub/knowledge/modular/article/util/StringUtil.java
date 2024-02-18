@@ -17,7 +17,7 @@ public class StringUtil {
         if (text.length() <= num) {
             return text;
         } else {
-            return text.substring(0, num);
+            return text.substring(0, num) + "...";
         }
     }
 

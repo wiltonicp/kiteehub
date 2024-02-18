@@ -26,4 +26,8 @@ public class KnowledgeUploadParam {
      */
     @ApiModelProperty(value = "区域ID集合", required = true, position = 3)
     private List<String> areaIds;
+
+    /** 社保人员类型 */
+    @ApiModelProperty(value = "社保人员类型", required = true, position = 4)
+    private String personnelType;
 }

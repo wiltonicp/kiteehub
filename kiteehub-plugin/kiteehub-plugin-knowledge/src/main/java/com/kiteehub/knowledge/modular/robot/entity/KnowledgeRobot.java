@@ -74,13 +74,17 @@ public class KnowledgeRobot extends CommonEntity implements TransPojo {
     @ApiModelProperty(value = "空搜索回复", position = 10)
     private String emptySearchReply;
 
+    /** 社保人员类型 */
+    @ApiModelProperty(value = "社保人员类型", position = 11)
+    private String personnelType;
+
     /** 知识库ID集合 */
     @TableField(exist = false)
-    @ApiModelProperty(value = "知识库ID集合", position = 11)
+    @ApiModelProperty(value = "知识库ID集合", position = 12)
     private List<String> kids;
 
     /** 客服预设 */
     @TableField(exist = false)
-    @ApiModelProperty(value = "客服预设集合", position = 11)
+    @ApiModelProperty(value = "客服预设集合", position = 13)
     private List<KnowledgeRobotPreset> presets;
 }

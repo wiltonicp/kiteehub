@@ -8,6 +8,11 @@
 					</a-form-item>
 				</a-col>
 				<a-col :span="5">
+					<a-form-item label="人员类型" name="personnelType">
+						<a-select v-model:value="searchFormState.personnelType" placeholder="请选择人员类型" :options="personnelTypeOptions" />
+					</a-form-item>
+				</a-col>
+				<a-col :span="5">
 					<a-form-item label="标题" name="title">
 						<a-input v-model:value="searchFormState.title" placeholder="请输入标题" />
 					</a-form-item>
@@ -62,6 +67,9 @@
 				<template v-if="column.dataIndex === 'kid'">
 					<a-tag color="blue">{{ $TOOL.dictTypeData('KNOWLEDGE_GATHER', record.kid) }}</a-tag>
 				</template>
+				<template v-if="column.dataIndex === 'personnelType'">
+					<a-tag color="blue">{{ $TOOL.dictTypeData('PERSONNEL_TYPE', record.personnelType) }}</a-tag>
+				</template>
 				<template v-if="column.dataIndex === 'headImg'">
 					<a-image :width="60" :src="record.headImg.replace('http://10.10.15.36:8299', 'https://kb.vihacker.top/api')" />
 				</template>
@@ -101,6 +109,10 @@ const columns = [
 	{
 		title: '封面',
 		dataIndex: 'headImg'
+	},
+	{
+		title: '人员类型',
+		dataIndex: 'personnelType'
 	},
 	{
 		title: '标题',
@@ -182,4 +194,5 @@ const deleteBatchKnowledgeHotArticle = (params) => {
 	})
 }
 const kidOptions = tool.dictList('KNOWLEDGE_GATHER')
+const personnelTypeOptions = tool.dictList('PERSONNEL_TYPE')
 </script>

@@ -48,6 +48,9 @@ public class KbWorkGuideServiceImpl extends ServiceImpl<KbWorkGuideMapper, KbWor
         if(ObjectUtil.isNotEmpty(kbWorkGuidePageParam.getCategory())) {
             queryWrapper.lambda().eq(KbWorkGuide::getCategory, kbWorkGuidePageParam.getCategory());
         }
+        if(ObjectUtil.isNotEmpty(kbWorkGuidePageParam.getPersonnelType())) {
+            queryWrapper.lambda().eq(KbWorkGuide::getPersonnelType, kbWorkGuidePageParam.getPersonnelType());
+        }
         if(ObjectUtil.isAllNotEmpty(kbWorkGuidePageParam.getSortField(), kbWorkGuidePageParam.getSortOrder())) {
             CommonSortOrderEnum.validate(kbWorkGuidePageParam.getSortOrder());
             queryWrapper.orderBy(true, kbWorkGuidePageParam.getSortOrder().equals(CommonSortOrderEnum.ASC.getValue()),

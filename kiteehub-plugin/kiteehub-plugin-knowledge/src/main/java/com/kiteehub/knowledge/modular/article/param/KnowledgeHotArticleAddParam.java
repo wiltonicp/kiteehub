@@ -51,4 +51,8 @@ public class KnowledgeHotArticleAddParam {
     @ApiModelProperty(value = "区域ID集合", position = 6)
     private List<String> areaIds;
 
+    /** 社保人员类型 */
+    @ApiModelProperty(value = "社保人员类型", position = 7)
+    private String personnelType;
+
 }

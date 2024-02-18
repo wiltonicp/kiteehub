@@ -70,4 +70,8 @@ public class KbWorkGuide extends CommonEntity {
     /** 流程图 */
     @ApiModelProperty(value = "流程图", position = 9)
     private String flowChart;
+
+    /** 社保人员类型 */
+    @ApiModelProperty(value = "社保人员类型", position = 10)
+    private String personnelType;
 }

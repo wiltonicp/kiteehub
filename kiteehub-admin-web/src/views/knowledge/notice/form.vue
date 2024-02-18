@@ -7,6 +7,9 @@
 		@close="onClose"
 	>
 		<a-form ref="formRef" :model="formData" :rules="formRules" layout="vertical">
+            <a-form-item label="人员类型" name="personnelType">
+                <a-radio-group v-model:value="formData.personnelType" placeholder="请选择人员类型" :options="personnelTypeOptions" />
+            </a-form-item>
 			<a-form-item label="主题：" name="subject">
 				<a-input v-model:value="formData.subject" placeholder="请输入主题" allow-clear />
 			</a-form-item>
@@ -38,6 +41,7 @@
 	import { required } from '@/utils/formRules'
 	import knowledgeNoticeApi from '@/api/knowledge/knowledgeNoticeApi'
 	import XnEditor from "@/components/Editor/index.vue";
+    import tool from "@/utils/tool";
 	// 抽屉状态
 	const visible = ref(false)
 	const emit = defineEmits({ successful: null })
@@ -45,6 +49,7 @@
 	// 表单数据
 	const formData = ref({})
 	const submitLoading = ref(false)
+    const personnelTypeOptions = ref([])
 	// 文本方式
 	const sendType = ref('TXT')
 
@@ -55,6 +60,7 @@
 			let recordData = cloneDeep(record)
 			formData.value = Object.assign({}, recordData)
 		}
+        personnelTypeOptions.value = tool.dictList('PERSONNEL_TYPE')
 	}
 	// 关闭抽屉
 	const onClose = () => {
@@ -64,6 +70,7 @@
 	}
 	// 默认要校验的
 	const formRules = {
+        personnelType: [required('请选择人员类型')],
 		subject: [required('请输入主题')],
 		content: [required('请输入正文')],
 	}

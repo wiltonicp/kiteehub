@@ -72,4 +72,8 @@ public class KbWorkGuideEditParam {
     @ApiModelProperty(value = "流程图", position = 10)
     private String flowChart;
 
+    /** 社保人员类型 */
+    @ApiModelProperty(value = "社保人员类型")
+    private String personnelType;
+
 }

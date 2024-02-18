@@ -46,4 +46,13 @@ public class KnowledgeNotice extends CommonEntity {
     /** 扩展信息 */
     @ApiModelProperty(value = "扩展信息", position = 4)
     private String extJson;
+
+    /** 社保人员类型 */
+    @ApiModelProperty(value = "社保人员类型", position = 5)
+    private String personnelType;
+
+    /** 摘要 */
+    @ApiModelProperty(value = "摘要", position = 6)
+    @TableField(exist = false)
+    private String summary;
 }

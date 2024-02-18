@@ -18,6 +18,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kiteehub.knowledge.modular.article.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.kiteehub.common.enums.CommonSortOrderEnum;
@@ -48,6 +49,9 @@ public class KnowledgeNoticeServiceImpl extends ServiceImpl<KnowledgeNoticeMappe
         if(ObjectUtil.isNotEmpty(knowledgeNoticePageParam.getSubject())) {
             queryWrapper.lambda().like(KnowledgeNotice::getSubject, knowledgeNoticePageParam.getSubject());
         }
+        if(ObjectUtil.isNotEmpty(knowledgeNoticePageParam.getPersonnelType())) {
+            queryWrapper.lambda().like(KnowledgeNotice::getPersonnelType, knowledgeNoticePageParam.getPersonnelType());
+        }
         if(ObjectUtil.isAllNotEmpty(knowledgeNoticePageParam.getSortField(), knowledgeNoticePageParam.getSortOrder())) {
             CommonSortOrderEnum.validate(knowledgeNoticePageParam.getSortOrder());
             queryWrapper.orderBy(true, knowledgeNoticePageParam.getSortOrder().equals(CommonSortOrderEnum.ASC.getValue()),
@@ -55,7 +59,11 @@ public class KnowledgeNoticeServiceImpl extends ServiceImpl<KnowledgeNoticeMappe
         } else {
             queryWrapper.lambda().orderByAsc(KnowledgeNotice::getId);
         }
-        return this.page(CommonPageRequest.defaultPage(), queryWrapper);
+        Page<KnowledgeNotice> page = this.page(CommonPageRequest.defaultPage(), queryWrapper);
+        page.getRecords().forEach(record ->{
+            record.setSummary(StringUtil.truncateString(record.getContent(),30));
+        });
+        return page;
     }
 
     @Transactional(rollbackFor = Exception.class)

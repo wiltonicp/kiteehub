@@ -76,6 +76,9 @@ public class KnowledgeAttachServiceImpl extends ServiceImpl<KnowledgeAttachMappe
         if (ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getGatherState())) {
             wrapper.eq(KnowledgeAttach::getGatherState, knowledgeAttachPageParam.getGatherState());
         }
+        if (ObjectUtil.isNotEmpty(knowledgeAttachPageParam.getPersonnelType())) {
+            wrapper.eq(KnowledgeAttach::getPersonnelType, knowledgeAttachPageParam.getPersonnelType());
+        }
         wrapper.orderByDesc(KnowledgeAttach::getUpdateTime);
         Page<KnowledgeAttach> knowledgeAttachPage = this.baseMapper.joinSelectPage(CommonPageRequest.defaultPage(), wrapper, KnowledgeAttach.class);
 //        knowledgeAttachPage.getRecords().forEach(record -> {

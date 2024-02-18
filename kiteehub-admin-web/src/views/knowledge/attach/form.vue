@@ -92,6 +92,9 @@
 					disabled
 				/>
 			</a-form-item>
+			<a-form-item label="状态：" name="gatherState">
+				<a-radio-group v-model:value="formData.personnelType" placeholder="请选择人员类型" :options="personnelTypeOptions" disabled />
+			</a-form-item>
 
 <!--			<a-form-item label="区域选择：" name="areaSelection" v-if="areaList.length > 0">-->
 <!--				<a-tree-select-->
@@ -148,6 +151,7 @@ const areaIds = ref([])
 const formData = ref({})
 const submitLoading = ref(false)
 const gatherStateOptions = ref([])
+const personnelTypeOptions = ref([])
 
 onMounted(() => {
 	getToken()
@@ -175,6 +179,7 @@ const onOpen = (typeUrl, record) => {
 		formData.value = Object.assign({}, recordData)
 	}
 	gatherStateOptions.value = tool.dictList('Gather')
+	personnelTypeOptions.value = tool.dictList('PERSONNEL_TYPE')
 }
 //区域id
 let getAreaIds = (value) => {

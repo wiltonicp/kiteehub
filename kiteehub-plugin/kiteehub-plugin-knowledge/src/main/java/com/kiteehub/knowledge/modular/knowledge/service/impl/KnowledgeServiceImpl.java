@@ -162,6 +162,7 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeMapper, Knowledge
         knowledgeAttach.setCreateTime(new Date());
         knowledgeAttach.setUpdateTime(new Date());
         knowledgeAttach.setGatherState(EnumUtil.toString(KnowledgeGatherEnum.PROGRESSING));
+        knowledgeAttach.setPersonnelType(request.getPersonnelType());
         knowledgeAttachService.save(knowledgeAttach);
 
         CompletableFuture.runAsync(() ->{
