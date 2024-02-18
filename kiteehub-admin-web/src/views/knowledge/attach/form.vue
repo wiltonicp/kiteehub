@@ -32,35 +32,35 @@
 						<p class="ant-upload-hint">支持.txt.docx.pdf.md,.html文件。</p>
 					</a-upload-dragger>
 				</a-tab-pane>
-<!--				<a-tab-pane key="2" tab="网址链接提取">-->
-<!--					<a-input v-model:value="value2">-->
-<!--						<template #addonBefore>-->
-<!--							<a-select v-model:value="url" style="width: 90px">-->
-<!--								<a-select-option value="Http://">http://</a-select-option>-->
-<!--								<a-select-option value="Https://">https://</a-select-option>-->
-<!--							</a-select>-->
-<!--						</template>-->
-<!--					</a-input>-->
-<!--				</a-tab-pane>-->
+				<!--				<a-tab-pane key="2" tab="网址链接提取">-->
+				<!--					<a-input v-model:value="value2">-->
+				<!--						<template #addonBefore>-->
+				<!--							<a-select v-model:value="url" style="width: 90px">-->
+				<!--								<a-select-option value="Http://">http://</a-select-option>-->
+				<!--								<a-select-option value="Https://">https://</a-select-option>-->
+				<!--							</a-select>-->
+				<!--						</template>-->
+				<!--					</a-input>-->
+				<!--				</a-tab-pane>-->
 			</a-tabs>
 
-<!--			<div style="margin-top: 50px">-->
-<!--				<a-form-item label="区域选择：" name="areaSelection" v-if="areaList.length > 0">-->
-<!--					<a-tree-select-->
-<!--						v-model:value="areaIds"-->
-<!--						style="width: 100%"-->
-<!--						tree-checkable-->
-<!--						tree-default-expand-all-->
-<!--						:show-checked-strategy="SHOW_PARENT"-->
-<!--						:height="233"-->
-<!--						:tree-data="areaList"-->
-<!--						:max-tag-count="10"-->
-<!--						tree-node-filter-prop="name"-->
-<!--						:fieldNames="{ children: 'children', label: 'name', value: 'id' }"-->
-<!--					>-->
-<!--					</a-tree-select>-->
-<!--				</a-form-item>-->
-<!--			</div>-->
+			<!--			<div style="margin-top: 50px">-->
+			<!--				<a-form-item label="区域选择：" name="areaSelection" v-if="areaList.length > 0">-->
+			<!--					<a-tree-select-->
+			<!--						v-model:value="areaIds"-->
+			<!--						style="width: 100%"-->
+			<!--						tree-checkable-->
+			<!--						tree-default-expand-all-->
+			<!--						:show-checked-strategy="SHOW_PARENT"-->
+			<!--						:height="233"-->
+			<!--						:tree-data="areaList"-->
+			<!--						:max-tag-count="10"-->
+			<!--						tree-node-filter-prop="name"-->
+			<!--						:fieldNames="{ children: 'children', label: 'name', value: 'id' }"-->
+			<!--					>-->
+			<!--					</a-tree-select>-->
+			<!--				</a-form-item>-->
+			<!--			</div>-->
 		</div>
 
 		<!-- 重命名 -->
@@ -70,6 +70,13 @@
 			</a-form-item>
 			<a-form-item label="知识名称：" name="docName">
 				<a-input v-model:value="formData.docName" placeholder="请输入知识名称" allow-clear />
+			</a-form-item>
+			<a-form-item label="人员类型：" name="gatherState">
+				<a-radio-group
+					v-model:value="formData.personnelType"
+					placeholder="请选择人员类型"
+					:options="personnelTypeOptions"
+				/>
 			</a-form-item>
 			<a-form-item label="知识类型：" name="docType">
 				<a-input v-model:value="formData.docType" placeholder="请输入知识类型" allow-clear disabled />
@@ -92,25 +99,23 @@
 					disabled
 				/>
 			</a-form-item>
-			<a-form-item label="状态：" name="gatherState">
-				<a-radio-group v-model:value="formData.personnelType" placeholder="请选择人员类型" :options="personnelTypeOptions" disabled />
-			</a-form-item>
+		
 
-<!--			<a-form-item label="区域选择：" name="areaSelection" v-if="areaList.length > 0">-->
-<!--				<a-tree-select-->
-<!--					v-model:value="formData.areaIds"-->
-<!--					style="width: 100%"-->
-<!--					tree-checkable-->
-<!--					tree-default-expand-all-->
-<!--					:show-checked-strategy="SHOW_PARENT"-->
-<!--					:height="233"-->
-<!--					:tree-data="areaList"-->
-<!--					:max-tag-count="10"-->
-<!--					tree-node-filter-prop="name"-->
-<!--					:fieldNames="{ children: 'children', label: 'name', value: 'id' }"-->
-<!--				>-->
-<!--				</a-tree-select>-->
-<!--			</a-form-item>-->
+			<!--			<a-form-item label="区域选择：" name="areaSelection" v-if="areaList.length > 0">-->
+			<!--				<a-tree-select-->
+			<!--					v-model:value="formData.areaIds"-->
+			<!--					style="width: 100%"-->
+			<!--					tree-checkable-->
+			<!--					tree-default-expand-all-->
+			<!--					:show-checked-strategy="SHOW_PARENT"-->
+			<!--					:height="233"-->
+			<!--					:tree-data="areaList"-->
+			<!--					:max-tag-count="10"-->
+			<!--					tree-node-filter-prop="name"-->
+			<!--					:fieldNames="{ children: 'children', label: 'name', value: 'id' }"-->
+			<!--				>-->
+			<!--				</a-tree-select>-->
+			<!--			</a-form-item>-->
 		</a-form>
 		<template #footer>
 			<div v-if="!formData.id">
