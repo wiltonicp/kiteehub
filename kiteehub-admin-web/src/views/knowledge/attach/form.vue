@@ -8,20 +8,19 @@
 	>
 		<!-- 新增 -->
 		<div class="card-container" v-if="!formData.id">
-			<a-tabs v-model:activeKey="activeKey" type="card">
-				<a-tab-pane key="1" tab="文件上传导入">
+			<a-form ref="formRefUpload" :model="formData" :rules="formUploadRules" layout="vertical">
+				<a-form-item label="文件上传导入" name="fileList">
 					<div style="margin-bottom: 30px">
-						<a-upload style="float: left; width: 100%" :fileList="fileList"></a-upload>
+						<a-upload style="float: left; width: 100%" :fileList="formData.fileList"></a-upload>
 					</div>
-
 					<a-upload-dragger
-						v-model:fileList="fileList"
+						v-model:fileList="formData.fileList"
 						name="file"
 						:multiple="true"
 						:action="action"
 						:headers="headers"
 						:progress="progress"
-						:data="{ kid: typeUrlItem, areaIds: areaIds }"
+						:data="{ kid: typeUrlItem, areaIds: areaIds, personnelType: formData.personnelType }"
 						@change="handleChange"
 						@drop="handleDrop"
 					>
@@ -31,36 +30,15 @@
 						<p class="ant-upload-text">单击或拖动文件到此区域进行上传</p>
 						<p class="ant-upload-hint">支持.txt.docx.pdf.md,.html文件。</p>
 					</a-upload-dragger>
-				</a-tab-pane>
-				<!--				<a-tab-pane key="2" tab="网址链接提取">-->
-				<!--					<a-input v-model:value="value2">-->
-				<!--						<template #addonBefore>-->
-				<!--							<a-select v-model:value="url" style="width: 90px">-->
-				<!--								<a-select-option value="Http://">http://</a-select-option>-->
-				<!--								<a-select-option value="Https://">https://</a-select-option>-->
-				<!--							</a-select>-->
-				<!--						</template>-->
-				<!--					</a-input>-->
-				<!--				</a-tab-pane>-->
-			</a-tabs>
-
-			<!--			<div style="margin-top: 50px">-->
-			<!--				<a-form-item label="区域选择：" name="areaSelection" v-if="areaList.length > 0">-->
-			<!--					<a-tree-select-->
-			<!--						v-model:value="areaIds"-->
-			<!--						style="width: 100%"-->
-			<!--						tree-checkable-->
-			<!--						tree-default-expand-all-->
-			<!--						:show-checked-strategy="SHOW_PARENT"-->
-			<!--						:height="233"-->
-			<!--						:tree-data="areaList"-->
-			<!--						:max-tag-count="10"-->
-			<!--						tree-node-filter-prop="name"-->
-			<!--						:fieldNames="{ children: 'children', label: 'name', value: 'id' }"-->
-			<!--					>-->
-			<!--					</a-tree-select>-->
-			<!--				</a-form-item>-->
-			<!--			</div>-->
+				</a-form-item>
+				<a-form-item label="人员类型：" name="personnelType" style="margin-top: 50px">
+					<a-radio-group
+						v-model:value="formData.personnelType"
+						placeholder="请选择人员类型"
+						:options="personnelTypeOptions"
+					/>
+				</a-form-item>
+			</a-form>
 		</div>
 
 		<!-- 重命名 -->
@@ -99,7 +77,6 @@
 					disabled
 				/>
 			</a-form-item>
-		
 
 			<!--			<a-form-item label="区域选择：" name="areaSelection" v-if="areaList.length > 0">-->
 			<!--				<a-tree-select-->
@@ -144,9 +121,10 @@ const emit = defineEmits({ successful: null, getParameUrl: null })
 const action = ref(`${import.meta.env.VITE_API_BASEURL}/knowledge/attach/add`)
 const headers = ref({})
 const activeKey = ref('1')
-const fileList = ref([])
+// const fileList = ref([])
 const url = ref('http://')
 const typeUrlItem = ref('')
+const formRefUpload = ref()
 const formRef = ref()
 const areaList = ref([])
 
@@ -157,6 +135,12 @@ const formData = ref({})
 const submitLoading = ref(false)
 const gatherStateOptions = ref([])
 const personnelTypeOptions = ref([])
+
+// 默认要校验的
+const formUploadRules = {
+	fileList: [required('请选择文件上传导入')],
+	personnelType: [required('请选择人员类型')]
+}
 
 onMounted(() => {
 	getToken()
@@ -177,7 +161,8 @@ const getArea = () => {
 // 打开抽屉
 const onOpen = (typeUrl, record) => {
 	visible.value = true
-	fileList.value = []
+	formData.value.fileList = []
+	formData.value.personnelType = []
 	typeUrlItem.value = typeUrl
 	if (record) {
 		let recordData = cloneDeep(record)
@@ -259,9 +244,11 @@ const handleDrop = (e) => {
 	console.log(e)
 }
 const confirm = () => {
-	submitLoading.value = false
-	visible.value = false
-	emit('successful')
+	formRefUpload.value.validate().then(() => {
+		submitLoading.value = false
+		visible.value = false
+		emit('successful')
+	})
 }
 
 watch(formData.areaIds, () => {
