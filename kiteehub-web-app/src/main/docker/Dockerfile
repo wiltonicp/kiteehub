@@ -16,5 +16,13 @@ ENV LANG C.UTF-8
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN mkdir /defaultUploadFolder
 
+#添加中文字体
+RUN apk update  && apk --no-cache add font-adobe-100dpi
+RUN mkdir /usr/share/fonts/win
+ADD yahei.ttf  /usr/share/fonts/win/yahei.ttf
+RUN chmod 777 /usr/share/fonts/win/yahei.ttf  \
+    && fc-cache -fv  && fc-list
+
+
 #ENTRYPOINT ["java","-Dspring.profiles.active=prod", "-jar", "/app/app.jar"]
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
