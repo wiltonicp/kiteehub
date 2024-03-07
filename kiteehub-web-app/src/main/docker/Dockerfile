@@ -17,12 +17,11 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN mkdir /defaultUploadFolder
 
 #添加中文字体
-RUN apk update  && apk --no-cache add font-adobe-100dpi
-RUN mkdir /usr/share/fonts/win
-ADD yahei.ttf  /usr/share/fonts/win/yahei.ttf
-RUN chmod 777 /usr/share/fonts/win/yahei.ttf  \
-    && fc-cache -fv  && fc-list
+RUN echo -e 'https://mirrors.aliyun.com/alpine/v3.6/main/\nhttps://mirrors.aliyun.com/alpine/v3.6/community/' > /etc/apk/repositories \
+&& apk update && apk upgrade \
+&& apk --no-cache add ttf-dejavu fontconfig
 
+COPY yahei.ttf /usr/share/fonts/ttf-dejavu/simsun.ttc
 
 #ENTRYPOINT ["java","-Dspring.profiles.active=prod", "-jar", "/app/app.jar"]
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

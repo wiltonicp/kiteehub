@@ -163,6 +163,11 @@
                             <directory>${project.build.directory}</directory>
                             <include>${project.build.finalName}.jar</include>
                         </resource>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}/classes</directory>
+                            <include>yahei.ttf</include>
+                        </resource>
                     </resources>
                 </configuration>
             </plugin>
