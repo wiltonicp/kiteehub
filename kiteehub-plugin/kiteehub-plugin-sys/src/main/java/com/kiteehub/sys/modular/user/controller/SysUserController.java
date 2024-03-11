@@ -86,6 +86,25 @@ public class SysUserController {
     }
 
     /**
+     * 添加普通用户
+     *
+     * @date 2022/4/24 20:47
+     */
+    @ApiOperationSupport(order = 2)
+    @ApiOperation("添加普通用户")
+    @CommonLog("添加普通用户")
+    @PostMapping("/sys/user/addOrdinary")
+    public CommonResult<String> addOrdinary(@RequestBody SysUserAddParam sysUserAddParam) {
+        sysUserAddParam.setDirectorId("1749996725492355074");
+        sysUserAddParam.setIdCardType("身份证");
+        sysUserAddParam.setOrgId("1543842934270394368");
+        sysUserAddParam.setPositionId("1765624490102984706");
+        sysUserAddParam.setPhone(sysUserAddParam.getAccount());
+        sysUserService.add(sysUserAddParam);
+        return CommonResult.ok();
+    }
+
+    /**
      * 编辑用户
      *
      * @author xuyuxiang

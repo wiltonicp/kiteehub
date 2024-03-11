@@ -156,7 +156,9 @@ public class GlobalConfigure implements WebMvcConfigurer {
 
             /* 知识库相关*/
             "/knowledge/client/**",
-            "/kb/socket/**"
+            "/kb/socket/**",
+            "/auth/b/checkUserToken",
+            "/sys/user/addOrdinary"
     };
 
     /**

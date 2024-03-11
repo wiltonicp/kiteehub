@@ -1,5 +1,8 @@
 package com.kiteehub.common.util;
 
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,6 +36,9 @@ public class TestToken {
         System.out.println(idToken);
 
         //输出解密结果
-        System.out.println(CommonEncrypt.decrypts("d46a1d35da26f777f6a1172ef22bb6ac61c315b981a8d788bfe69b3ef6a62d80",idToken));
+        String info = CommonEncrypt.decrypts("d46a1d35da26f777f6a1172ef22bb6ac61c315b981a8d788bfe69b3ef6a62d80", idToken);
+        System.out.println(info);
+        JSONObject entries = JSONUtil.parseObj(info);
+        System.out.println(entries);
     }
 }

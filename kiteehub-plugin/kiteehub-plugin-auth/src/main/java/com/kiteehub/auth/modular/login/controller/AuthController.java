@@ -13,6 +13,7 @@ package com.kiteehub.auth.modular.login.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.json.JSONObject;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import io.swagger.annotations.Api;
@@ -128,5 +129,16 @@ public class AuthController {
     @GetMapping("/auth/b/getLoginUser")
     public CommonResult<SaBaseLoginUser> getLoginUser() {
         return CommonResult.data(authService.getLoginUser());
+    }
+
+    /**
+     * B端校验三方token
+     *
+     **/
+    @ApiOperationSupport(order = 7)
+    @ApiOperation("B端校验三方token")
+    @GetMapping("/auth/b/checkUserToken")
+    public CommonResult<JSONObject> checkUserToken(String token){
+        return CommonResult.data(authService.checkUserToken(token));
     }
 }
