@@ -11,8 +11,8 @@
  */
 package com.kiteehub.knowledge.modular.attach.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttach;
+import icu.mhb.mybatisplus.plugln.base.mapper.JoinBaseMapper;
 
 /**
  * 知识库附件Mapper接口
@@ -20,5 +20,5 @@ import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttach;
  * @author Ranger
  * @date  2023/12/27 14:00
  **/
-public interface KnowledgeAttachMapper extends BaseMapper<KnowledgeAttach> {
+public interface KnowledgeAttachMapper extends JoinBaseMapper<KnowledgeAttach> {
 }

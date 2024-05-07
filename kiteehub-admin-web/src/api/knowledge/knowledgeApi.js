@@ -28,5 +28,6 @@ export default {
 	// 获取知识库详情
 	knowledgeDetail(data) {
 		return request('detail', data, 'get')
-	}
+	},
+
 }

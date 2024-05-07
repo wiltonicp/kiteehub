@@ -14,18 +14,17 @@ package com.kiteehub.knowledge.modular.attach.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttach;
-import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachAddParam;
-import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachEditParam;
-import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachIdParam;
-import com.kiteehub.knowledge.modular.attach.param.KnowledgeAttachPageParam;
+import com.kiteehub.knowledge.modular.attach.param.*;
+import com.kiteehub.knowledge.modular.attach.pojo.Tree;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 知识库附件Service接口
  *
  * @author Ranger
- * @date  2023/12/27 14:00
+ * @date 2023/12/27 14:00
  **/
 public interface KnowledgeAttachService extends IService<KnowledgeAttach> {
 
@@ -33,7 +32,7 @@ public interface KnowledgeAttachService extends IService<KnowledgeAttach> {
      * 获取知识库附件分页
      *
      * @author Ranger
-     * @date  2023/12/27 14:00
+     * @date 2023/12/27 14:00
      */
     Page<KnowledgeAttach> page(KnowledgeAttachPageParam knowledgeAttachPageParam);
 
@@ -41,7 +40,7 @@ public interface KnowledgeAttachService extends IService<KnowledgeAttach> {
      * 添加知识库附件
      *
      * @author Ranger
-     * @date  2023/12/27 14:00
+     * @date 2023/12/27 14:00
      */
     void add(KnowledgeAttachAddParam knowledgeAttachAddParam);
 
@@ -49,7 +48,7 @@ public interface KnowledgeAttachService extends IService<KnowledgeAttach> {
      * 编辑知识库附件
      *
      * @author Ranger
-     * @date  2023/12/27 14:00
+     * @date 2023/12/27 14:00
      */
     void edit(KnowledgeAttachEditParam knowledgeAttachEditParam);
 
@@ -57,7 +56,7 @@ public interface KnowledgeAttachService extends IService<KnowledgeAttach> {
      * 删除知识库附件
      *
      * @author Ranger
-     * @date  2023/12/27 14:00
+     * @date 2023/12/27 14:00
      */
     void delete(List<KnowledgeAttachIdParam> knowledgeAttachIdParamList);
 
@@ -65,7 +64,7 @@ public interface KnowledgeAttachService extends IService<KnowledgeAttach> {
      * 获取知识库附件详情
      *
      * @author Ranger
-     * @date  2023/12/27 14:00
+     * @date 2023/12/27 14:00
      */
     KnowledgeAttach detail(KnowledgeAttachIdParam knowledgeAttachIdParam);
 
@@ -73,7 +72,27 @@ public interface KnowledgeAttachService extends IService<KnowledgeAttach> {
      * 获取知识库附件详情
      *
      * @author Ranger
-     * @date  2023/12/27 14:00
+     * @date 2023/12/27 14:00
      **/
-    KnowledgeAttach queryEntity(Long id);
+    KnowledgeAttach queryEntity(String id);
+
+    /**
+     * 获取知识库附件详情
+     *
+     * @author Ranger
+     * @date 2023/12/27 14:00
+     **/
+    KnowledgeAttach queryEntity(String kid, String docId);
+
+    /**
+     * 获取知识库附件详情
+     *
+     * @author Ranger
+     * @date 2023/12/27 14:00
+     **/
+    List<KnowledgeAttach> queryByPersonnelType(String kid, String personnelType);
+
+    List<? extends Tree<?>> areaTree();
+
+    List<Map<String, Object>> areaCount(String areaId);
 }

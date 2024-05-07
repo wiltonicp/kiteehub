@@ -3,4 +3,23 @@
 <mapper namespace="com.kiteehub.dev.modular.dict.mapper.DevDictMapper">
 
 
+    <select id="getIdsByParentIds" resultType="java.lang.String">
+        WITH RECURSIVE subordinates AS (
+            SELECT id FROM dev_dict WHERE id IN
+            <foreach collection="parentIds" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+            UNION ALL
+            SELECT e.id FROM dev_dict e INNER JOIN subordinates s ON e.parent_id = s.id WHERE e.DELETE_FLAG = 'NOT_DELETE'
+        )
+        SELECT * FROM subordinates
+    </select>
+    <select id="dictTree" resultType="com.kiteehub.dev.core.pojo.DictNode">
+        WITH RECURSIVE city(ID,parent_id,DICT_LABEL,DICT_VALUE,SORT_CODE) AS (
+            SELECT ID,parent_id,DICT_LABEL,DICT_VALUE,SORT_CODE FROM dev_dict WHERE id = #{parentId}
+            UNION ALL
+            SELECT e.ID,e.parent_id,e.DICT_LABEL,e.DICT_VALUE,e.SORT_CODE FROM dev_dict e INNER JOIN city s ON e.parent_id = s.id WHERE e.DELETE_FLAG = 'NOT_DELETE'
+        )
+        SELECT ID,parent_id,DICT_LABEL,DICT_VALUE,SORT_CODE FROM city ORDER BY SORT_CODE
+    </select>
 </mapper>

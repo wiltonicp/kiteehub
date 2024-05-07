@@ -11,6 +11,10 @@
  */
 package com.kiteehub.dev.api;
 
+import com.kiteehub.dev.core.pojo.DictNode;
+
+import java.util.List;
+
 /**
  * 字典API
  *
@@ -18,4 +22,17 @@ package com.kiteehub.dev.api;
  * @date 2022/9/2 15:58
  */
 public interface DevDictApi {
+
+    /**
+     * 根据父ID集合获取所有的子ID集合
+     * @param parentIds
+     * @return
+     */
+    List<String> getIdsByParentIds(List<String> parentIds);
+
+    /**
+     * 查询字典树
+     * @return
+     */
+    List<DictNode> dictTree(String parentId);
 }

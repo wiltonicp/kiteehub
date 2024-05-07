@@ -2,6 +2,9 @@ import { baseRequest } from '@/utils/request'
 
 const request = (url, ...arg) => baseRequest(`/knowledge/attach/` + url, ...arg)
 
+
+const requestSelf = (url, ...arg) => baseRequest(`/knowledge/attach-chunk/` + url, ...arg)
+
 /**
  * 知识库附件Api接口管理器
  *
@@ -28,5 +31,22 @@ export default {
 	// 获取知识库附件详情
 	knowledgeAttachDetail(data) {
 		return request('detail', data, 'get')
+	},
+
+	// 获取知识库附件分页
+	knowledAttachChunk(data) {
+		return requestSelf('page', data, 'get')
+	},
+	// 删除知识库分片
+	knowledAttachDelete(data) {
+		return requestSelf('delete', data)
+	},
+	// 获取区域树
+	cityTree() {
+		return request('area/tree', null, 'get')
+	},
+	// 获取区域数量
+	count(data) {
+		return request('area/count', data, 'get')
 	}
 }

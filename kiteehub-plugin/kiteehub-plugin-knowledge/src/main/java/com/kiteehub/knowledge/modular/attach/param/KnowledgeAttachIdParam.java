@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * 知识库附件Id参数
@@ -29,6 +29,6 @@ public class KnowledgeAttachIdParam {
 
     /** ID */
     @ApiModelProperty(value = "ID", required = true)
-    @NotBlank(message = "id不能为空")
-    private Long id;
+    @NotNull(message = "id不能为空")
+    private String id;
 }

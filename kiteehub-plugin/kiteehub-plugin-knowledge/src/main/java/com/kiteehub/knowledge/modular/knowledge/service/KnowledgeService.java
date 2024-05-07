@@ -13,6 +13,7 @@ package com.kiteehub.knowledge.modular.knowledge.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.kiteehub.knowledge.modular.attach.entity.KnowledgeAttach;
 import com.kiteehub.knowledge.modular.knowledge.entity.Knowledge;
 import com.kiteehub.knowledge.modular.knowledge.param.*;
 import com.kiteehub.knowledge.modular.knowledge.result.KnowledgeDetailResult;
@@ -26,7 +27,7 @@ import java.util.List;
  * 知识库Service接口
  *
  * @author Ranger
- * @date  2023/12/27 10:20
+ * @date 2023/12/27 10:20
  **/
 public interface KnowledgeService extends IService<Knowledge> {
 
@@ -34,7 +35,7 @@ public interface KnowledgeService extends IService<Knowledge> {
      * 获取知识库分页
      *
      * @author Ranger
-     * @date  2023/12/27 10:20
+     * @date 2023/12/27 10:20
      */
     Page<Knowledge> page(KnowledgePageParam knowledgePageParam);
 
@@ -42,7 +43,7 @@ public interface KnowledgeService extends IService<Knowledge> {
      * 添加知识库
      *
      * @author Ranger
-     * @date  2023/12/27 10:20
+     * @date 2023/12/27 10:20
      */
     void add(KnowledgeAddParam knowledgeAddParam);
 
@@ -50,7 +51,7 @@ public interface KnowledgeService extends IService<Knowledge> {
      * 编辑知识库
      *
      * @author Ranger
-     * @date  2023/12/27 10:20
+     * @date 2023/12/27 10:20
      */
     void edit(KnowledgeEditParam knowledgeEditParam);
 
@@ -58,7 +59,7 @@ public interface KnowledgeService extends IService<Knowledge> {
      * 删除知识库
      *
      * @author Ranger
-     * @date  2023/12/27 10:20
+     * @date 2023/12/27 10:20
      */
     void delete(List<KnowledgeIdParam> knowledgeIdParamList);
 
@@ -66,7 +67,7 @@ public interface KnowledgeService extends IService<Knowledge> {
      * 获取知识库详情
      *
      * @author Ranger
-     * @date  2023/12/27 10:20
+     * @date 2023/12/27 10:20
      */
     Knowledge detail(KnowledgeIdParam knowledgeIdParam);
 
@@ -74,16 +75,24 @@ public interface KnowledgeService extends IService<Knowledge> {
      * 获取知识库详情
      *
      * @author Ranger
-     * @date  2023/12/27 10:20
+     * @date 2023/12/27 10:20
      **/
-    Knowledge queryEntity(Long id);
+    Knowledge queryEntity(String id);
+
+    /**
+     * 获取知识库详情
+     *
+     * @author Ranger
+     * @date 2023/12/27 10:20
+     **/
+    Knowledge queryEntityWithKid(String kid);
 
 
-    void saveOne(KnowledgeSaveParam request, Long userId);
+    void saveOne(KnowledgeSaveParam request, String userId);
 
     void upload(KnowledgeUploadParam request);
 
-    void storeContent(MultipartFile file, String kid, Boolean firstTime) throws IOException;
+    void storeContent(MultipartFile file, KnowledgeAttach knowledgeAttach, String kname, List<String> areaIds, Boolean firstTime) throws IOException;
 
     KnowledgeDetailResult detail(String kid);
 

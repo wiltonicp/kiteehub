@@ -22,7 +22,9 @@ import cn.hutool.core.util.PhoneUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.kiteehub.common.util.CommonEncrypt;
 import org.springframework.stereotype.Service;
 import com.kiteehub.auth.api.SaBaseLoginUserApi;
 import com.kiteehub.auth.core.enums.SaClientTypeEnum;
@@ -412,5 +414,28 @@ public class AuthServiceImpl implements AuthService {
             // 执行C端登录
             return execLoginC(saBaseClientLoginUser, device);
         }
+    }
+
+    @Override
+    public JSONObject checkUserToken(String token) {
+        if(ObjectUtil.isEmpty(token)){
+            throw new CommonException("三方token不能为空");
+        }
+        String userInfoStr = CommonEncrypt.decrypts("d46a1d35da26f777f6a1172ef22bb6ac61c315b981a8d788bfe69b3ef6a62d80", token);
+        JSONObject entries = JSONUtil.parseObj(userInfoStr);
+        String mobile = entries.getStr("mobile");
+        String sfzh = entries.getStr("sfzh");
+        SaBaseLoginUser saBaseLoginUser = loginUserApi.getUserByPhone(mobile);
+
+        if(ObjectUtil.isNull(saBaseLoginUser)){
+            //注册
+            entries.set("isExist",false);
+            return entries;
+        }
+        //执行登录
+        String loginToken = execLoginB(saBaseLoginUser, AuthDeviceTypeEnum.APP.getValue());
+        entries.set("isExist",true);
+        entries.set("token",loginToken);
+        return entries;
     }
 }

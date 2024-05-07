@@ -33,15 +33,11 @@ public class KnowledgeEditParam {
     /** ID */
     @ApiModelProperty(value = "ID", required = true, position = 1)
     @NotNull(message = "id不能为空")
-    private Long id;
+    private String id;
 
     /** ID */
     @ApiModelProperty(value = "ID", position = 2)
     private String kid;
-
-    /** 用户ID */
-    @ApiModelProperty(value = "用户ID", position = 3)
-    private Long uid;
 
     /** 名称 */
     @ApiModelProperty(value = "名称", position = 4)
@@ -54,5 +50,9 @@ public class KnowledgeEditParam {
     /** 险别ID */
     @ApiModelProperty(value = "险别ID", position = 6)
     private Long insureTypeId;
+
+    /** 官网 */
+    @ApiModelProperty(value = "官网", position = 7)
+    private String website;
 
 }

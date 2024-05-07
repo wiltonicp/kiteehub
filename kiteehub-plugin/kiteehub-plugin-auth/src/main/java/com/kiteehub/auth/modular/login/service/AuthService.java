@@ -11,6 +11,7 @@
  */
 package com.kiteehub.auth.modular.login.service;
 
+import cn.hutool.json.JSONObject;
 import com.kiteehub.auth.core.pojo.SaBaseClientLoginUser;
 import com.kiteehub.auth.core.pojo.SaBaseLoginUser;
 import com.kiteehub.auth.modular.login.param.AuthAccountPasswordLoginParam;
@@ -81,4 +82,10 @@ public interface AuthService {
      * @date 2022/7/9 14:44
      */
     String doLoginById(String userId, String device, String type);
+
+    /**
+     * B端校验三方token
+     * @param token
+     */
+    JSONObject checkUserToken(String token);
 }

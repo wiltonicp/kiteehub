@@ -57,6 +57,11 @@ public class Application {
      **/
     @GetMapping("/")
     public String index() {
-        return "WELCOME";
+        return "WELCOME KITEEHUB";
+    }
+
+    @GetMapping("/index")
+    public String index() {
+        return "WELCOME KITEEHUB";
     }
 }

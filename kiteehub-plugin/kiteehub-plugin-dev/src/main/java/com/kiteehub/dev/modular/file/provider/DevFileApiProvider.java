@@ -42,6 +42,11 @@ public class DevFileApiProvider implements DevFileApi {
     }
 
     @Override
+    public String getStoragePathWithReturnIdLocal(String localId) {
+        return devFileService.queryEntity(localId).getStoragePath();
+    }
+
+    @Override
     public String storageFileWithReturnUrlAliyun(MultipartFile file) {
         return devFileService.uploadReturnUrl(DevFileEngineTypeEnum.ALIYUN.getValue(), file);
     }

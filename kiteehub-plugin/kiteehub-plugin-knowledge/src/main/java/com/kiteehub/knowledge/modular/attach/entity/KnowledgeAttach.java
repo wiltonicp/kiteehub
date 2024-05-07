@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 知识库附件实体
@@ -33,7 +34,7 @@ public class KnowledgeAttach extends CommonEntity {
     /** ID */
     @TableId
     @ApiModelProperty(value = "ID", position = 1)
-    private Long id;
+    private String id;
 
     /** 知识库ID */
     @ApiModelProperty(value = "知识库ID", position = 2)
@@ -62,4 +63,23 @@ public class KnowledgeAttach extends CommonEntity {
     /** 状态 */
     @ApiModelProperty(value = "状态", position = 8)
     private String gatherState;
+
+    /** 社保人员类型 */
+    @ApiModelProperty(value = "社保人员类型", position = 9)
+    private String personnelType;
+
+    /** 索引模型 */
+    @TableField(exist = false)
+    @ApiModelProperty(value = "索引模型", position = 10)
+    private String indexModel = "Embedding-ada-002";
+
+    /** 知识处理模型 */
+    @TableField(exist = false)
+    @ApiModelProperty(value = "知识处理模型", position = 11)
+    private String fileModel = "Kite-Ai-16k";
+
+    /** 区域ids */
+    @TableField(exist = false)
+    @ApiModelProperty(value = "区域ids", position = 12)
+    private List<String> areaIds;
 }

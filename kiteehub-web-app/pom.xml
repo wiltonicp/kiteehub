@@ -134,6 +134,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.5.12</version>
                 <configuration>
+                    <!-- 在打包时将引用的外部jar引入到当前项目包中	-->
                     <includeSystemScope>true</includeSystemScope>
                 </configuration>
                 <executions>
@@ -154,16 +155,18 @@
                     <!-- install阶段上传镜像 -->
                     <pushImage>true</pushImage>
                     <!-- 远程仓库地址 -->
-                    <!--                        <registryUrl>${docker.registry}</registryUrl>-->
                     <dockerDirectory>src/main/docker</dockerDirectory>
-                    <!--                    <dockerHost>http://192.168.1.169:2375</dockerHost>-->
                     <imageName>kitee-knowledge</imageName>
-                    <!--                    <imageName>${docker.registry}/${project.artifactId}:${project.version}</imageName>-->
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>
                             <directory>${project.build.directory}</directory>
                             <include>${project.build.finalName}.jar</include>
+                        </resource>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}/classes</directory>
+                            <include>yahei.ttf</include>
                         </resource>
                     </resources>
                 </configuration>

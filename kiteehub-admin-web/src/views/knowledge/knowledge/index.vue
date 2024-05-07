@@ -8,11 +8,6 @@
 					</a-form-item>
 				</a-col>
 				<a-col :span="6">
-					<a-form-item label="区域" name="area">
-						<a-input v-model:value="searchFormState.area" placeholder="请输入区域" />
-					</a-form-item>
-				</a-col>
-				<a-col :span="6">
 					<a-button type="primary" @click="table.refresh(true)">查询</a-button>
 					<a-button style="margin: 0 8px" @click="reset">重置</a-button>
 				</a-col>
@@ -32,7 +27,7 @@
 				<a-space>
 					<a-button type="primary" @click="formRef.onOpen()" v-if="hasPerm('knowledgeAdd')">
 						<template #icon><plus-outlined /></template>
-						新建/导入
+						新建
 					</a-button>
 					<xn-batch-delete
 						v-if="hasPerm('knowledgeBatchDelete')"
@@ -67,21 +62,25 @@
 	const toolConfig = { refresh: true, height: true, columnSetting: true, striped: false }
 	const columns = [
 		{
-			title: 'ID',
+			title: 'KID',
 			dataIndex: 'kid'
 		},
 		{
 			title: '名称',
 			dataIndex: 'kname'
 		},
-		{
-			title: '区域',
-			dataIndex: 'area'
-		},
-		{
-			title: '险别ID',
-			dataIndex: 'insureTypeId'
-		},
+    {
+      title: '官网',
+      dataIndex: 'website'
+    },
+		// {
+		// 	title: '区域',
+		// 	dataIndex: 'area'
+		// },
+		// {
+		// 	title: '险别ID',
+		// 	dataIndex: 'insureTypeId'
+		// },
 	]
 	// 操作栏通过权限判断是否显示
 	if (hasPerm(['knowledgeEdit', 'knowledgeDelete'])) {

@@ -36,7 +36,7 @@ public class KnowledgeAddParam {
 
     /** 用户ID */
     @ApiModelProperty(value = "用户ID", position = 3)
-    private Long uid;
+    private String uid;
 
     /** 名称 */
     @ApiModelProperty(value = "名称", position = 4)
@@ -49,5 +49,9 @@ public class KnowledgeAddParam {
     /** 险别ID */
     @ApiModelProperty(value = "险别ID", position = 6)
     private Long insureTypeId;
+
+    /** 官网 */
+    @ApiModelProperty(value = "官网", position = 7)
+    private String website;
 
 }

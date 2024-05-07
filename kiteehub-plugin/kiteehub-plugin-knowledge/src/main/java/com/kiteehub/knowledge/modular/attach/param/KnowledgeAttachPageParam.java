@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 知识库附件查询参数
@@ -47,6 +48,10 @@ public class KnowledgeAttachPageParam {
     @ApiModelProperty(value = "关键词")
     private String searchKey;
 
+    /** 文档ID */
+    @ApiModelProperty(value = "文档ID")
+    private String kid;
+
     /** 文档名称 */
     @ApiModelProperty(value = "文档名称")
     private String docName;
@@ -54,5 +59,13 @@ public class KnowledgeAttachPageParam {
     /** 状态 */
     @ApiModelProperty(value = "状态")
     private String gatherState;
+
+    /** 区域ID集合 */
+    @ApiModelProperty(value = "区域ID集合")
+    private String areaIds;
+
+    /** 社保人员类型 */
+    @ApiModelProperty(value = "社保人员类型")
+    private String personnelType;
 
 }

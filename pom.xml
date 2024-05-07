@@ -60,12 +60,15 @@
         <minio.version>8.5.2</minio.version>
         <mssql.connector.java.version>9.2.1.jre8</mssql.connector.java.version>
         <mybatis.plus.version>3.5.3.1</mybatis.plus.version>
+        <mybatis.plus.join.version>1.3.6</mybatis.plus.join.version>
         <mybatis.version>3.5.10</mybatis.version>
         <mysql.connector.java.version>8.0.28</mysql.connector.java.version>
         <netty.common.version>4.1.89.Final</netty.common.version>
         <netty.handler.version>4.1.89.Final</netty.handler.version>
         <okhttp3.version>4.10.0</okhttp3.version>
         <okio.version>3.3.0</okio.version>
+        <jsoup.version>1.15.3</jsoup.version>
+        <webmagic.version>0.7.3</webmagic.version>
         <dm.connector.java.version>8.1.2.192</dm.connector.java.version>
         <kingbase.connector.java.version>8.6.0</kingbase.connector.java.version>
         <oracle.connector.java.version>21.5.0.0</oracle.connector.java.version>
@@ -260,6 +263,14 @@
                 <version>${mybatis.plus.version}</version>
             </dependency>
 
+            <!-- mybatis-plus-join -->
+            <dependency>
+                <groupId>icu.mhb</groupId>
+                <artifactId>mybatis-plus-join</artifactId>
+                <version>${mybatis.plus.join.version}</version>
+            </dependency>
+
+
             <!-- easy-trans -->
             <dependency>
                 <groupId>com.fhs-opensource</groupId>
@@ -293,6 +304,20 @@
                 <groupId>com.squareup.okio</groupId>
                 <artifactId>okio</artifactId>
                 <version>${okio.version}</version>
+            </dependency>
+
+            <!-- jsoup -->
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>${jsoup.version}</version>
+            </dependency>
+
+            <!-- webmagic-extension -->
+            <dependency>
+                <groupId>us.codecraft</groupId>
+                <artifactId>webmagic-extension</artifactId>
+                <version>${webmagic.version}</version>
             </dependency>
 
             <!-- hutool -->

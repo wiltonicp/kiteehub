@@ -7,21 +7,18 @@
 		@close="onClose"
 	>
 		<a-form ref="formRef" :model="formData" :rules="formRules" layout="vertical">
-			<a-form-item label="ID：" name="kid">
-				<a-input v-model:value="formData.kid" placeholder="请输入ID" allow-clear />
-			</a-form-item>
-			<a-form-item label="用户ID：" name="uid">
-				<a-input v-model:value="formData.uid" placeholder="请输入用户ID" allow-clear />
+			<a-form-item label="KID：" name="kid">
+				<a-input v-model:value="formData.kid" placeholder="系统自动生成" allow-clear disabled />
 			</a-form-item>
 			<a-form-item label="名称：" name="kname">
 				<a-input v-model:value="formData.kname" placeholder="请输入名称" allow-clear />
 			</a-form-item>
-			<a-form-item label="区域：" name="area">
-				<a-input v-model:value="formData.area" placeholder="请输入区域" allow-clear />
-			</a-form-item>
-			<a-form-item label="险别ID：" name="insureTypeId">
-				<a-input v-model:value="formData.insureTypeId" placeholder="请输入险别ID" allow-clear />
-			</a-form-item>
+      <a-form-item label="官网：" name="kname">
+        <a-input v-model:value="formData.website" placeholder="请输入官网地址" allow-clear />
+      </a-form-item>
+<!--			<a-form-item label="区域：" name="area">-->
+<!--				<a-input v-model:value="formData.area" placeholder="请输入区域" allow-clear />-->
+<!--			</a-form-item>-->
 		</a-form>
 		<template #footer>
 			<a-button style="margin-right: 8px" @click="onClose">关闭</a-button>

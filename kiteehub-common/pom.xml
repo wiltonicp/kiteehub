@@ -113,6 +113,12 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
+        <!-- jackson-jsr310 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
         <!-- hutool -->
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -172,5 +178,25 @@
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-ext-jdk15to18</artifactId>
+            <version>1.68</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15to18</artifactId>
+            <version>1.68</version>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>com.sm2</groupId>-->
+<!--            <artifactId>SM2Util</artifactId>-->
+<!--            <version>1.0-jar-with-dependencies</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/src/main/resources/lib/SM2Util-1.0-jar-with-dependencies.jar</systemPath>-->
+<!--        </dependency>-->
     </dependencies>
 </project>
